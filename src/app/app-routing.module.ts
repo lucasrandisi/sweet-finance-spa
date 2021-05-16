@@ -1,23 +1,27 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import { LoggedInGuard } from './shared/guards/logged-in.guard';
+import { LoggedOutGuard } from './shared/guards/logged-out.guard';
 
 const routes: Routes = [
 	{
-		path: '',
-		pathMatch: 'full',
-		component: AppComponent
-	},
-	{
 		path: 'login',
-		component: LoginComponent
+		component: LoginComponent,
+		canActivate: [LoggedOutGuard]
 	},
 	{
 		path: 'register',
-		component: RegisterComponent
-	}
+		component: RegisterComponent,
+		canActivate: [LoggedOutGuard]
+	},
+	{
+		path: '',
+		pathMatch: 'full',
+		loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+		canActivateChild: [LoggedInGuard]
+	},
 ];
 
 @NgModule({
