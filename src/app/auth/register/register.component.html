@@ -1,23 +1,28 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="form">
-    <mat-form-field appearance="legacy">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" autocomplete="false">
-    </mat-form-field>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-    <mat-form-field appearance="legacy">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" autocomplete="false">
-    </mat-form-field>
+<div class="w3-container">
 
-    <mat-form-field appearance="legacy">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password" type="password">
-    </mat-form-field>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+        <mat-form-field appearance="legacy">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" autocomplete="false">
+        </mat-form-field>
 
-    <mat-form-field appearance="legacy">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput formControlName="password_confirmation" type="password">
-    </mat-form-field>
+        <mat-form-field appearance="legacy">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" autocomplete="false">
+        </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Register</button>
-</form>
+        <mat-form-field appearance="legacy">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password">
+        </mat-form-field>
+
+        <mat-form-field appearance="legacy">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput formControlName="password_confirmation" type="password">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">Register</button>
+    </form>
+</div>

@@ -5,6 +5,8 @@ import { RegisterComponent } from './auth/register/register.component';
 import { LoggedInGuard } from './shared/guards/logged-in.guard';
 import { LoggedOutGuard } from './shared/guards/logged-out.guard';
 
+
+
 const routes: Routes = [
 	{
 		path: 'login',
@@ -16,12 +18,14 @@ const routes: Routes = [
 		component: RegisterComponent,
 		canActivate: [LoggedOutGuard]
 	},
+	/* PREGUNTAR ESTO
 	{
 		path: '',
 		pathMatch: 'full',
 		loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
 		canActivateChild: [LoggedInGuard]
 	},
+	*/
 ];
 
 @NgModule({

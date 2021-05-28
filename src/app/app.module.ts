@@ -9,7 +9,7 @@ import { httpInterceptorProviders } from './shared/interceptors/http-interceptor
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
 	],
 	imports: [
 		BrowserModule,
