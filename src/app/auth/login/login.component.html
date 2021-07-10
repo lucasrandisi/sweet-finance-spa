@@ -1,21 +1,13 @@
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+    <mat-form-field appearance="legacy">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" autocomplete="false">
+    </mat-form-field>
 
-<div class="w3-container">
-    <form [formGroup]="form" (ngSubmit)="submit()" class="form">
-        <mat-form-field appearance="legacy">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" autocomplete="false">
-        </mat-form-field>
+    <mat-form-field appearance="legacy">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password">
+    </mat-form-field>
 
-        <mat-form-field appearance="legacy">
-            <mat-label>Password</mat-label>
-            <input matInput formControlName="password" type="password">
-        </mat-form-field>
-
-        <button mat-raised-button color="primary" type="submit">Login</button>
-    </form>
-</div>
-
-<div style="text-align: right">
-    <img src="../../../assets/logo.png">
-</div>
+    <button mat-raised-button color="primary" type="submit">Login</button>
+</form>
