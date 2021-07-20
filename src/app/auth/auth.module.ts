@@ -7,6 +7,7 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../shared/services/auth.service';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
 	declarations: [
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 		MatFormFieldModule,
 		MatInputModule,
 		MatButtonModule,
+		MatDividerModule,
 	],
 	providers: [
 		AuthService

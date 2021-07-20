@@ -18,14 +18,14 @@ const routes: Routes = [
 		component: RegisterComponent,
 		canActivate: [LoggedOutGuard]
 	},
-	/* PREGUNTAR ESTO
+	
 	{
 		path: '',
 		pathMatch: 'full',
 		loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
 		canActivateChild: [LoggedInGuard]
 	},
-	*/
+	
 ];
 
 @NgModule({

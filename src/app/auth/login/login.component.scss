@@ -1,26 +1,33 @@
-.form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.register-button{
+    background-color: #cccc00;
+    color: black;
+    border: 1px solid #212245;
+    margin: 2px;
 }
 
-.w3-container {
-    margin: 100px auto; 
-    max-width: 500px; 
-    padding: 15px;
-    background: #e7fa3e;
-    border: 5px solid #ffff00;
-    border-radius: 3px;
-  }
-
-.mat-input-element {
-    color: rgb(26, 5, 5);
+img{
+    height: 5vh;
+    width: 5vh;
+    margin-right: 3vh;
 }
 
-img {
-    margin: 5px;
-    text-align: right;
-    border: 1px solid #ffff00;
-    border-radius: 4px;
-    width: 120px;
-  }
+nav{
+    background-color: #0d0e1c;
+}
+
+body{
+    background-image: url(../../../assets/bg_space.jpg);
+}
+
+.container{
+    background-color: #f7f9f9;
+    width: 80%;
+	margin: 10%;
+	height: 50vh;
+    border: 1px solid #cccc00;
+    padding: 2%;
+}
+
+.form{
+    margin: 2%;
+}
