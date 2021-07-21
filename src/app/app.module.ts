@@ -14,12 +14,12 @@ import { httpInterceptorProviders } from './shared/interceptors/http-interceptor
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-		AuthModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
+		AuthModule
 	],
 	providers: [
-		httpInterceptorProviders
+		httpInterceptorProviders,
 	],
 	bootstrap: [AppComponent]
 })

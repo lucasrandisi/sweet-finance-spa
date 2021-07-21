@@ -13,41 +13,37 @@
     <button mat-raised-button color="primary" type="submit">Login</button>
 </form> -->
 
-<body>
 
-    <nav class="flex items-center justify-between flex-wrap">
-        <div class="flex items-center">
-            <img src="../../../assets/s.png">
-            <span class="font-extrabold text-xl" style="color: #cccc00"> SWEET FINANCE</span>
-        </div>
+<nav class="flex items-center justify-between flex-wrap">
+    <div class="flex items-center">
+        <img src="../../../assets/s.png">
+        <span class="font-extrabold text-xl" style="color: #cccc00"> SWEET FINANCE</span>
+    </div>
 
-        <div>
-            <button mat-raised-button class="register-button">Registrese</button>
-        </div>
-    </nav>
+    <div>
+        <button mat-raised-button class="register-button">Registrese</button>
+    </div>
+</nav>
 
-    <div class="grid grid-cols-2">
+<div class="grid grid-cols-2">
 
-        <div class="container mx-auto">
-            <span class="font-extrabold text-xl" style="color: #cccc00"> Iniciar Sesión</span>
-            <mat-divider></mat-divider>
+    <div class="container mx-auto">
+        <span class="font-extrabold text-xl" style="color: #cccc00"> Iniciar Sesión</span>
+        <mat-divider></mat-divider>
 
-            <form [formGroup]="form" (ngSubmit)="submit()" class="form">
-                <mat-form-field appearance="fill">
-                    <mat-label>Nombre de usuario</mat-label>
-                    <input formControlName="email" autocomplete="false" matInput>
-                </mat-form-field>
+        <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre de usuario</mat-label>
+                <input formControlName="email" autocomplete="false" matInput>
+            </mat-form-field>
 
-            </form>
+        </form>
 
-        </div>
-
-
-
-        <div style="color:white">
-            2
-        </div>
     </div>
 
 
-</body>
+
+    <div style="color:white">
+        2
+    </div>
+</div>
