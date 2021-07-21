@@ -1,33 +1,100 @@
-.register-button{
+.button{
     background-color: #cccc00;
     color: black;
     border: 1px solid #212245;
     margin: 2px;
 }
 
-img{
-    height: 5vh;
+.logo{
+    height: 4vh;
     width: 5vh;
-    margin-right: 3vh;
+    margin-right: 2vh;
+    margin-left: 3vh;
+    margin-bottom: 0.5vh;
 }
 
 nav{
     background-color: #0d0e1c;
 }
 
-body{
-    background-image: url(../../../assets/bg_space.jpg);
+.container-body{
+    background-image: url(../../../assets/bg_space.jpg); 
+    background-size: 100%;  
+    background-size: cover;
 }
 
-.container{
+.container-form{
     background-color: #f7f9f9;
-    width: 80%;
-	margin: 10%;
-	height: 50vh;
+    width: 70%;
+    margin-top: 10%;
+    margin-bottom: 10%;
+    height: 50vh;
     border: 1px solid #cccc00;
-    padding: 2%;
+    padding: 5%;
+    border-radius: 5%;
 }
 
-.form{
+form{
     margin: 2%;
+
+    mat-form-field{
+        width: 100%;
+    }
 }
+
+mat-divider{
+    border: 0.005vh solid #cccc00;
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+
+a{
+    font-size: small;
+    color: #cccc00;
+}
+
+.footer{
+    text-align: center;
+    color: white;
+    font-size: smaller;
+    margin-top: 5vh;
+}
+
+.img-4{
+    height: 5vh;
+    width: 6vh;
+}
+
+.container-carousel{
+    background-color: transparent;
+    margin-top: 20%;
+    margin-bottom: 20%;
+    height: 30vh;
+    width: 50%;
+}
+
+.carousel-open:checked + .carousel-item {
+    position: static;
+    opacity: 100;
+}
+
+.carousel-item {
+    -webkit-transition: opacity 2s ease-out;
+    transition: opacity 2s ease-out;
+
+    img{
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 2%;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+
+
