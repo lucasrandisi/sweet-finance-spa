@@ -5,8 +5,8 @@ import { MatInputModule } from '@angular/material/input';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../shared/services/auth.service';
 import { MatButtonModule } from '@angular/material/button';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
 	declarations: [
@@ -16,12 +16,10 @@ import { MatButtonModule } from '@angular/material/button';
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
+		SharedModule,
 		MatFormFieldModule,
 		MatInputModule,
 		MatButtonModule,
 	],
-	providers: [
-		AuthService
-	]
 })
 export class AuthModule { }
