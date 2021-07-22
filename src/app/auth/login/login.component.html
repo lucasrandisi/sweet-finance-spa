@@ -6,7 +6,7 @@
         </div>
 
         <div>
-            <button mat-raised-button class="button">Registrese</button>
+            <button mat-raised-button class="button"><a [routerLink] = "['../register']">Registrese</a></button>
         </div>
     </nav>
 
@@ -30,7 +30,7 @@
                     </mat-form-field>
                 </p>
 
-                <a href="">¿Olvidaste el email o la contraseña?</a>
+                <a class="recover" href="">¿Olvidaste el email o la contraseña?</a>
 
                 <div align="right">
                     <button mat-raised-button class="button" type="submit">Entrar</button>

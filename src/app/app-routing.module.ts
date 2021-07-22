@@ -5,8 +5,6 @@ import { RegisterComponent } from './auth/register/register.component';
 import { LoggedInGuard } from './shared/guards/logged-in.guard';
 import { LoggedOutGuard } from './shared/guards/logged-out.guard';
 
-
-
 const routes: Routes = [
 	{
 		path: 'login',

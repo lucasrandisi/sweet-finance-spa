@@ -8,6 +8,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { SharedModule } from '../shared/shared.module';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox'; 
+import { RouterModule } from '@angular/router';
 
 @NgModule({
 	declarations: [
@@ -16,12 +19,15 @@ import { SharedModule } from '../shared/shared.module';
 	],
 	imports: [
 		CommonModule,
+		RouterModule,
 		ReactiveFormsModule,
 		SharedModule,
 		MatFormFieldModule,
 		MatInputModule,
 		MatButtonModule,
 		MatDividerModule,
+		MatDatepickerModule,
+		MatCheckboxModule,
 	],
 })
 export class AuthModule { }
