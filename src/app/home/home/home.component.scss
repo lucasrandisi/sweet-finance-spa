@@ -1,0 +1,36 @@
+.container-body{
+    background-image: url(../../../assets/bg_space.jpg); 
+    background-size: 100%;  
+    background-size: cover;
+}
+
+.logo{
+    height: 4vh;
+    width: 5vh;
+    margin-right: 2vh;
+    margin-left: 3vh;
+    margin-bottom: 0.5vh;
+}
+
+nav{
+    background-color: #0d0e1c;
+}
+
+.button{
+    background-color: #cccc00;
+    color: black;
+    border: 1px solid #212245;
+    margin: 1vh;
+}
+
+.a-navbar{
+    color: #cccc00;
+    margin-left: 2%;
+}
+
+.button-info{
+    background-color: #f7f9f9;
+    color: black;
+    border: 1px solid #212245;
+    margin: 1vh;
+}
