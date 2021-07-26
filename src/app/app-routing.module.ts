@@ -20,14 +20,9 @@ const routes: Routes = [
 		canActivate: [LoggedOutGuard]
 	},
 	{
-		path: '',
-		pathMatch: 'full',
+		path: 'home',
 		loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
 		//canActivateChild: [LoggedInGuard]
-	},
-	{
-		path: 'home/info',
-		component: InfoComponent,
 	}
 	
 ];

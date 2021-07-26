@@ -6,13 +6,13 @@ import { InfoComponent } from './info/info.component';
 const routes: Routes = [
 	{
 		path: '',
-		pathMatch: 'full',
-		component: HomeComponent
-	},
-	//esto no se como es
-	{
-		path: 'info',
-		component: InfoComponent,
+		component: HomeComponent,
+		children:[
+			{
+			path: 'info',
+			component: InfoComponent,
+			}
+		]	
 	}
 ];
 
