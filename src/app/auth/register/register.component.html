@@ -1,28 +1,67 @@
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<div class="container-body">
+    <nav class="flex items-center justify-between flex-wrap">
+        <div class="flex items-center">
+            <img class="logo" src="../../../assets/sw_logo.png">
+            <span class="font-extrabold text-xl" style="color: #cccc00"> SWEET FINANCE</span>
+        </div>
 
-<div class="w3-container">
+        <div>
+            <span class="font-light text-base" style="color: #cccc00">¿Ya tienes cuenta?</span>
+            <button mat-raised-button class="button"><a [routerLink] = "['../login']">Iniciar Sesión</a></button>
+        </div>
+    </nav>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="form">
-        <mat-form-field appearance="legacy">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name" autocomplete="false">
-        </mat-form-field>
+    <div class="container-form mx-auto">
+        <span class="font-extrabold text-xl" style="color: #cccc00"> Formulario de Registro</span>
+        <mat-divider></mat-divider>
 
-        <mat-form-field appearance="legacy">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" autocomplete="false">
-        </mat-form-field>
+        <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+            <p>
+                <mat-form-field appearance="legacy">
+                    <mat-label>Nombre Completo</mat-label>
+                    <input formControlName="name" autocomplete="false" matInput>
+                </mat-form-field>
+            </p>
 
-        <mat-form-field appearance="legacy">
-            <mat-label>Password</mat-label>
-            <input matInput formControlName="password" type="password">
-        </mat-form-field>
+            <!-- ESTO NO ANDA
+            <p> 
+                <mat-form-field appearance="fill">
+                    <mat-label>Choose a date</mat-label>
+                    <input formControlName="date" matInput [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </p>
+            -->
 
-        <mat-form-field appearance="legacy">
-            <mat-label>Confirm Password</mat-label>
-            <input matInput formControlName="password_confirmation" type="password">
-        </mat-form-field>
+            <p>
+                <mat-form-field appearance="legacy">
+                    <mat-label>Email</mat-label>
+                    <input formControlName="email" autocomplete="false" matInput>
+                </mat-form-field>
+            </p>
 
-        <button mat-raised-button color="primary" type="submit">Register</button>
-    </form>
+            <p>
+                <mat-form-field appearance="legacy">
+                    <mat-label>Contraseña</mat-label>
+                    <input formControlName="password" type="password" matInput>
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field appearance="legacy">
+                    <mat-label>Confirmar Contraseña</mat-label>
+                    <input matInput formControlName="password_confirmation" type="password">
+                </mat-form-field>
+            </p>
+
+            <mat-checkbox>He leído y acepto los Términos de Sweet Finance</mat-checkbox>
+
+            <div align="right">
+                <button mat-raised-button class="button" type="submit">Registrarse</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="footer">Sweet Finance © CLR Company</div> 
 </div>

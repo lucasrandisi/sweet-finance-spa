@@ -1,18 +1,57 @@
-.form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.container-body{
+    background-image: url(../../../assets/bg_space.jpg); 
+    background-size: 100%;  
+    background-size: cover;
+    min-height: 100vh;
 }
 
-.w3-container {
-    margin: 100px auto; 
-    max-width: 500px; 
-    padding: 15px;
-    background: #e7fa3e;
-    border: 5px solid #ffff00;
-    border-radius: 3px;
-  }
+.logo{
+    height: 4vh;
+    width: 5vh;
+    margin-right: 2vh;
+    margin-left: 3vh;
+    margin-bottom: 0.5vh;
+}
 
-.mat-input-element {
-    color: rgb(26, 5, 5);
+nav{
+    background-color: #0d0e1c;
+}
+
+.container-form{
+    background-color: #f7f9f9;
+    width: 35%;
+    margin-top: 3%;
+    margin-bottom: 5%;
+    height: 67vh;
+    border: 1px solid #cccc00;
+    padding: 1%;
+    border-radius: 3%;
+}
+
+.button{
+    background-color: #cccc00;
+    color: black;
+    border: 1px solid #212245;
+    margin: 1vh;
+}
+
+mat-divider{
+    border: 0.005vh solid #cccc00;
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+
+form{
+    margin: 2%;
+
+    mat-form-field{
+        width: 100%;
+    }
+}
+
+.footer{
+    text-align: center;
+    color: white;
+    font-size: smaller;
+    margin-top: 5vh;
 }
