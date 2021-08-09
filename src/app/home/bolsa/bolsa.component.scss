@@ -1,0 +1,22 @@
+.container-body{
+    background-color: #f7f9f9; 
+    background-size: 100%;  
+    background-size: cover;
+    min-height: 100vh;
+}
+
+.container-list{
+    margin: 3vh;
+}
+
+.container-find{
+    margin: 3vh;
+    border: 1px solid #cccc00;
+    padding: 1vh;
+}
+
+form{
+    mat-form-field{
+        margin: 1vh;
+    }
+}
