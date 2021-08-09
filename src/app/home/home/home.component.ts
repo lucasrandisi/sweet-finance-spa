@@ -21,15 +21,6 @@ export class HomeComponent implements OnInit {
 
 	//se ejecuta al iniciar el componente
 	ngOnInit(): void {
-		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
-			params: {
-				function: 'OVERVIEW',
-				symbol: 'IBM'
-			}
-		}).subscribe((response:any)=>{
-			console.log(response); //para mostrar en la consola
-			this.name = response[0].Name;
-		});
 	}
 
 	logout() {
