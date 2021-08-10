@@ -22,10 +22,10 @@
                             <th class="w-1/6">Ticker</th>
                             <th class="w-1/4">Compañía</th>
                             <th class="w-1/6">Industria</th>
-                            <th class="w-1/6">Cotización</th>
-                            <th class="w-1/8">SMA21</th>
-                            <th class="w-1/8">EMA200</th>
-                            <th class="w-1/8">RSI</th>
+                            <th class="w-1/6">Última cotización</th>
+                            <th class="w-1/8">SMA21 Diaria</th>
+                            <th class="w-1/8">EMA200 Diaria</th>
+                            <th class="w-1/8">RSI Diario</th>
                             <th class="w-1/6">Estado</th>
                         </tr>
                     </thead>
@@ -36,6 +36,10 @@
                             <td>{{industria}}</td>
                             <td>{{price}}</td>
                             <td>{{sma21_value}}</td>
+                            <td>{{ema200_value}}</td>
+                            <td>{{rsi_value}}</td>
+                            <td *ngIf="estado_compra" class="compra">COMPRA</td>
+                            <td *ngIf="estado_venta" class="venta">VENTA</td>
                         </tr>
                     </tbody>
                 </div>
