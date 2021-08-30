@@ -10,12 +10,13 @@ const routes: Routes = [
 	{
 		path: 'login',
 		component: LoginComponent,
-		canActivate: [LoggedOutGuard]
+		//canActivate: [LoggedOutGuard]
+		//revisar esto, si no tengo ningun usuario en la bd me deja entrar igual al home
 	},
 	{
 		path: 'register',
 		component: RegisterComponent,
-		canActivate: [LoggedOutGuard]
+		//canActivate: [LoggedOutGuard]
 	},
 	{
 		path: '',

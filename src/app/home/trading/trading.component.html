@@ -1,0 +1,48 @@
+<div class="container-body">
+
+    <div class="grid grid-cols-2">
+        <div align="center" style="margin-top:1%">
+            <h2>Dinero: $F asd</h2>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-8">
+
+        <!--menú de trade-->
+        <div class="col-span-4" align="center"> 
+            
+            <form [formGroup]="ticker" (ngSubmit)="find_ticker()">
+                <mat-form-field appearance="legacy">
+                    <mat-label>Ticker</mat-label>
+                    <input formControlName="ticker" autocomplete="false" matInput>
+                </mat-form-field>
+                
+                <button mat-raised-button type="submit">Buscar</button>
+            </form>
+
+            <div class="grid grid-cols-4">
+                <h3>Cotización</h3>
+                <h3>Cambio en 24h</h3>
+                <h3>Máx en 24h</h3>
+                <h3>Mín en 24h</h3>
+                
+            
+            </div>
+            
+        </div>
+
+        <!--recompensas-->
+        <div class="col-span-3">
+            
+        </div>
+
+        <!--tops-->
+        <div class="col-span-1">
+            
+        </div>
+
+
+    </div>
+
+
+</div>
