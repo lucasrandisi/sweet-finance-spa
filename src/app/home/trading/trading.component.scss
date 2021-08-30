@@ -1,0 +1,13 @@
+.container-body{
+    background-color: #f7f9f9; 
+    background-size: 100%;  
+    background-size: cover;
+    min-height: 100vh;
+}
+
+form{
+    mat-form-field{
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
