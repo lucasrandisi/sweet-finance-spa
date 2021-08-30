@@ -11,7 +11,6 @@ const routes: Routes = [
 		path: 'login',
 		component: LoginComponent,
 		//canActivate: [LoggedOutGuard]
-		//revisar esto, si no tengo ningun usuario en la bd me deja entrar igual al home
 	},
 	{
 		path: 'register',

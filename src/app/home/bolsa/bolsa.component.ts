@@ -16,8 +16,8 @@ export class BolsaComponent implements OnInit {
   name: string;
   industria: string;
   price: string;
-  sma21: string;
-  sma21_value : string;
+  ema21: string;
+  ema21_value : string;
   ema200 : string;
   ema200_value : string;
   rsi : string;
@@ -25,7 +25,7 @@ export class BolsaComponent implements OnInit {
   estado_compra : boolean;
   estado_venta : boolean;
 
-  sma21_value_number : number;
+  ema21_value_number : number;
   price_number : number;
 
 
@@ -58,10 +58,10 @@ export class BolsaComponent implements OnInit {
 			this.price = response[0].AnalystTargetPrice;
 		});
 
-		//request for sma21
+		//request for ema21
 		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
 			params: {
-				function: 'SMA',
+				function: 'EMA',
 				symbol: this.form.value['ticker'],
 				interval: 'daily',
 				time_period: '21',
@@ -69,15 +69,15 @@ export class BolsaComponent implements OnInit {
 				datatype: 'json'
 				}
 			}).subscribe((response:any)=>{
-				this.sma21 = response[0]['Technical Analysis: SMA'];
-				const last_sma21 = this.getLastSma21(this.sma21);
-				this.sma21_value = response[0]['Technical Analysis: SMA'][last_sma21].SMA;
-				this.sma21_value = this.sma21_value.substr(0, this.sma21_value.length-2);
+				this.ema21 = response[0]['Technical Analysis: EMA'];
+				const last_ema21 = this.getLast(this.ema21);
+				this.ema21_value = response[0]['Technical Analysis: EMA'][last_ema21].EMA;
+				this.ema21_value = this.ema21_value.substr(0, this.ema21_value.length-2);
 				
 				//calculate state
-				this.sma21_value_number = +this.sma21_value;
+				this.ema21_value_number = +this.ema21_value;
 				this.price_number = +this.price;
-				if (this.sma21_value_number <= this.price_number){
+				if (this.ema21_value_number <= this.price_number){
 					this.estado_compra = true;
 				} else {
 					this.estado_venta = true;
@@ -96,7 +96,8 @@ export class BolsaComponent implements OnInit {
 				}
 			}).subscribe((response:any)=>{
 				this.ema200 = response[0]['Technical Analysis: EMA'];
-				const last_ema200 = this.getLastSma21(this.ema200);
+				console.log(this.ema200);
+				const last_ema200 = this.getLast(this.ema200);
 				this.ema200_value = response[0]['Technical Analysis: EMA'][last_ema200].EMA;
 				this.ema200_value = this.ema200_value.substr(0, this.ema200_value.length-2);
 		});
@@ -113,7 +114,7 @@ export class BolsaComponent implements OnInit {
 				}
 			}).subscribe((response:any)=>{
 				this.rsi = response[0]['Technical Analysis: RSI'];
-				const last_rsi = this.getLastSma21(this.rsi);
+				const last_rsi = this.getLast(this.rsi);
 				this.rsi_value = response[0]['Technical Analysis: RSI'][last_rsi].RSI;
 				this.rsi_value = this.rsi_value.substr(0, this.rsi_value.length-2);
 		});	
@@ -128,7 +129,7 @@ export class BolsaComponent implements OnInit {
    		return splitStr.join(' '); 
 	}
 
-	getLastSma21(object_sma: any){
+	getLast(object_sma: any){
 		let	lastDate = moment('1940-07-01');
 		for(const key in object_sma){
 			lastDate = lastDate.isAfter('2010-10-19') ? lastDate : moment(key);
