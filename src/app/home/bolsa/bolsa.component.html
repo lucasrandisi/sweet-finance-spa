@@ -1,0 +1,51 @@
+<div class="container-body">
+    
+    <div class="grid grid-cols-4">
+        <div class="container-list">
+            <span class="font-normal text-3xl">Mis listas</span>
+        </div>
+
+        <div class="col-span-3">
+            <div class="container-find">
+                <form [formGroup]="form" (ngSubmit)="find_ticker()">
+                    <mat-form-field appearance="legacy">
+                        <mat-label>Ticker</mat-label>
+                        <input formControlName="ticker" autocomplete="false" matInput>
+                    </mat-form-field>
+                    
+                    <button mat-raised-button type="submit">Buscar</button>
+                </form>
+
+                <div class="table-fixed text-center">
+                    <thead>
+                        <tr>
+                            <th class="w-1/6">Ticker</th>
+                            <th class="w-1/4">Compañía</th>
+                            <th class="w-1/6">Industria</th>
+                            <th class="w-1/6">Última cotización</th>
+                            <th class="w-1/8">SMA21 Diaria</th>
+                            <th class="w-1/8">EMA200 Diaria</th>
+                            <th class="w-1/8">RSI Diario</th>
+                            <th class="w-1/6">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{symbol}}</td>
+                            <td>{{name}}</td>
+                            <td>{{industria}}</td>
+                            <td>{{price}}</td>
+                            <td>{{sma21_value}}</td>
+                            <td>{{ema200_value}}</td>
+                            <td>{{rsi_value}}</td>
+                            <td *ngIf="estado_compra" class="compra">COMPRA</td>
+                            <td *ngIf="estado_venta" class="venta">VENTA</td>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

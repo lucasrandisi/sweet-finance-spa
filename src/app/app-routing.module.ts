@@ -5,8 +5,6 @@ import { RegisterComponent } from './auth/register/register.component';
 import { LoggedInGuard } from './shared/guards/logged-in.guard';
 import { LoggedOutGuard } from './shared/guards/logged-out.guard';
 
-//corregir, llamar desde el home
-import { InfoComponent } from './home/info/info.component';
 
 const routes: Routes = [
 	{
@@ -20,9 +18,9 @@ const routes: Routes = [
 		canActivate: [LoggedOutGuard]
 	},
 	{
-		path: 'home',
+		path: '',
 		loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
-		//canActivateChild: [LoggedInGuard]
+		canActivateChild: [LoggedInGuard]
 	}
 	
 ];
