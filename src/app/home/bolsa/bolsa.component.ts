@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import * as moment from 'moment';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-bolsa',
@@ -14,7 +15,7 @@ export class BolsaComponent implements OnInit {
   form: FormGroup;
   symbol: string;
   name: string;
-  industria: string;
+  mercado: string;
   price: string;
   ema21: string;
   ema21_value : string;
@@ -43,7 +44,8 @@ export class BolsaComponent implements OnInit {
 	}
 
 	find_ticker() {
-		//request for ticker data
+		//request for ticker data in alpha-vantage
+		/*
 		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
 			params: {
 			function: 'OVERVIEW',
@@ -57,7 +59,49 @@ export class BolsaComponent implements OnInit {
 			this.industria = this.convertUpperLower(this.industria);
 			this.price = response[0].AnalystTargetPrice;
 		});
+		*/
 
+		//request for ticker data
+		this.http.get(`${environment.apiUrl}/twelve-data/stocks`,{
+			params: {
+			symbol: this.form.value['ticker']
+			}
+		}).subscribe((response:any)=>{
+			//console.log(response); //para mostrar en la consola
+			this.name = response[0].name;
+			this.symbol = response[0].symbol;
+			this.mercado = this.findExchange(response); //trae muchos mercados por eso el find
+			console.log(response);	
+		});
+
+		//request for price
+		this.http.get(`${environment.apiUrl}/twelve-data/price`,{
+			params: {
+			symbol: this.form.value['ticker']
+			}
+		}).subscribe((response:any)=>{
+			this.price = response;
+			this.price = this.price.substr(0, this.price.length-3);
+		});
+		
+
+		//request for RSI
+		this.http.get(`${environment.apiUrl}/twelve-data/rsi`,{
+			params: {
+				symbol: this.form.value['ticker'],
+				interval: '1day'
+				}
+			}).subscribe((response:any)=>{
+				/*
+				this.rsi = response[0]['Technical Analysis: RSI'];
+				const last_rsi = this.getLast(this.rsi);
+				this.rsi_value = response[0]['Technical Analysis: RSI'][last_rsi].RSI;
+				this.rsi_value = this.rsi_value.substr(0, this.rsi_value.length-2);
+				*/
+				console.log(response);
+		});	
+
+		/*
 		//request for ema21
 		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
 			params: {
@@ -118,9 +162,11 @@ export class BolsaComponent implements OnInit {
 				this.rsi_value = response[0]['Technical Analysis: RSI'][last_rsi].RSI;
 				this.rsi_value = this.rsi_value.substr(0, this.rsi_value.length-2);
 		});	
+		*/
 		
 	}
 
+	/*
 	convertUpperLower(cadena : string){
 		var splitStr = cadena.toLowerCase().split(' ');
   	 	for (var i = 0; i < splitStr.length; i++) {
@@ -128,6 +174,7 @@ export class BolsaComponent implements OnInit {
    		}
    		return splitStr.join(' '); 
 	}
+	*/
 
 	getLast(object_sma: any){
 		let	lastDate = moment('1940-07-01');
@@ -136,5 +183,12 @@ export class BolsaComponent implements OnInit {
 		}
 		return lastDate.format('YYYY-MM-DD').toString();
 	}
-
+	
+	findExchange(array : any){
+		for (let object of array){
+			if (object.currency == "USD"){
+				return object.exchange;
+			}
+		}
+	}
 }
