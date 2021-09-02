@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 export class TradingComponent implements OnInit {
 
   ticker: FormGroup;
-  price : number;
+  price : string;
 
   constructor(private http: HttpClient) { }
 
@@ -23,14 +23,21 @@ export class TradingComponent implements OnInit {
 
   find_ticker() {
 		//request for ticker data
-		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
+		this.http.get(`${environment.apiUrl}/twelve-data/price`,{
 			params: {
-			function: 'OVERVIEW',
 			symbol: this.ticker.value['ticker']
 			}
 		}).subscribe((response:any)=>{
-			//console.log(response); //para mostrar en la consola
-			this.price = response[0].AnalystTargetPrice;
+			this.price = response; 
+			this.price = this.price.substr(0, this.price.length-3);
+		});
+
+		this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
+			params: {
+			symbol: this.ticker.value['ticker']
+			}
+		}).subscribe((response:any)=>{
+			console.log(response);
 		});
   }
 

@@ -3,7 +3,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import * as moment from 'moment';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-bolsa',
@@ -71,7 +70,6 @@ export class BolsaComponent implements OnInit {
 			this.name = response[0].name;
 			this.symbol = response[0].symbol;
 			this.mercado = this.findExchange(response); //trae muchos mercados por eso el find
-			console.log(response);	
 		});
 
 		//request for price
