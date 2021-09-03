@@ -108,7 +108,6 @@ export class BolsaComponent implements OnInit {
 				time_period: '21'
 				}
 			}).subscribe((response:any)=>{
-				console.log(response);
 				this.ema21 = response.values[0].ema;
 				this.ema21 = this.ema21.substr(0, this.ema21.length-3);
 

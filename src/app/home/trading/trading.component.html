@@ -20,13 +20,32 @@
                 <button mat-raised-button type="submit">Buscar</button>
             </form>
 
-            <div class="grid grid-cols-4">
-                <h3>Cotización</h3>
-                <h3>Cambio en 24h</h3>
-                <h3>Máx en 24h</h3>
-                <h3>Mín en 24h</h3>
-                <p>{{price}}</p>
             
+            <div class="grid grid-cols-4">
+                <span class="font-bold">Cotización</span>
+                <span class="font-bold">Cambio en 24h</span>
+                <span class="font-bold">Máx en 24h</span>
+                <span class="font-bold">Mín en 24h</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="price">{{price}}</span>
+                <span *ngIf="price">{{change}}</span>
+                <span *ngIf="price">{{max24}}</span>
+                <span *ngIf="price">{{min24}}</span>
+                <span class="font-bold">Estado</span>
+                <span class="font-bold">Volumen</span>
+                <span class="font-bold">Máx en 52s</span>
+                <span class="font-bold">Mín en 52s</span>
+                <span *ngIf="!estado" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="estado">{{estado}}</span>
+                <span *ngIf="price">{{volume}}</span>
+                <span *ngIf="price">{{max52}}</span>
+                <span *ngIf="price">{{min52}}</span>
             </div>
             
         </div>
