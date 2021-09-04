@@ -6,17 +6,19 @@ import { HomeComponent } from './home/home.component';
 import { MatButtonModule } from '@angular/material/button';
 import { InfoComponent } from './info/info.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card'; 
 import { BolsaComponent } from './bolsa/bolsa.component'; 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+import { TradingComponent } from './trading/trading.component';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
   		InfoComponent,
-   		BolsaComponent
+   		BolsaComponent,
+     	TradingComponent
 	],
 	imports: [
 		CommonModule,

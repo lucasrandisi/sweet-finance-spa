@@ -14,18 +14,18 @@ export class BolsaComponent implements OnInit {
   form: FormGroup;
   symbol: string;
   name: string;
-  industria: string;
+  mercado: string;
   price: string;
-  sma21: string;
-  sma21_value : string;
+  ema21: string;
+  //ema21_value : string;
   ema200 : string;
-  ema200_value : string;
+  //ema200_value : string;
   rsi : string;
-  rsi_value : string;
+  //rsi_value : string;
   estado_compra : boolean;
   estado_venta : boolean;
 
-  sma21_value_number : number;
+  ema21_value_number : number;
   price_number : number;
 
 
@@ -43,7 +43,8 @@ export class BolsaComponent implements OnInit {
 	}
 
 	find_ticker() {
-		//request for ticker data
+		//request for ticker data in alpha-vantage
+		/*
 		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
 			params: {
 			function: 'OVERVIEW',
@@ -57,69 +58,85 @@ export class BolsaComponent implements OnInit {
 			this.industria = this.convertUpperLower(this.industria);
 			this.price = response[0].AnalystTargetPrice;
 		});
+		*/
 
-		//request for sma21
-		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
+		//request for ticker data in twelve-data
+		this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
 			params: {
-				function: 'SMA',
+			symbol: this.form.value['ticker']
+			}
+		}).subscribe((response:any)=>{
+			//console.log(response); //para mostrar en la consola
+			this.name = response.name;
+			this.symbol = response.symbol;
+			this.mercado = response.exchange;
+		});
+
+		//request for price
+		this.http.get(`${environment.apiUrl}/twelve-data/price`,{
+			params: {
+			symbol: this.form.value['ticker']
+			}
+		}).subscribe((response:any)=>{
+			this.price = response.price;
+			this.price = this.price.substr(0, this.price.length-3);
+		});
+		
+
+		//request for RSI
+		this.http.get(`${environment.apiUrl}/twelve-data/rsi`,{
+			params: {
 				symbol: this.form.value['ticker'],
-				interval: 'daily',
-				time_period: '21',
-				series_type: 'close',
-				datatype: 'json'
+				interval: '1day'
 				}
 			}).subscribe((response:any)=>{
-				this.sma21 = response[0]['Technical Analysis: SMA'];
-				const last_sma21 = this.getLastSma21(this.sma21);
-				this.sma21_value = response[0]['Technical Analysis: SMA'][last_sma21].SMA;
-				this.sma21_value = this.sma21_value.substr(0, this.sma21_value.length-2);
-				
+				/*
+				this.rsi = response[0]['Technical Analysis: RSI'];
+				const last_rsi = this.getLast(this.rsi);
+				this.rsi_value = response[0]['Technical Analysis: RSI'][last_rsi].RSI;
+				this.rsi_value = this.rsi_value.substr(0, this.rsi_value.length-2);
+				*/
+				this.rsi = response.values[0].rsi;
+				this.rsi = this.rsi.substr(0, this.rsi.length-3);
+		});	
+
+		//request for ema21
+		this.http.get(`${environment.apiUrl}/twelve-data/ema`,{
+			params: {
+				symbol: this.form.value['ticker'],
+				interval: '1day',
+				time_period: '21'
+				}
+			}).subscribe((response:any)=>{
+				this.ema21 = response.values[0].ema;
+				this.ema21 = this.ema21.substr(0, this.ema21.length-3);
+
 				//calculate state
-				this.sma21_value_number = +this.sma21_value;
+				this.ema21_value_number = +this.ema21;
 				this.price_number = +this.price;
-				if (this.sma21_value_number <= this.price_number){
+				if (this.ema21_value_number <= this.price_number){
 					this.estado_compra = true;
 				} else {
 					this.estado_venta = true;
 				}
-		});
+		});	
 
 		//request for ema200
-		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
+		this.http.get(`${environment.apiUrl}/twelve-data/ema`,{
 			params: {
-				function: 'EMA',
 				symbol: this.form.value['ticker'],
-				interval: 'daily',
-				time_period: '200',
-				series_type: 'close',
-				datatype: 'json'
+				interval: '1day',
+				time_period: '200'
 				}
 			}).subscribe((response:any)=>{
-				this.ema200 = response[0]['Technical Analysis: EMA'];
-				const last_ema200 = this.getLastSma21(this.ema200);
-				this.ema200_value = response[0]['Technical Analysis: EMA'][last_ema200].EMA;
-				this.ema200_value = this.ema200_value.substr(0, this.ema200_value.length-2);
+				console.log(response);
+				this.ema200 = response.values[0].ema;
+				this.ema200 = this.ema200.substr(0, this.ema200.length-3);
 		});
-
-		//request for RSI
-		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
-			params: {
-				function: 'RSI',
-				symbol: this.form.value['ticker'],
-				interval: 'daily',
-				time_period: '14',
-				series_type: 'close',
-				datatype: 'json'
-				}
-			}).subscribe((response:any)=>{
-				this.rsi = response[0]['Technical Analysis: RSI'];
-				const last_rsi = this.getLastSma21(this.rsi);
-				this.rsi_value = response[0]['Technical Analysis: RSI'][last_rsi].RSI;
-				this.rsi_value = this.rsi_value.substr(0, this.rsi_value.length-2);
-		});	
-		
 	}
 
+	/*
+	//en caso de que venga formateado como APPLE INC.
 	convertUpperLower(cadena : string){
 		var splitStr = cadena.toLowerCase().split(' ');
   	 	for (var i = 0; i < splitStr.length; i++) {
@@ -127,13 +144,26 @@ export class BolsaComponent implements OnInit {
    		}
    		return splitStr.join(' '); 
 	}
+	*/
 
-	getLastSma21(object_sma: any){
+	/*
+	// en caso de necesitar extraer el valor de la fecha más cercana
+	getLast(object_sma: any){
 		let	lastDate = moment('1940-07-01');
 		for(const key in object_sma){
 			lastDate = lastDate.isAfter('2010-10-19') ? lastDate : moment(key);
 		}
 		return lastDate.format('YYYY-MM-DD').toString();
 	}
-
+	*/
+	
+	/*
+	//para cuando la consulta traía muchos exchanges
+	findExchange(array : any){
+		for (let object of array){
+			if (object.currency == "USD"){
+				return object.exchange;
+			}
+		}
+	}*/
 }
