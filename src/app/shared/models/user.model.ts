@@ -3,6 +3,7 @@ import { environment } from "src/environments/environment";
 export interface UserInterface {
     name: string;
     email: string;
+    finance: number;
 }
 
 export class User implements UserInterface {
@@ -10,6 +11,8 @@ export class User implements UserInterface {
 
     name: string;
     email: string;
+    finance: number;
+
 
     constructor(props: Partial<UserInterface>) {
         Object.assign(this, props)
