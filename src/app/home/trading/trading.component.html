@@ -2,7 +2,7 @@
 
     <div class="grid grid-cols-2">
         <div align="center" style="margin-top:1%">
-            <h2>Dinero: $F asd</h2>
+            <h2>Dinero: $F {{finance}}</h2>
         </div>
     </div>
     
@@ -20,7 +20,6 @@
                 <button mat-raised-button type="submit">Buscar</button>
             </form>
 
-            
             <div class="grid grid-cols-4">
                 <span class="font-bold">Cotización</span>
                 <span class="font-bold">Cambio en 24h</span>
@@ -48,6 +47,62 @@
                 <span *ngIf="price">{{min52}}</span>
             </div>
             
+            <div class="container-trading">
+
+                <div class="grid grid-cols-3">
+                    <button mat-button>Instantánea</button>
+                    <button mat-button>Orden Limit</button>
+                    <button mat-button>Orden Stop-Limit</button>
+                </div>
+                <mat-divider></mat-divider>
+
+                <!--Instantánea-->
+                <div id="instantanea">
+
+                    <div class="grid grid-cols-3">
+                        <div class="col-span-2">
+                            <span class="font-medium text-base">Ticker: {{symbol}}</span>
+
+                            <form [formGroup]="buy" (ngSubmit)="buy_ticker()">
+                                <mat-form-field appearance="legacy">
+                                    <mat-label>Cantidad a comprar</mat-label>
+                                    <input formControlName="amount" autocomplete="false" matInput>
+                                </mat-form-field>
+                                
+                                <button mat-stroked-button class="button-buy" type="submit">Comprar</button>
+                            </form>
+
+                            <form [formGroup]="sell" (ngSubmit)="sell_ticker()">
+                                <mat-form-field appearance="legacy">
+                                    <mat-label>Cantidad a vender</mat-label>
+                                    <input formControlName="amount" autocomplete="false" matInput>
+                                </mat-form-field>
+                                
+                                <button mat-stroked-button class="button-sell" type="submit">Vender</button>
+                            </form>
+                        </div>
+
+                        <div class="container-hint">
+                            <p class="font-semibold text-xs">
+                                En esta sección podrás convertir al instante dinero de Sweet Finance ($F) 
+                                a tickers mediante la compra de acciones (por ejemplo IBM) o 
+                                viceversa mediante la venta.
+                            </p>
+                            <p class="font-semibold text-xs">
+                                Si no cuentas con el mínimo requerido de $F puedes recargar 
+                                ingresando a Tu Cuenta.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    
+                </div>
+
+            </div>
+
+
+
         </div>
 
         <!--recompensas-->
