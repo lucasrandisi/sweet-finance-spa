@@ -11,6 +11,9 @@ import { environment } from 'src/environments/environment';
 export class TradingComponent implements OnInit {
 
   ticker: FormGroup;
+  buy: FormGroup;
+  sell: FormGroup;
+
   price : string;
   change: string;
   max24: string;
@@ -22,12 +25,29 @@ export class TradingComponent implements OnInit {
   ema21_value_number: number;
   price_number: number;
   estado: string;
+  symbol: string;
+  finance: number;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.ticker = new FormGroup({
+		this.ticker = new FormGroup({
 			ticker: new FormControl()
+		});
+
+		this.buy = new FormGroup({
+			amount: new FormControl()
+		});
+
+		this.sell = new FormGroup({
+			amount: new FormControl()
+		});
+			
+		this.http.get(`${environment.apiUrl}/me`,{
+			params: {
+			}
+		}).subscribe((response:any)=>{
+			this.finance = response.data.finance; 
 		});
   }
 
@@ -47,6 +67,7 @@ export class TradingComponent implements OnInit {
 			symbol: this.ticker.value['ticker']
 			}
 		}).subscribe((response:any)=>{
+			this.symbol = response.symbol;
 			this.change = response.percent_change;
 			this.change = this.change.substr(0, this.change.length-3);
 			this.change = this.change.concat("%");
@@ -90,6 +111,24 @@ export class TradingComponent implements OnInit {
 				}
 		});	
     }
+
+	buy_ticker(){
+		this.http.post(`${environment.apiUrl}/stocks/${this.symbol}/buy`,{
+			amount: this.buy.value['amount']
+		}).subscribe((response:any)=>{
+			this.finance = response.data.user.finance;
+		});
+	}
+
+	sell_ticker(){
+		this.http.post(`${environment.apiUrl}/stocks/${this.symbol}/sell`,{
+			amount: this.sell.value['amount']
+		}).subscribe((response:any)=>{
+			this.finance = response.data.user.finance;
+		},(error:any)=>{
+			console.log(error);
+		} );
+	}
 
 	convertVolume(vol : any){
 		if(vol.length>6){
