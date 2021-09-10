@@ -125,7 +125,9 @@ export class TradingComponent implements OnInit {
 			amount: this.sell.value['amount']
 		}).subscribe((response:any)=>{
 			this.finance = response.data.user.finance;
-		});
+		},(error:any)=>{
+			console.log(error);
+		} );
 	}
 
 	convertVolume(vol : any){
