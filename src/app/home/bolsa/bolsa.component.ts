@@ -236,7 +236,8 @@ export class BolsaComponent implements OnInit {
 					let open = +day.open.substr(0, day.open.length-3);
 					let high = +day.high.substr(0, day.high.length-3);
 					let low = +day.low.substr(0, day.low.length-3);
-					let close = +day.close.substr(0, day.close.length-3);
+					let close = day.close.substr(0, day.close.length-3);
+					
 					let volume = +Math.floor(day.volume/1000000);
 
 					if(this.flag_min_max){
@@ -275,16 +276,16 @@ export class BolsaComponent implements OnInit {
 					  }
 					],
 					chart: {
-					  type: "candlestick",
-					  height: 300,
-					  id: "candles",
-					  toolbar: {
-						autoSelected: "pan",
-						show: false
-					  },
-					  zoom: {
-						enabled: false
-					  },
+						type: "candlestick",
+						height: 300,
+						id: "candles",
+						toolbar: {
+							autoSelected: "pan",
+							show: false
+						},
+						zoom: {
+							enabled: false
+						},
 					},
 					plotOptions: {
 					  candlestick: {
@@ -294,14 +295,13 @@ export class BolsaComponent implements OnInit {
 						}
 					  },
 					},
-					/*
+					xaxis: {
+					  type: "datetime"
+					},	
 					yaxis: {
 						max: this.max_candle,
 						min: this.min_candle
-					},*/
-					xaxis: {
-					  type: "datetime"
-					},		
+					}
 				};
 
 				this.chartBarOptions = {
