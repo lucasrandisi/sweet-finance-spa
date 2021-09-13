@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <div class="chart-box">
+            <div *ngIf="flag" class="chart-box">
                 <div id="chart-candlestick">
                   <apx-chart
                     #chartCandle
@@ -67,7 +67,7 @@
                     [plotOptions]="chartBarOptions.plotOptions"
                   ></apx-chart>
                 </div>
-              </div>
+            </div>
         </div>
     </div>
 
