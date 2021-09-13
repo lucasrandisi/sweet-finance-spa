@@ -229,14 +229,15 @@ export class BolsaComponent implements OnInit {
 				this.max_candle = 0;
 				this.min_candle = 9999999999;
 				for (let day of response.values){
+					//console.log(response.values);
 					let year = +day.datetime.substr(0,4);
-					let month = +day.datetime.substr(5,2);
+					let month = +day.datetime.substr(5,2)-1;
 					let day_s = +day.datetime.substr(8,2);
-					let open = +day.open;
-					let high = +day.high;
-					let low = +day.low;
-					let close = +day.close;
-					let volume = +day.volume;
+					let open = +day.open.substr(0, day.open.length-3);
+					let high = +day.high.substr(0, day.high.length-3);
+					let low = +day.low.substr(0, day.low.length-3);
+					let close = +day.close.substr(0, day.close.length-3);
+					let volume = +Math.floor(day.volume/1000000);
 
 					if(this.flag_min_max){
 						this.min_year = year;
@@ -314,8 +315,8 @@ export class BolsaComponent implements OnInit {
 						height: 160,
 						type: "bar",
 						brush: {
-						enabled: true,
-						target: "candles"
+							enabled: true,
+							target: "candles"
 						},
 						selection: {
 						enabled: true,
@@ -365,7 +366,7 @@ export class BolsaComponent implements OnInit {
 					},
 					yaxis: {
 						labels: {
-						show: false
+						show: true
 						},
 					}
 				};

@@ -11,8 +11,8 @@ const routes: Routes = [
 		component: HomeComponent,
 		children:[
 			{
-			path: 'info',
-			component: InfoComponent,
+				path: 'info',
+				component: InfoComponent,
 			},
 			{
 				path: 'bolsa',
