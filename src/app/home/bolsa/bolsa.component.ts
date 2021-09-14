@@ -63,14 +63,9 @@ export class BolsaComponent implements OnInit {
 	//y: Volume
 	seriesDataLinear : SerieDataLinear[] = [];
 
-	min_year : number;
-	min_month : number;
-	min_day : number;
-	max_year : number;
-	max_month : number;
-	max_day : number;
 	max_candle : number;
 	min_candle : number;
+	max_vol : number;
 	flag_min_max : boolean;
 
  	constructor(private http: HttpClient) {
@@ -216,6 +211,7 @@ export class BolsaComponent implements OnInit {
 
 	//gráfico de velas + volumen
 	draw(){
+		//request for velas
 		this.http.get(`${environment.apiUrl}/twelve-data/time_series`,{
 			params: {
 				symbol: this.form.value['ticker'],
@@ -225,27 +221,26 @@ export class BolsaComponent implements OnInit {
 			}).subscribe((response:any)=>{
 				this.seriesData = [];
 				this.seriesDataLinear = [];
-				this.flag_min_max = true;
 				this.max_candle = 0;
 				this.min_candle = 9999999999;
+				let max_carachter = 0;
+				let volume_avg_lenght = 0;
+
 				for (let day of response.values){
-					//console.log(response.values);
 					let year = +day.datetime.substr(0,4);
 					let month = +day.datetime.substr(5,2)-1;
 					let day_s = +day.datetime.substr(8,2);
 					let open = +day.open.substr(0, day.open.length-3);
-					let high = +day.high.substr(0, day.high.length-3);
+					let high_s = day.high.substr(0, day.high.length-3);
+					let high = +high_s;
 					let low = +day.low.substr(0, day.low.length-3);
 					let close = day.close.substr(0, day.close.length-3);
-					
-					let volume = +Math.floor(day.volume/1000000);
 
-					if(this.flag_min_max){
-						this.min_year = year;
-						this.min_month = month;
-						this.min_day = day;
-						this.flag_min_max = false;
+					if(high_s.length>max_carachter){
+						max_carachter = high_s.length;
 					}
+	
+					volume_avg_lenght = volume_avg_lenght + day.volume.length;
 
 					if(high > this.max_candle){
 						this.max_candle = high;
@@ -255,17 +250,39 @@ export class BolsaComponent implements OnInit {
 						this.min_candle = low;
 					}
 
-					this.max_year = year;
-					this.max_month = month;
-					this.max_day = day;
-
 					this.seriesData.push(
 						new SerieData(year, month, day_s, open, high, low, close)
-					);
+					);	
+				}
+
+				//corrección de volumenes erroneos provenientes de la API
+				this.max_vol = 0;
+				volume_avg_lenght = Math.floor(volume_avg_lenght/30);
+				for (let day of response.values){
+					let year = +day.datetime.substr(0,4);
+					let month = +day.datetime.substr(5,2)-1;
+					let day_s = +day.datetime.substr(8,2);
+					let volume_s = day.volume;
+
+					if(volume_s.length>volume_avg_lenght){
+						volume_s = volume_s.substr(0, volume_avg_lenght);
+					}
+
+					let volume = +(volume_s/1000000);
+
+					if (volume>this.max_vol){
+						this.max_vol = volume;
+					}
+
+					volume_s = volume.toString().substr(0, max_carachter);
+					console.log(volume_s);
+					console.log(max_carachter);
+
+					volume = +volume_s;
 
 					this.seriesDataLinear.push(
 						new SerieDataLinear(year, month, day_s, volume)
-					);	
+					);
 				}
 				
 				this.chartCandleOptions = {
@@ -278,29 +295,30 @@ export class BolsaComponent implements OnInit {
 					chart: {
 						type: "candlestick",
 						height: 300,
+						width: '100%',
 						id: "candles",
 						toolbar: {
 							autoSelected: "pan",
 							show: false
-						},
-						zoom: {
-							enabled: false
-						},
+						}
 					},
 					plotOptions: {
 					  candlestick: {
 						colors: {
-						  upward: "#3C90EB",
-						  downward: "#DF7D46"
+						  upward: "#13AE4B",
+						  downward: "#FF2400"
 						}
 					  },
 					},
 					xaxis: {
-					  type: "datetime"
+						type: "datetime",
+						labels:{
+							show: false
+					  	}
 					},	
 					yaxis: {
-						max: this.max_candle,
-						min: this.min_candle
+						max: this.max_candle + 0.5,
+						min: this.min_candle - 0.5
 					}
 				};
 
@@ -313,24 +331,11 @@ export class BolsaComponent implements OnInit {
 					],
 					chart: {
 						height: 160,
+						width: "100%",
 						type: "bar",
-						brush: {
-							enabled: true,
-							target: "candles"
-						},
-						selection: {
-						enabled: true,
-						xaxis: {
-							min: new Date(this.min_year, this.min_month, this.min_day),
-							max: new Date(this.max_year, this.max_month, this.max_day)
-						},
-						fill: {
-							color: "#ccc",
-							opacity: 0.4
-						},
-						stroke: {
-							color: "#0D47A1"
-						}
+						toolbar: {
+							autoSelected: "pan",
+							show: false
 						}
 					},
 					dataLabels: {
@@ -338,20 +343,14 @@ export class BolsaComponent implements OnInit {
 					},
 					plotOptions: {
 						bar: {
-						columnWidth: "80%",
+						columnWidth: "100%",
 						colors: {
 							ranges: [
 							{
-								from: -1000,
-								to: 0,
-								color: "#F15B46"
-							},
-							{
-								from: 1,
-								to: 10000,
-								color: "#FEB019"
-							}
-							]
+								from: 0,
+								to: 999999999999,
+								color: "#03A9F4"
+							}]
 						}
 						}
 					},
@@ -368,11 +367,15 @@ export class BolsaComponent implements OnInit {
 						labels: {
 						show: true
 						},
-					}
+						max: this.max_vol,
+						tickAmount: 4,
+					},
+					
 				};
 
-				this.flag = true;
+				this.flag = true;	
 		});
+
 	}
 
 }
