@@ -46,7 +46,10 @@ export class BolsaComponent implements OnInit {
 	rsi : string;
 	estado_compra : boolean;
 	estado_venta : boolean;
-	flag : boolean;
+	flag_candle = false;
+	flag_vol = false;
+	flag_rsi = false;
+	flag_macd = false;
 
 	ema21_value_number : number;
 	price_number : number;
@@ -54,6 +57,8 @@ export class BolsaComponent implements OnInit {
 	@ViewChild("chart") chart: ChartComponent;
 	public chartCandleOptions: any;
 	public chartBarOptions: any;
+	public chartRSIOptions: any;
+	public chartMACDOptions: any;
 
 	//x: new Date(Year, Month, Day), el mes enero es el 0
 	//y: [Open, High, Low, Close]
@@ -63,10 +68,16 @@ export class BolsaComponent implements OnInit {
 	//y: Volume
 	seriesDataLinear : SerieDataLinear[] = [];
 
+	seriesRSI : SerieDataLinear[] = [];
+
+	seriesMACD : SerieDataLinear[] = [];
+	seriesMACDSignal : SerieDataLinear[] = [];
+	seriesMACDHist : SerieDataLinear[] = [];
+
 	max_candle : number;
 	min_candle : number;
 	max_vol : number;
-	flag_min_max : boolean;
+	dif_lenght = 0;
 
  	constructor(private http: HttpClient) {
 	}
@@ -178,17 +189,6 @@ export class BolsaComponent implements OnInit {
 	}
 
 	/*
-	//en caso de que venga formateado como APPLE INC.
-	convertUpperLower(cadena : string){
-		var splitStr = cadena.toLowerCase().split(' ');
-  	 	for (var i = 0; i < splitStr.length; i++) {
-       		splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
-   		}
-   		return splitStr.join(' '); 
-	}
-	*/
-
-	/*
 	// en caso de necesitar extraer el valor de la fecha más cercana
 	getLast(object_sma: any){
 		let	lastDate = moment('1940-07-01');
@@ -198,20 +198,11 @@ export class BolsaComponent implements OnInit {
 		return lastDate.format('YYYY-MM-DD').toString();
 	}
 	*/
-	
-	/*
-	//para cuando la consulta traía muchos exchanges
-	findExchange(array : any){
-		for (let object of array){
-			if (object.currency == "USD"){
-				return object.exchange;
-			}
-		}
-	}*/
 
 	//gráfico de velas + volumen
 	draw(){
-		//request for velas
+		
+		//request for velas + volumen
 		this.http.get(`${environment.apiUrl}/twelve-data/time_series`,{
 			params: {
 				symbol: this.form.value['ticker'],
@@ -223,21 +214,22 @@ export class BolsaComponent implements OnInit {
 				this.seriesDataLinear = [];
 				this.max_candle = 0;
 				this.min_candle = 9999999999;
-				let max_carachter = 0;
 				let volume_avg_lenght = 0;
+				let max_lenght_candle = 0;
 
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
 					let month = +day.datetime.substr(5,2)-1;
 					let day_s = +day.datetime.substr(8,2);
-					let open = +day.open.substr(0, day.open.length-3);
-					let high_s = day.high.substr(0, day.high.length-3);
-					let high = +high_s;
-					let low = +day.low.substr(0, day.low.length-3);
-					let close = day.close.substr(0, day.close.length-3);
+					let open = +day.open;
+					let high = +day.high;
+					let low = +day.low;
+					let close = +day.close;
 
-					if(high_s.length>max_carachter){
-						max_carachter = high_s.length;
+					let high_lenght = day.high.length;
+
+					if(high_lenght>max_lenght_candle){
+						max_lenght_candle = high_lenght;
 					}
 	
 					volume_avg_lenght = volume_avg_lenght + day.volume.length;
@@ -257,6 +249,7 @@ export class BolsaComponent implements OnInit {
 
 				//corrección de volumenes erroneos provenientes de la API
 				this.max_vol = 0;
+				let max_lenght_vol = 0;
 				volume_avg_lenght = Math.floor(volume_avg_lenght/30);
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
@@ -268,22 +261,22 @@ export class BolsaComponent implements OnInit {
 						volume_s = volume_s.substr(0, volume_avg_lenght);
 					}
 
+					if(volume_s.length>max_lenght_vol){
+						max_lenght_vol = volume_s.length;
+					}
+
 					let volume = +(volume_s/1000000);
 
 					if (volume>this.max_vol){
 						this.max_vol = volume;
 					}
 
-					volume_s = volume.toString().substr(0, max_carachter);
-					console.log(volume_s);
-					console.log(max_carachter);
-
-					volume = +volume_s;
-
 					this.seriesDataLinear.push(
 						new SerieDataLinear(year, month, day_s, volume)
 					);
 				}
+
+				this.dif_lenght = Math.abs(max_lenght_candle - max_lenght_vol) + 2;
 				
 				this.chartCandleOptions = {
 					series: [
@@ -312,13 +305,12 @@ export class BolsaComponent implements OnInit {
 					},
 					xaxis: {
 						type: "datetime",
-						labels:{
-							show: false
-					  	}
+						position: "top"
 					},	
 					yaxis: {
 						max: this.max_candle + 0.5,
-						min: this.min_candle - 0.5
+						min: this.min_candle - 0.5,
+						decimalsInFloat: 2
 					}
 				};
 
@@ -330,7 +322,7 @@ export class BolsaComponent implements OnInit {
 						}
 					],
 					chart: {
-						height: 160,
+						height: 120,
 						width: "100%",
 						type: "bar",
 						toolbar: {
@@ -359,23 +351,202 @@ export class BolsaComponent implements OnInit {
 					},
 					xaxis: {
 						type: "datetime",
-						axisBorder: {
-						offsetX: 13
+						labels:{
+							show: false
 						}
 					},
 					yaxis: {
 						labels: {
-						show: true
+							how: true
 						},
 						max: this.max_vol,
 						tickAmount: 4,
+						decimalsInFloat: this.dif_lenght
 					},
 					
-				};
+				};	
 
-				this.flag = true;	
+				this.flag_candle = true;
+				this.flag_vol = true;
 		});
 
-	}
+		//request for RSI
+		this.http.get(`${environment.apiUrl}/twelve-data/rsi`,{
+			params: {
+				symbol: this.form.value['ticker'],
+				interval: '1day',
+				outputsize: '30'
+				}
+			}).subscribe((response:any)=>{
+				this.seriesRSI = [];
 
+				for (let day of response.values){
+					let year = +day.datetime.substr(0,4);
+					let month = +day.datetime.substr(5,2)-1;
+					let day_s = +day.datetime.substr(8,2);
+					let rsi = +day.rsi;
+
+					this.seriesRSI.push(
+						new SerieDataLinear(year, month, day_s, rsi)
+					);	
+				}
+
+				this.chartRSIOptions = {
+					series: [{
+						name: 'RSI',
+						data: this.seriesRSI
+					  }],
+					chart: {
+						type: 'line',
+						height: 120,
+						toolbar: {
+							autoSelected: "pan",
+							show: false
+						}
+					},
+					annotations: {
+						yaxis: [
+						  {
+							y: 30,
+							y2: 70,
+							fillColor: '#D499ED',
+						  }
+						]
+					},
+					stroke: { 
+						width: 2,
+        				curve: "smooth",
+						colors: "#9400D3"
+					},
+					markers: {
+						size: 0,
+					},
+					yaxis: {
+						labels: {
+							show: true
+						},
+						min: 0,
+						max: 100,
+						tickAmount: 4,
+						decimalsInFloat: this.dif_lenght
+					},
+					xaxis: {
+						type: 'datetime',
+						labels:{
+							show: false
+						}
+					},
+				};
+
+				this.flag_rsi = true;
+		});	
+
+		//request for MACD
+		this.http.get(`${environment.apiUrl}/twelve-data/macd`,{
+			params: {
+				symbol: this.form.value['ticker'],
+				interval: '1day',
+				outputsize: '30'
+				}
+			}).subscribe((response:any)=>{
+				this.seriesMACD = [];
+				this.seriesMACDHist = [];
+				this.seriesMACDSignal = [];
+
+				for (let day of response.values){
+					let year = +day.datetime.substr(0,4);
+					let month = +day.datetime.substr(5,2)-1;
+					let day_s = +day.datetime.substr(8,2);
+					let macd = +day.macd;
+					let macd_signal = +day.macd_signal;
+					let macd_hist = +day.macd_hist;
+
+					this.seriesMACD.push(
+						new SerieDataLinear(year, month, day_s, macd)
+					);	
+					this.seriesMACDSignal.push(
+						new SerieDataLinear(year, month, day_s, macd_signal)
+					);
+					this.seriesMACDHist.push(
+						new SerieDataLinear(year, month, day_s, macd_hist)
+					);
+				}
+
+				this.chartMACDOptions = {
+					series:[
+						{
+							name: "MACD",
+							type: "line",
+							data: this.seriesMACD
+						},
+						{
+							name: "MACD Signal",
+							type: "line",
+							data: this.seriesMACDSignal
+						},
+						{
+							name: "MACD Hist",
+							type: "bar",
+							data: this.seriesMACDHist
+						}
+					],
+					chart: {
+						height: 120,
+						type: "line",
+						stacked: false,
+						toolbar: {
+							autoSelected: "pan",
+							show: false
+						}
+					},
+					stroke: {
+						width: [2, 2, 0],
+						curve: "smooth",
+						colors: ["#003166","#ff6600"]
+					},
+					plotOptions: {
+						bar: {
+							columnWidth: "100%",
+							colors: {
+							  ranges: [
+								{
+								  from: -9999,
+								  to: 0,
+								  color: "#ED2939"
+								},
+								{
+								  from: 0,
+								  to: 9999,
+								  color: "#4FA64F"
+								}
+							  ]
+							}
+						}
+					},
+					markers: {
+						size: 0
+					},
+					xaxis: {
+						type: "datetime",
+						labels:{
+							show: false
+						}
+					},
+					yaxis: {
+						labels: {
+							show: true
+						},
+						tickAmount: 4,
+						decimalsInFloat: this.dif_lenght
+					},
+					legend: {
+						show: false
+					}
+				};
+
+				this.flag_macd = true;
+			});		
+		}
+
+		
 }

@@ -45,28 +45,53 @@
                 </div>
             </div>
 
-            <div *ngIf="flag" class="chart-box">
-                <div id="chart-candlestick">
-                  <apx-chart
-                    #chartCandle
-                    [series]="chartCandleOptions.series"
-                    [chart]="chartCandleOptions.chart"
-                    [xaxis]="chartCandleOptions.xaxis"
-                    [yaxis]="chartCandleOptions.yaxis"
-                    [plotOptions]="chartCandleOptions.plotOptions"
-                  ></apx-chart>
+            <div class="chart-box">
+                <div *ngIf="flag_candle" id="chart-candlestick">
+                    <apx-chart
+                        #chartCandle
+                        [series]="chartCandleOptions.series"
+                        [chart]="chartCandleOptions.chart"
+                        [xaxis]="chartCandleOptions.xaxis"
+                        [yaxis]="chartCandleOptions.yaxis"
+                        [plotOptions]="chartCandleOptions.plotOptions"
+                    ></apx-chart>
                 </div>
-                <div id="chart-bar">
-                  <apx-chart
-                    #chartBar
-                    [series]="chartBarOptions.series"
-                    [chart]="chartBarOptions.chart"
-                    [xaxis]="chartBarOptions.xaxis"
-                    [yaxis]="chartBarOptions.yaxis"
-                    [dataLabels]="chartBarOptions.dataLabels"
-                    [stroke]="chartBarOptions.stroke"
-                    [plotOptions]="chartBarOptions.plotOptions"
-                  ></apx-chart>
+                <div *ngIf="flag_vol" id="chart-bar">
+                    <apx-chart
+                        #chartBar
+                        [series]="chartBarOptions.series"
+                        [chart]="chartBarOptions.chart"
+                        [xaxis]="chartBarOptions.xaxis"
+                        [yaxis]="chartBarOptions.yaxis"
+                        [dataLabels]="chartBarOptions.dataLabels"
+                        [stroke]="chartBarOptions.stroke"
+                        [plotOptions]="chartBarOptions.plotOptions"
+                    ></apx-chart>
+                </div>
+                <div *ngIf="flag_rsi" id="chart-rsi">
+                    <apx-chart
+                        #chartRSI
+                        [series]="chartRSIOptions.series"
+                        [chart]="chartRSIOptions.chart"
+                        [markers]="chartRSIOptions.markers"
+                        [xaxis]="chartRSIOptions.xaxis"
+                        [yaxis]="chartRSIOptions.yaxis"
+                        [stroke]="chartRSIOptions.stroke"
+                        [annotations]="chartRSIOptions.annotations"
+                        ></apx-chart>
+                </div>
+                <div *ngIf="flag_macd" id="chart-macd">
+                    <apx-chart
+                        #chartMACD
+                        [series]="chartMACDOptions.series"
+                        [chart]="chartMACDOptions.chart"
+                        [markers]="chartMACDOptions.markers"
+                        [xaxis]="chartMACDOptions.xaxis"
+                        [yaxis]="chartMACDOptions.yaxis"
+                        [stroke]="chartMACDOptions.stroke"
+                        [plotOptions]="chartMACDOptions.plotOptions"
+                        [legend]="chartMACDOptions.legend"
+                    ></apx-chart>
                 </div>
             </div>
         </div>
