@@ -54,6 +54,9 @@
                         [xaxis]="chartCandleOptions.xaxis"
                         [yaxis]="chartCandleOptions.yaxis"
                         [plotOptions]="chartCandleOptions.plotOptions"
+                        [title]="chartCandleOptions.title"     
+                        [legend]="chartCandleOptions.legend"
+                        [stroke]="chartCandleOptions.stroke"
                     ></apx-chart>
                 </div>
                 <div *ngIf="flag_vol" id="chart-bar">
@@ -66,19 +69,8 @@
                         [dataLabels]="chartBarOptions.dataLabels"
                         [stroke]="chartBarOptions.stroke"
                         [plotOptions]="chartBarOptions.plotOptions"
+                        [title]="chartBarOptions.title"
                     ></apx-chart>
-                </div>
-                <div *ngIf="flag_rsi" id="chart-rsi">
-                    <apx-chart
-                        #chartRSI
-                        [series]="chartRSIOptions.series"
-                        [chart]="chartRSIOptions.chart"
-                        [markers]="chartRSIOptions.markers"
-                        [xaxis]="chartRSIOptions.xaxis"
-                        [yaxis]="chartRSIOptions.yaxis"
-                        [stroke]="chartRSIOptions.stroke"
-                        [annotations]="chartRSIOptions.annotations"
-                        ></apx-chart>
                 </div>
                 <div *ngIf="flag_macd" id="chart-macd">
                     <apx-chart
@@ -91,7 +83,21 @@
                         [stroke]="chartMACDOptions.stroke"
                         [plotOptions]="chartMACDOptions.plotOptions"
                         [legend]="chartMACDOptions.legend"
+                        [title]="chartMACDOptions.title"
                     ></apx-chart>
+                </div>
+                <div *ngIf="flag_rsi" id="chart-rsi">
+                    <apx-chart
+                        #chartRSI
+                        [series]="chartRSIOptions.series"
+                        [chart]="chartRSIOptions.chart"
+                        [markers]="chartRSIOptions.markers"
+                        [xaxis]="chartRSIOptions.xaxis"
+                        [yaxis]="chartRSIOptions.yaxis"
+                        [stroke]="chartRSIOptions.stroke"
+                        [annotations]="chartRSIOptions.annotations"
+                        [title]="chartRSIOptions.title"
+                        ></apx-chart>
                 </div>
             </div>
         </div>

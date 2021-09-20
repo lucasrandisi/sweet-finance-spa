@@ -16,7 +16,7 @@ import {
 	ApexDataLabels,
 	ApexStroke,
 	YAxisAnnotations
-  } from "ng-apexcharts";
+} from "ng-apexcharts";
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -26,12 +26,12 @@ export type ChartOptions = {
 	plotOptions: ApexPlotOptions;
 	dataLabels: ApexDataLabels;
 	stroke: ApexStroke;
-  };
+};
 
 @Component({
-  selector: 'app-bolsa',
-  templateUrl: './bolsa.component.html',
-  styleUrls: ['./bolsa.component.scss']
+	selector: 'app-bolsa',
+	templateUrl: './bolsa.component.html',
+	styleUrls: ['./bolsa.component.scss']
 })
 
 export class BolsaComponent implements OnInit {
@@ -43,6 +43,10 @@ export class BolsaComponent implements OnInit {
 	price: string;
 	ema21: string;
 	ema200 : string;
+	max_ema200 = 0;
+	min_ema200 = 999999;
+	max_ema21 = 0;
+	min_ema21 = 999999;
 	rsi : string;
 	estado_compra : boolean;
 	estado_venta : boolean;
@@ -74,6 +78,9 @@ export class BolsaComponent implements OnInit {
 	seriesMACDSignal : SerieDataLinear[] = [];
 	seriesMACDHist : SerieDataLinear[] = [];
 
+	seriesEMA200 : SerieDataLinear[] = [];
+	seriesEMA21 : SerieDataLinear[] = [];
+
 	max_candle : number;
 	min_candle : number;
 	max_vol : number;
@@ -84,6 +91,7 @@ export class BolsaComponent implements OnInit {
 
   	ngOnInit(): void {
 		this.initializeForm();
+		this.find_ticker_form('AAPL');
 	}
 
 	initializeForm() {
@@ -92,7 +100,11 @@ export class BolsaComponent implements OnInit {
 		});
 	}
 
-	find_ticker() {
+	find_ticker(){
+		this.find_ticker_form(this.form.value['ticker'])
+	}
+
+	find_ticker_form(ticker: any) {
 		//request for ticker data in alpha-vantage
 		/*
 		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
@@ -113,7 +125,7 @@ export class BolsaComponent implements OnInit {
 		//request for ticker data in twelve-data
 		this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
 			params: {
-			symbol: this.form.value['ticker']
+			symbol: ticker
 			}
 		}).subscribe((response:any)=>{
 			//console.log(response); //para mostrar en la consola
@@ -124,40 +136,23 @@ export class BolsaComponent implements OnInit {
 			this.mercado = response.exchange;
 		});
 
-		//request for price
+		//request for actual price
 		this.http.get(`${environment.apiUrl}/twelve-data/price`,{
 			params: {
-			symbol: this.form.value['ticker']
+			symbol: ticker
 			}
 		}).subscribe((response:any)=>{
 			this.price = response.price;
 			this.price = this.price.substr(0, this.price.length-3);
 		});
-		
-
-		//request for RSI
-		this.http.get(`${environment.apiUrl}/twelve-data/rsi`,{
-			params: {
-				symbol: this.form.value['ticker'],
-				interval: '1day'
-				}
-			}).subscribe((response:any)=>{
-				/*
-				this.rsi = response[0]['Technical Analysis: RSI'];
-				const last_rsi = this.getLast(this.rsi);
-				this.rsi_value = response[0]['Technical Analysis: RSI'][last_rsi].RSI;
-				this.rsi_value = this.rsi_value.substr(0, this.rsi_value.length-2);
-				*/
-				this.rsi = response.values[0].rsi;
-				this.rsi = this.rsi.substr(0, this.rsi.length-3);
-		});	
 
 		//request for ema21
 		this.http.get(`${environment.apiUrl}/twelve-data/ema`,{
 			params: {
-				symbol: this.form.value['ticker'],
+				symbol: ticker,
 				interval: '1day',
-				time_period: '21'
+				time_period: '21',
+				outputsize: '45'
 				}
 			}).subscribe((response:any)=>{
 				this.ema21 = response.values[0].ema;
@@ -171,43 +166,75 @@ export class BolsaComponent implements OnInit {
 				} else {
 					this.estado_venta = true;
 				}
+
+				this.seriesEMA21 = [];
+
+				for (let day of response.values){
+					let year = +day.datetime.substr(0,4);
+					let month = +day.datetime.substr(5,2)-1;
+					let day_s = +day.datetime.substr(8,2);
+					let ema21_value = +day.ema;
+
+					this.seriesEMA21.push(
+						new SerieDataLinear(year, month, day_s, ema21_value)
+					);
+
+					if(ema21_value > this.max_ema21){
+						this.max_ema21 = ema21_value;
+					}
+
+					if(ema21_value < this.min_ema21){
+						this.min_ema21 = ema21_value;
+					}
+				}
 		});	
 
 		//request for ema200
 		this.http.get(`${environment.apiUrl}/twelve-data/ema`,{
 			params: {
-				symbol: this.form.value['ticker'],
+				symbol: ticker,
 				interval: '1day',
-				time_period: '200'
+				time_period: '200',
+				outputsize: '45'
 				}
 			}).subscribe((response:any)=>{
 				this.ema200 = response.values[0].ema;
 				this.ema200 = this.ema200.substr(0, this.ema200.length-3);
+
+				this.seriesEMA200 = [];
+
+				for (let day of response.values){
+					let year = +day.datetime.substr(0,4);
+					let month = +day.datetime.substr(5,2)-1;
+					let day_s = +day.datetime.substr(8,2);
+					let ema200_value = +day.ema;
+
+					this.seriesEMA200.push(
+						new SerieDataLinear(year, month, day_s, ema200_value)
+					);
+
+					if(ema200_value > this.max_ema200){
+						this.max_ema200 = ema200_value;
+					}
+
+					if(ema200_value < this.min_ema200){
+						this.min_ema200 = ema200_value;
+					}
+
+				}
 		});
 
-		this.draw();
+		this.draw(ticker);
 	}
-
-	/*
-	// en caso de necesitar extraer el valor de la fecha más cercana
-	getLast(object_sma: any){
-		let	lastDate = moment('1940-07-01');
-		for(const key in object_sma){
-			lastDate = lastDate.isAfter('2010-10-19') ? lastDate : moment(key);
-		}
-		return lastDate.format('YYYY-MM-DD').toString();
-	}
-	*/
 
 	//gráfico de velas + volumen
-	draw(){
-		
+	draw(ticker : any){
 		//request for velas + volumen
 		this.http.get(`${environment.apiUrl}/twelve-data/time_series`,{
 			params: {
-				symbol: this.form.value['ticker'],
+				symbol: ticker,
 				interval: '1day',
-				outputsize: '30'
+				outputsize: '45'
 				}
 			}).subscribe((response:any)=>{
 				this.seriesData = [];
@@ -247,10 +274,26 @@ export class BolsaComponent implements OnInit {
 					);	
 				}
 
+				if (this.min_ema200 < this.min_candle){
+					this.min_candle = this.min_ema200;
+				}
+
+				if (this.max_ema200 > this.max_candle){
+					this.max_candle = this.max_ema200;
+				}
+
+				if (this.min_ema21 < this.min_candle){
+					this.min_candle = this.min_ema21;
+				}
+
+				if (this.max_ema21 > this.max_candle){
+					this.max_candle = this.max_ema21;
+				}
+
 				//corrección de volumenes erroneos provenientes de la API
 				this.max_vol = 0;
 				let max_lenght_vol = 0;
-				volume_avg_lenght = Math.floor(volume_avg_lenght/30);
+				volume_avg_lenght = Math.floor(volume_avg_lenght/45);
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
 					let month = +day.datetime.substr(5,2)-1;
@@ -277,19 +320,32 @@ export class BolsaComponent implements OnInit {
 				}
 
 				this.dif_lenght = Math.abs(max_lenght_candle - max_lenght_vol) + 2;
+
+				console.log(this.seriesEMA21);
 				
 				this.chartCandleOptions = {
 					series: [
-					  {
-						name: "candle",
-						data: this.seriesData
-					  }
+						{
+							name: "EMA200",
+							type: "line",
+							data: this.seriesEMA200
+						},
+						{
+							name: "EMA21",
+							type: "line",
+							data: this.seriesEMA21
+						},
+						{
+							name: "candle",
+							type: "candlestick",
+							data: this.seriesData
+					 	}
 					],
 					chart: {
 						type: "candlestick",
+						staked: false,
 						height: 300,
 						width: '100%',
-						id: "candles",
 						toolbar: {
 							autoSelected: "pan",
 							show: false
@@ -311,7 +367,20 @@ export class BolsaComponent implements OnInit {
 						max: this.max_candle + 0.5,
 						min: this.min_candle - 0.5,
 						decimalsInFloat: 2
-					}
+					},
+					title:{
+						text: `${ticker}: Velas Japonesas daily + Media Móvil Exponencial 21/200/close`,
+						align: "center",
+						margin: 0
+					},
+					legend:{
+						show: false
+					},
+					stroke: {
+						width: [1, 1],
+						curve: "smooth",
+						colors: ["#FFA701", "#266D98"]
+					},
 				};
 
 				this.chartBarOptions = {
@@ -363,6 +432,11 @@ export class BolsaComponent implements OnInit {
 						tickAmount: 4,
 						decimalsInFloat: this.dif_lenght
 					},
+					title:{
+						text: "Volumen Diario en Millones + Volumen Promedio",
+						align: "center",
+						margin: 0
+					}
 					
 				};	
 
@@ -373,12 +447,15 @@ export class BolsaComponent implements OnInit {
 		//request for RSI
 		this.http.get(`${environment.apiUrl}/twelve-data/rsi`,{
 			params: {
-				symbol: this.form.value['ticker'],
+				symbol: ticker,
 				interval: '1day',
-				outputsize: '30'
+				outputsize: '45'
 				}
 			}).subscribe((response:any)=>{
 				this.seriesRSI = [];
+
+				this.rsi = response.values[0].rsi;
+				this.rsi = this.rsi.substr(0, this.rsi.length-3);
 
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
@@ -398,7 +475,7 @@ export class BolsaComponent implements OnInit {
 					  }],
 					chart: {
 						type: 'line',
-						height: 120,
+						height: 150,
 						toolbar: {
 							autoSelected: "pan",
 							show: false
@@ -407,8 +484,8 @@ export class BolsaComponent implements OnInit {
 					annotations: {
 						yaxis: [
 						  {
-							y: 30,
-							y2: 70,
+							y: 25,
+							y2: 75,
 							fillColor: '#D499ED',
 						  }
 						]
@@ -436,6 +513,11 @@ export class BolsaComponent implements OnInit {
 							show: false
 						}
 					},
+					title:{
+						text: "Índice de Fuerza Relativa 14/close",
+						align: "center",
+						margin: 0
+					}
 				};
 
 				this.flag_rsi = true;
@@ -444,9 +526,9 @@ export class BolsaComponent implements OnInit {
 		//request for MACD
 		this.http.get(`${environment.apiUrl}/twelve-data/macd`,{
 			params: {
-				symbol: this.form.value['ticker'],
+				symbol: ticker,
 				interval: '1day',
-				outputsize: '30'
+				outputsize: '45'
 				}
 			}).subscribe((response:any)=>{
 				this.seriesMACD = [];
@@ -491,7 +573,7 @@ export class BolsaComponent implements OnInit {
 						}
 					],
 					chart: {
-						height: 120,
+						height: 150,
 						type: "line",
 						stacked: false,
 						toolbar: {
@@ -541,6 +623,11 @@ export class BolsaComponent implements OnInit {
 					},
 					legend: {
 						show: false
+					},
+					title:{
+						text: "Media Móvil de Convergencia/Divergencia (MACD) 12/26/close/9",
+						align: "center",
+						margin: 0
 					}
 				};
 
@@ -548,5 +635,15 @@ export class BolsaComponent implements OnInit {
 			});		
 		}
 
+	/*
+	// en caso de necesitar extraer el valor de la fecha más cercana
+	getLast(object_sma: any){
+		let	lastDate = moment('1940-07-01');
+		for(const key in object_sma){
+			lastDate = lastDate.isAfter('2010-10-19') ? lastDate : moment(key);
+		}
+		return lastDate.format('YYYY-MM-DD').toString();
+	}
+	*/
 		
 }
