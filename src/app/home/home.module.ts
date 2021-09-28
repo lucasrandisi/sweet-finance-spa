@@ -10,8 +10,9 @@ import { MatCardModule } from '@angular/material/card';
 import { BolsaComponent } from './bolsa/bolsa.component'; 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
 import { TradingComponent } from './trading/trading.component';
+
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
 	declarations: [
@@ -28,7 +29,8 @@ import { TradingComponent } from './trading/trading.component';
 		MatCardModule,
 		MatInputModule,
 		MatFormFieldModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		NgApexchartsModule
 	]
 })
 export class HomeModule { }
