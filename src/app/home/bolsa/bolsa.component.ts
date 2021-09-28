@@ -105,30 +105,13 @@ export class BolsaComponent implements OnInit {
 	}
 
 	find_ticker_form(ticker: any) {
-		//request for ticker data in alpha-vantage
-		/*
-		this.http.get(`${environment.apiUrl}/alpha-vantage`,{
-			params: {
-			function: 'OVERVIEW',
-			symbol: this.form.value['ticker']
-			}
-		}).subscribe((response:any)=>{
-			//console.log(response); //para mostrar en la consola
-			this.name = response[0].Name;
-			this.symbol = response[0].Symbol;
-			this.industria = response[0].Industry;
-			this.industria = this.convertUpperLower(this.industria);
-			this.price = response[0].AnalystTargetPrice;
-		});
-		*/
-
 		//request for ticker data in twelve-data
 		this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
 			params: {
 			symbol: ticker
 			}
 		}).subscribe((response:any)=>{
-			//console.log(response); //para mostrar en la consola
+			//console.log(response); 
 			this.estado_compra = false;
 			this.estado_venta = false;
 			this.name = response.name;
@@ -152,7 +135,7 @@ export class BolsaComponent implements OnInit {
 				symbol: ticker,
 				interval: '1day',
 				time_period: '21',
-				outputsize: '45'
+				outputsize: '90'
 				}
 			}).subscribe((response:any)=>{
 				this.ema21 = response.values[0].ema;
@@ -195,7 +178,7 @@ export class BolsaComponent implements OnInit {
 				symbol: ticker,
 				interval: '1day',
 				time_period: '200',
-				outputsize: '45'
+				outputsize: '90'
 				}
 			}).subscribe((response:any)=>{
 				this.ema200 = response.values[0].ema;
@@ -227,21 +210,19 @@ export class BolsaComponent implements OnInit {
 		this.draw(ticker);
 	}
 
-	//gráfico de velas + volumen
 	draw(ticker : any){
 		//request for velas + volumen
 		this.http.get(`${environment.apiUrl}/twelve-data/time_series`,{
 			params: {
 				symbol: ticker,
 				interval: '1day',
-				outputsize: '45'
+				outputsize: '90'
 				}
 			}).subscribe((response:any)=>{
 				this.seriesData = [];
 				this.seriesDataLinear = [];
 				this.max_candle = 0;
 				this.min_candle = 9999999999;
-				let volume_avg_lenght = 0;
 				let max_lenght_candle = 0;
 
 				for (let day of response.values){
@@ -258,8 +239,6 @@ export class BolsaComponent implements OnInit {
 					if(high_lenght>max_lenght_candle){
 						max_lenght_candle = high_lenght;
 					}
-	
-					volume_avg_lenght = volume_avg_lenght + day.volume.length;
 
 					if(high > this.max_candle){
 						this.max_candle = high;
@@ -293,26 +272,18 @@ export class BolsaComponent implements OnInit {
 				//corrección de volumenes erroneos provenientes de la API
 				this.max_vol = 0;
 				let max_lenght_vol = 0;
-				volume_avg_lenght = Math.floor(volume_avg_lenght/45);
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
 					let month = +day.datetime.substr(5,2)-1;
 					let day_s = +day.datetime.substr(8,2);
 					let volume_s = day.volume;
-
-					if(volume_s.length>volume_avg_lenght){
-						volume_s = volume_s.substr(0, volume_avg_lenght);
-					}
+					let v = +day.volume;
 
 					if(volume_s.length>max_lenght_vol){
 						max_lenght_vol = volume_s.length;
 					}
 
-					let volume = +(volume_s/1000000);
-
-					if (volume>this.max_vol){
-						this.max_vol = volume;
-					}
+					let volume = v/1000000;
 
 					this.seriesDataLinear.push(
 						new SerieDataLinear(year, month, day_s, volume)
@@ -320,8 +291,6 @@ export class BolsaComponent implements OnInit {
 				}
 
 				this.dif_lenght = Math.abs(max_lenght_candle - max_lenght_vol) + 2;
-
-				console.log(this.seriesEMA21);
 				
 				this.chartCandleOptions = {
 					series: [
@@ -343,9 +312,7 @@ export class BolsaComponent implements OnInit {
 					],
 					chart: {
 						type: "candlestick",
-						staked: false,
 						height: 300,
-						width: '100%',
 						toolbar: {
 							autoSelected: "pan",
 							show: false
@@ -381,6 +348,11 @@ export class BolsaComponent implements OnInit {
 						curve: "smooth",
 						colors: ["#FFA701", "#266D98"]
 					},
+					tooltip:{
+						enabled: true,
+						shared: false,
+						intersect: true
+					}
 				};
 
 				this.chartBarOptions = {
@@ -392,7 +364,6 @@ export class BolsaComponent implements OnInit {
 					],
 					chart: {
 						height: 120,
-						width: "100%",
 						type: "bar",
 						toolbar: {
 							autoSelected: "pan",
@@ -428,12 +399,11 @@ export class BolsaComponent implements OnInit {
 						labels: {
 							how: true
 						},
-						max: this.max_vol,
 						tickAmount: 4,
 						decimalsInFloat: this.dif_lenght
 					},
 					title:{
-						text: "Volumen Diario en Millones + Volumen Promedio",
+						text: "Volumen Diario en Millones",
 						align: "center",
 						margin: 0
 					}
@@ -449,7 +419,7 @@ export class BolsaComponent implements OnInit {
 			params: {
 				symbol: ticker,
 				interval: '1day',
-				outputsize: '45'
+				outputsize: '90'
 				}
 			}).subscribe((response:any)=>{
 				this.seriesRSI = [];
@@ -514,10 +484,11 @@ export class BolsaComponent implements OnInit {
 						}
 					},
 					title:{
-						text: "Índice de Fuerza Relativa 14/close",
+						text: "Índice de Fuerza Relativa (RSI) 14/close",
 						align: "center",
 						margin: 0
 					}
+
 				};
 
 				this.flag_rsi = true;
@@ -528,7 +499,7 @@ export class BolsaComponent implements OnInit {
 			params: {
 				symbol: ticker,
 				interval: '1day',
-				outputsize: '45'
+				outputsize: '90'
 				}
 			}).subscribe((response:any)=>{
 				this.seriesMACD = [];
