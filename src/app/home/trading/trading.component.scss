@@ -14,7 +14,7 @@ form{
 
 .container-trading{
     width: 70%;
-    height: 50vh;
+    height: 85vh;
     border: 1px solid black;
     padding: 2%;
     border-radius: 5%;
@@ -26,7 +26,7 @@ span{
 }
 
 .mat-divider{
-    margin: 1vh;
+    margin: 2vh;
 }
 
 .button-buy{
@@ -51,3 +51,15 @@ span{
         color: #f7f9f9;
     }
 }
+
+.error{
+    color: red;
+}
+
+select {
+    background: transparent;
+    border: none;
+}
+
+select:focus{ outline: none;}
+ 

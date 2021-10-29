@@ -10,27 +10,36 @@ import { environment } from 'src/environments/environment';
 })
 export class TradingComponent implements OnInit {
 
-  ticker: FormGroup;
-  buy: FormGroup;
-  sell: FormGroup;
+	ticker: FormGroup;
+	buy: FormGroup;
+	sell: FormGroup;
+	limit_buy: FormGroup;
+	limit_sell: FormGroup;
+	stop_limit_buy: FormGroup;
+	stop_limit_sell: FormGroup;
 
-  price : string;
-  change: string;
-  max24: string;
-  min24: string;
-  max52: string;
-  min52: string;
-  volume: string;
-  ema21: string;
-  ema21_value_number: number;
-  price_number: number;
-  estado: string;
-  symbol: string;
-  finance: number;
+	price : string;
+	change: string;
+	max24: string;
+	min24: string;
+	max52: string;
+	min52: string;
+	volume: string;
+	ema21: string;
+	ema21_value_number: number;
+	price_number: number;
+	estado: string;
+	symbol: string;
+	finance: number;
 
-  constructor(private http: HttpClient) { }
+	error_message : string;
+	error_flag : boolean;
 
-  ngOnInit(): void {
+	switch: string = "instantanea";
+
+  	constructor(private http: HttpClient) { }
+
+  	ngOnInit(): void {
 		this.ticker = new FormGroup({
 			ticker: new FormControl()
 		});
@@ -42,6 +51,28 @@ export class TradingComponent implements OnInit {
 		this.sell = new FormGroup({
 			amount: new FormControl()
 		});
+
+		this.limit_buy = new FormGroup({
+			limit: new FormControl(),
+			amount: new FormControl()
+		});
+
+		this.limit_sell = new FormGroup({
+			limit: new FormControl(),
+			amount: new FormControl()
+		});
+
+		this.stop_limit_buy = new FormGroup({
+			stop: new FormControl(),
+			limit: new FormControl(),
+			amount: new FormControl()
+		});
+
+		this.stop_limit_sell = new FormGroup({
+			stop: new FormControl(),
+			limit: new FormControl(),
+			amount: new FormControl()
+		});
 			
 		this.http.get(`${environment.apiUrl}/me`,{
 			params: {
@@ -49,13 +80,19 @@ export class TradingComponent implements OnInit {
 		}).subscribe((response:any)=>{
 			this.finance = response.data.finance; 
 		});
-  }
 
-  find_ticker() {
+		this.find_ticker_form('AAPL');
+	}
+
+	find_ticker(){
+		this.find_ticker_form(this.ticker.value['ticker'])
+	}
+
+ 	find_ticker_form(ticker: any) {
 		//request for ticker data
 		this.http.get(`${environment.apiUrl}/twelve-data/price`,{
 			params: {
-			symbol: this.ticker.value['ticker']
+			symbol: ticker
 			}
 		}).subscribe((response:any)=>{
 			this.price = response.price; 
@@ -64,7 +101,7 @@ export class TradingComponent implements OnInit {
 
 		this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
 			params: {
-			symbol: this.ticker.value['ticker']
+			symbol: ticker
 			}
 		}).subscribe((response:any)=>{
 			this.symbol = response.symbol;
@@ -84,7 +121,7 @@ export class TradingComponent implements OnInit {
 
 		this.http.get(`${environment.apiUrl}/twelve-data/price`,{
 			params: {
-			symbol: this.ticker.value['ticker']
+			symbol: ticker
 			}
 		}).subscribe((response:any)=>{
 			this.price = response.price;
@@ -93,7 +130,7 @@ export class TradingComponent implements OnInit {
 
 		this.http.get(`${environment.apiUrl}/twelve-data/ema`,{
 			params: {
-				symbol: this.ticker.value['ticker'],
+				symbol: ticker,
 				interval: '1day',
 				time_period: '21'
 				}
@@ -116,7 +153,11 @@ export class TradingComponent implements OnInit {
 		this.http.post(`${environment.apiUrl}/stocks/${this.symbol}/buy`,{
 			amount: this.buy.value['amount']
 		}).subscribe((response:any)=>{
+			this.error_flag = false;
 			this.finance = response.data.user.finance;
+		}, (error:any)=>{
+			this.error_flag = true;
+			this.error_message = error.error.message;
 		});
 	}
 
@@ -124,10 +165,77 @@ export class TradingComponent implements OnInit {
 		this.http.post(`${environment.apiUrl}/stocks/${this.symbol}/sell`,{
 			amount: this.sell.value['amount']
 		}).subscribe((response:any)=>{
+			this.error_flag = false;
 			this.finance = response.data.user.finance;
 		},(error:any)=>{
+			this.error_flag = true;
+			this.error_message = error.error.message;
+		});
+	}
+
+	limit_buy_ticker(){
+		this.http.post(`${environment.apiUrl}/orders`,{
+			stock_symbol: this.symbol,
+			action: 'BUY',
+			limit: this.limit_buy.value['limit'],
+			amount: this.limit_buy.value['amount']
+		}).subscribe((response:any)=>{
+			this.error_flag = true;
+			this.error_message = "Orden creada exitosamente";
+			this.finance = response.data.user.finance;
+		}, (error:any)=>{
+			this.error_flag = true;
+			this.error_message = error.error.message;
+		});
+	}
+
+	limit_sell_ticker(){
+		this.http.post(`${environment.apiUrl}/orders`,{
+			stock_symbol: this.symbol,
+			action: 'SELL',
+			limit: this.limit_sell.value['limit'],
+			amount: this.limit_sell.value['amount']
+		}).subscribe((response:any)=>{
+			this.error_flag = true;
+			this.error_message = "Orden creada exitosamente";
+		}, (error:any)=>{
+			this.error_flag = true;
+			this.error_message = error.error.message;
+		});
+	}
+
+	stop_limit_buy_ticker(){
+		this.http.post(`${environment.apiUrl}/orders`,{
+			stock_symbol: this.symbol,
+			action: 'BUY',
+			stop: this.stop_limit_buy.value['stop'],
+			limit: this.stop_limit_buy.value['limit'],
+			amount: this.stop_limit_buy.value['amount']
+		}).subscribe((response:any)=>{
+			this.error_flag = true;
+			this.error_message = "Orden creada exitosamente";
+			this.finance = response.data.user.finance;
+		}, (error:any)=>{
+			this.error_flag = true;
+			this.error_message = error.error.message;
 			console.log(error);
-		} );
+		});
+	}
+
+	stop_limit_sell_ticker(){
+		this.http.post(`${environment.apiUrl}/orders`,{
+			stock_symbol: this.symbol,
+			action: 'SELL',
+			stop: this.stop_limit_sell.value['stop'],
+			limit: this.stop_limit_sell.value['limit'],
+			amount: this.stop_limit_sell.value['amount']
+		}).subscribe((response:any)=>{
+			this.error_flag = true;
+			this.error_message = "Orden creada exitosamente";
+		}, (error:any)=>{
+			this.error_flag = true;
+			this.error_message = error.error.message;
+		});
 	}
 
 	convertVolume(vol : any){

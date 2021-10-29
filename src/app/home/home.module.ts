@@ -11,6 +11,7 @@ import { BolsaComponent } from './bolsa/bolsa.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TradingComponent } from './trading/trading.component';
+import { FormsModule } from '@angular/forms';
 
 import { NgApexchartsModule } from 'ng-apexcharts';
 
@@ -30,7 +31,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 		MatInputModule,
 		MatFormFieldModule,
 		ReactiveFormsModule,
-		NgApexchartsModule
+		NgApexchartsModule,
+		FormsModule
 	]
 })
 export class HomeModule { }
