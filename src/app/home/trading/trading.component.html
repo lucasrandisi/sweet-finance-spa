@@ -47,9 +47,11 @@
                 <span *ngIf="price">{{min52}}</span>
             </div>
             
-            <div class="container-trading">
+            <div [class.container-trading-insta]="insta" 
+                [class.container-trading-limit]="lim"
+                [class.container-trading-stop]="stop">
 
-                <select [(ngModel)]="switch">
+                <select [(ngModel)]="switch" (ngModelChange)="onChangeHeight($event)">
                     <option value="instantanea"> Instantánea
                     <option value="limit"> Orden Limit
                     <option value="stop-limit"> Orden Stop-Limit
@@ -61,8 +63,8 @@
                     <div *ngSwitchCase="'instantanea'">
                         <div class="grid grid-cols-3">
                             <div class="col-span-2">
-                                <span class="font-medium text-base">Ticker: {{symbol}}</span>
-                                <!-- <span class="font-medium text-base">Disponible: {{disponible}}</span> -->
+                                <div class="font-medium text-base">Ticker: {{symbol}}</div>
+                                <div class="font-medium text-base disponible">Disponible: {{disponible}}</div>
 
                                 <form [formGroup]="buy" (ngSubmit)="buy_ticker()">
                                     <mat-form-field appearance="legacy">
@@ -100,8 +102,8 @@
                     <div *ngSwitchCase="'limit'">
                         <div class="grid grid-cols-3">
                             <div class="col-span-2">
-                                <span class="font-medium text-base">Ticker: {{symbol}}</span>
-                                <!-- <span class="font-medium text-base">Disponible: {{disponible}}</span> -->
+                                <div class="font-medium text-base">Ticker: {{symbol}}</div>
+                                <div class="font-medium text-base disponible">Disponible: {{disponible}}</div>
 
                                 <form [formGroup]="limit_buy" (ngSubmit)="limit_buy_ticker()">
                                     <mat-form-field appearance="legacy">
@@ -147,8 +149,8 @@
                     <div *ngSwitchCase="'stop-limit'">
                         <div class="grid grid-cols-3">
                             <div class="col-span-2">
-                                <span class="font-medium text-base">Ticker: {{symbol}}</span>
-                                <!-- <span class="font-medium text-base">Disponible: {{disponible}}</span> -->
+                                <div class="font-medium text-base">Ticker: {{symbol}}</div>
+                                <div class="font-medium text-base disponible">Disponible: {{disponible}}</div>
 
                                 <form [formGroup]="stop_limit_buy" (ngSubmit)="stop_limit_buy_ticker()">
                                     <mat-form-field appearance="legacy">
@@ -202,7 +204,8 @@
                     
                 </div>
 
-                <span *ngIf="error_flag" class="error">{{error_message}}</span>
+                <div *ngIf="wait" [class.error]="error_flag" [class.success]="!error_flag">
+                    {{feedback_message}}</div>
 
             </div>
 

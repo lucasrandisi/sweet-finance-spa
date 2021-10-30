@@ -31,15 +31,24 @@ export class TradingComponent implements OnInit {
 	estado: string;
 	symbol: string;
 	finance: number;
+	disponible : number;
 
-	error_message : string;
+	feedback_message : string;
 	error_flag : boolean;
+
+	insta: boolean;
+	lim : boolean;
+	stop : boolean;
+	wait : boolean;
 
 	switch: string = "instantanea";
 
   	constructor(private http: HttpClient) { }
 
   	ngOnInit(): void {
+
+		this.insta = true;
+
 		this.ticker = new FormGroup({
 			ticker: new FormControl()
 		});
@@ -147,17 +156,36 @@ export class TradingComponent implements OnInit {
 					this.estado = "VENTA";
 				}
 		});	
+
+		this.available(ticker);
     }
+
+	available(ticker : any){
+		this.http.get(`${environment.apiUrl}/stocks`,{
+		}).subscribe((response:any)=>{
+			for (let stock of response){
+				if(stock.stock_symbol == ticker){
+					this.disponible = stock.amount;
+				}
+			}
+		});
+	}
 
 	buy_ticker(){
 		this.http.post(`${environment.apiUrl}/stocks/${this.symbol}/buy`,{
 			amount: this.buy.value['amount']
 		}).subscribe((response:any)=>{
+			this.buy.reset();
 			this.error_flag = false;
+			this.available(this.symbol);
 			this.finance = response.data.user.finance;
+			this.feedback_message = "Operación realizada con éxito";
+			this.waiting();
 		}, (error:any)=>{
+			this.buy.reset();
 			this.error_flag = true;
-			this.error_message = error.error.message;
+			this.feedback_message = error.error.message;
+			this.waiting();
 		});
 	}
 
@@ -165,11 +193,17 @@ export class TradingComponent implements OnInit {
 		this.http.post(`${environment.apiUrl}/stocks/${this.symbol}/sell`,{
 			amount: this.sell.value['amount']
 		}).subscribe((response:any)=>{
+			this.sell.reset();
+			this.available(this.symbol);
 			this.error_flag = false;
 			this.finance = response.data.user.finance;
+			this.feedback_message = "Operación realizada con éxito";
+			this.waiting();
 		},(error:any)=>{
+			this.sell.reset();
 			this.error_flag = true;
-			this.error_message = error.error.message;
+			this.feedback_message = error.error.message;
+			this.waiting();
 		});
 	}
 
@@ -180,12 +214,17 @@ export class TradingComponent implements OnInit {
 			limit: this.limit_buy.value['limit'],
 			amount: this.limit_buy.value['amount']
 		}).subscribe((response:any)=>{
-			this.error_flag = true;
-			this.error_message = "Orden creada exitosamente";
+			this.limit_buy.reset();
+			this.available(this.symbol);
+			this.error_flag = false;
+			this.feedback_message = "Orden creada con éxito";
 			this.finance = response.data.user.finance;
+			this.waiting();
 		}, (error:any)=>{
+			this.limit_buy.reset();
 			this.error_flag = true;
-			this.error_message = error.error.message;
+			this.feedback_message = error.error.message;
+			this.waiting();
 		});
 	}
 
@@ -196,11 +235,16 @@ export class TradingComponent implements OnInit {
 			limit: this.limit_sell.value['limit'],
 			amount: this.limit_sell.value['amount']
 		}).subscribe((response:any)=>{
-			this.error_flag = true;
-			this.error_message = "Orden creada exitosamente";
+			this.limit_sell.reset();
+			this.available(this.symbol);
+			this.error_flag = false;
+			this.feedback_message = "Orden creada con éxito";
+			this.waiting();
 		}, (error:any)=>{
+			this.limit_sell.reset();
 			this.error_flag = true;
-			this.error_message = error.error.message;
+			this.feedback_message = error.error.message;
+			this.waiting();
 		});
 	}
 
@@ -212,13 +256,17 @@ export class TradingComponent implements OnInit {
 			limit: this.stop_limit_buy.value['limit'],
 			amount: this.stop_limit_buy.value['amount']
 		}).subscribe((response:any)=>{
-			this.error_flag = true;
-			this.error_message = "Orden creada exitosamente";
+			this.stop_limit_buy.reset();
+			this.available(this.symbol);
+			this.error_flag = false;
+			this.feedback_message = "Orden creada con éxito";
 			this.finance = response.data.user.finance;
+			this.waiting();
 		}, (error:any)=>{
+			this.stop_limit_buy.reset();
 			this.error_flag = true;
-			this.error_message = error.error.message;
-			console.log(error);
+			this.feedback_message = error.error.message;
+			this.waiting();
 		});
 	}
 
@@ -230,12 +278,24 @@ export class TradingComponent implements OnInit {
 			limit: this.stop_limit_sell.value['limit'],
 			amount: this.stop_limit_sell.value['amount']
 		}).subscribe((response:any)=>{
-			this.error_flag = true;
-			this.error_message = "Orden creada exitosamente";
+			this.stop_limit_sell.reset();
+			this.available(this.symbol);
+			this.error_flag = false;
+			this.feedback_message = "Orden creada con éxito";
+			this.waiting();
 		}, (error:any)=>{
+			this.stop_limit_sell.reset();
 			this.error_flag = true;
-			this.error_message = error.error.message;
+			this.feedback_message = error.error.message;
+			this.waiting();
 		});
+	}
+
+	waiting(): void {
+		this.wait = true;
+		setTimeout(function(this: any) {
+			this.wait = false;
+		}.bind(this), 3000);
 	}
 
 	convertVolume(vol : any){
@@ -249,6 +309,26 @@ export class TradingComponent implements OnInit {
 			} else{
 				return vol;
 			}
+		}
+	}
+
+	onChangeHeight(event : any){
+		if (event == "instantanea"){
+			this.lim = false;
+			this.stop = false;
+			this.insta = true;
+		}
+		
+		if (event == "limit"){
+			this.lim = true;
+			this.stop = false;
+			this.insta = false;
+		}
+
+		if (event == "stop-limit"){
+			this.lim = false;
+			this.stop = true;
+			this.insta = false;
 		}
 	}
 
