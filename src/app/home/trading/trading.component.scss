@@ -70,6 +70,11 @@ span{
     }
 }
 
+.container-table{
+    height: 25vh;
+    overflow-y: scroll;
+}
+
 .error{
     color: red;
     margin-top: 1vh;
@@ -86,4 +91,23 @@ select {
 }
 
 select:focus{ outline: none;}
+
+.title{
+    margin-top: 1%;
+}
  
+.table{
+    width: 100%;
+}
+
+.compra{
+    color: green;
+}
+
+.venta{
+    color: red;
+}
+
+.delete-button{
+    transform: scale(0.8);
+}

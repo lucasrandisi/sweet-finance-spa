@@ -1,15 +1,11 @@
 <div class="container-body">
-
-    <div class="grid grid-cols-2">
-        <div align="center" style="margin-top:1%">
-            <h2>Dinero: $F {{finance}}</h2>
-        </div>
-    </div>
     
     <div class="grid grid-cols-8">
 
         <!--menú de trade-->
         <div class="col-span-4" align="center"> 
+
+            <h2 class="title">Dinero: $F {{finance}}</h2>
             
             <form [formGroup]="ticker" (ngSubmit)="find_ticker()">
                 <mat-form-field appearance="legacy">
@@ -213,9 +209,38 @@
 
         </div>
 
-        <!--recompensas-->
-        <div class="col-span-3">
+        <!-- ordenes + recompensas-->
+        <div class="col-span-3" align="center">
             
+            <h2 class="title">Ordenes abiertas</h2>
+
+            <div class="container-table">
+                <div class="table-fixed text-center table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Ticker</th>
+                            <th>Tamaño</th>
+                            <th>STOP</th>
+                            <th>LIMIT</th>
+                            <th>Creación</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let order of orders">
+                            <td [class.compra]="order.action_boolean" [class.venta]="!order.action_boolean">{{order.action}}</td>
+                            <td>{{order.ticker}}</td>
+                            <td>{{order.amount}}</td>
+                            <td>{{order.stop}}</td>
+                            <td>{{order.limit}}</td>
+                            <td>2021-03-20</td>
+                            <button mat-icon-button (click)="delete_order(order.id)"><mat-icon class="delete-button">delete</mat-icon></button>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+
         </div>
 
         <!--tops-->

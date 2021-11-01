@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home/home.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { InfoComponent } from './info/info.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card'; 
@@ -32,7 +33,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 		MatFormFieldModule,
 		ReactiveFormsModule,
 		NgApexchartsModule,
-		FormsModule
+		FormsModule,
+		MatIconModule
 	]
 })
 export class HomeModule { }

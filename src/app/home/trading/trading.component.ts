@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { Orders } from './orders';
 
 @Component({
   selector: 'app-trading',
@@ -42,6 +43,8 @@ export class TradingComponent implements OnInit {
 	wait : boolean;
 
 	switch: string = "instantanea";
+
+	orders: Orders[] = [];
 
   	constructor(private http: HttpClient) { }
 
@@ -91,6 +94,8 @@ export class TradingComponent implements OnInit {
 		});
 
 		this.find_ticker_form('AAPL');
+
+		this.get_orders();
 	}
 
 	find_ticker(){
@@ -217,9 +222,10 @@ export class TradingComponent implements OnInit {
 			this.limit_buy.reset();
 			this.available(this.symbol);
 			this.error_flag = false;
+			this.get_orders();
 			this.feedback_message = "Orden creada con éxito";
-			this.finance = response.data.user.finance;
 			this.waiting();
+			this.finance = response.data.user.finance;
 		}, (error:any)=>{
 			this.limit_buy.reset();
 			this.error_flag = true;
@@ -238,6 +244,7 @@ export class TradingComponent implements OnInit {
 			this.limit_sell.reset();
 			this.available(this.symbol);
 			this.error_flag = false;
+			this.get_orders();
 			this.feedback_message = "Orden creada con éxito";
 			this.waiting();
 		}, (error:any)=>{
@@ -259,9 +266,10 @@ export class TradingComponent implements OnInit {
 			this.stop_limit_buy.reset();
 			this.available(this.symbol);
 			this.error_flag = false;
+			this.get_orders();
 			this.feedback_message = "Orden creada con éxito";
-			this.finance = response.data.user.finance;
 			this.waiting();
+			this.finance = response.data.user.finance;
 		}, (error:any)=>{
 			this.stop_limit_buy.reset();
 			this.error_flag = true;
@@ -281,6 +289,7 @@ export class TradingComponent implements OnInit {
 			this.stop_limit_sell.reset();
 			this.available(this.symbol);
 			this.error_flag = false;
+			this.get_orders();
 			this.feedback_message = "Orden creada con éxito";
 			this.waiting();
 		}, (error:any)=>{
@@ -288,6 +297,48 @@ export class TradingComponent implements OnInit {
 			this.error_flag = true;
 			this.feedback_message = error.error.message;
 			this.waiting();
+		});
+	}
+
+	get_orders(){
+		this.http.get(`${environment.apiUrl}/orders`,{
+			params: {
+			}
+		}).subscribe((response:any)=>{
+			this.orders = [];
+			let action_boolean: boolean;
+
+			for(let order of response){
+
+				if(order.action == "BUY"){
+					order.action = "COMPRA";
+					action_boolean = true;
+				} else{
+					order.action = "VENTA";
+					action_boolean = false;
+				}
+
+				if(order.limit == null){
+					order.limit = "-";
+				}
+
+				if(order.stop == null){
+					order.stop = "-";
+				}
+
+				this.orders.push(
+					new Orders(order.id, order.action, action_boolean, order.stock_symbol, order.amount,
+						order.stop, order.limit)
+				);
+			}
+		});
+	}
+
+	delete_order(id : any){
+		this.http.delete(`${environment.apiUrl}/orders/${id}`,{})
+		.subscribe((response:any)=>{
+			this.get_orders();
+			//actualizar finance
 		});
 	}
 
