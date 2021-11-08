@@ -74,8 +74,8 @@ export class TradingComponent implements OnInit {
 	public chartOptions : any;
 	seriesData : SerieData[] = [];
 
-	min_value = 999999;
-	max_value = 0;
+	min_value : number;
+	max_value : number;
 	flag_chart : boolean;
 
   	constructor(private http: HttpClient) { }
@@ -386,8 +386,9 @@ export class TradingComponent implements OnInit {
 			}
 		}).subscribe((response:any)=>{
 			this.seriesData = [];
-			let max_lenght_candle = 0;
-
+			this.max_value = 0;
+			this.min_value = 9999999;
+		
 			for (let hour of response.values){
 				let year = +hour.datetime.substr(0,4);
 				let month = +hour.datetime.substr(5,2)-1;
