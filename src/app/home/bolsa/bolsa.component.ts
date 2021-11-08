@@ -17,6 +17,7 @@ import {
 	ApexStroke,
 	YAxisAnnotations
 } from "ng-apexcharts";
+import { forkJoin } from 'rxjs';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -98,6 +99,7 @@ export class BolsaComponent implements OnInit {
 		this.initializeForm();
 		this.get_favorites();
 		this.find_ticker_form('AAPL');
+		//setTimeout(() => console.log(this.favorites),1000);
 	}
 
 	initializeForm() {
@@ -626,30 +628,40 @@ export class BolsaComponent implements OnInit {
 		}).subscribe((response:any)=>{
 			this.favorites = [];
 
+			console.log(response);
+
 			for(let f of response){
-				this.http.get(`${environment.apiUrl}/twelve-data/price`,{
+				let observable1 = this.http.get(`${environment.apiUrl}/twelve-data/price`,{
 					params: {
 					symbol: f.stock_symbol
 					}
-				}).subscribe((response:any)=>{
-					this.fav_price = response.price;
-					this.fav_price = this.fav_price.substr(0, this.fav_price.length-3);
 				});
 
-				this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
+				let observable2 = this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
 					params: {
 					symbol: f.stock_symbol
 					}
-				}).subscribe((response:any)=>{
-					this.fav_change = response.percent_change;
+				});
+
+				forkJoin([observable1, observable2]).subscribe((response : any)=>{
+					let price_obs = response[0];
+					let change_obs = response[1];
+
+					this.fav_price = price_obs.price;
+					this.fav_price = this.fav_price.substr(0, this.fav_price.length-3);
+
+					this.fav_change = change_obs.percent_change;
 					this.fav_change = this.fav_change.substr(0, this.fav_change.length-3);
 					this.fav_change = this.fav_change.concat("%");
+	
+					this.favorites.push(
+						new Favorites(f.id, f.stock_symbol, this.fav_change, this.fav_price)
+					);
 				});
-
-				this.favorites.push(
-					new Favorites(f.id, f.stock_symbol, this.fav_change, this.fav_price)
-				);
-			}	
+				
+			}
+			
+			
 		});
 	}
 
@@ -659,7 +671,8 @@ export class BolsaComponent implements OnInit {
 		this.http.post(`${environment.apiUrl}/stocks/favorites`,{
 			stock_symbol: ticker
 		}).subscribe((response:any)=>{
-			this.get_favorites();
+			this.get_favorites(); //agregar a la lista
+			//ver resolvers
 		}, (error:any)=>{
 			console.log(error);
 		});
