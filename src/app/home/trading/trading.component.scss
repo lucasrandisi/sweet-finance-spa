@@ -12,9 +12,27 @@ form{
     }
 }
 
-.container-trading{
+.container-trading-insta{
     width: 70%;
-    height: 50vh;
+    height: 55vh;
+    border: 1px solid black;
+    padding: 2%;
+    border-radius: 5%;
+    margin-top: 2%;
+}
+
+.container-trading-limit{
+    width: 70%;
+    height: 70vh;
+    border: 1px solid black;
+    padding: 2%;
+    border-radius: 5%;
+    margin-top: 2%;
+}
+
+.container-trading-stop{
+    width: 70%;
+    height: 88vh;
     border: 1px solid black;
     padding: 2%;
     border-radius: 5%;
@@ -26,7 +44,7 @@ span{
 }
 
 .mat-divider{
-    margin: 1vh;
+    margin: 2vh;
 }
 
 .button-buy{
@@ -50,4 +68,51 @@ span{
     p{
         color: #f7f9f9;
     }
+}
+
+.container-table{
+    height: 25vh;
+    overflow-y: scroll;
+}
+
+.error{
+    color: red;
+    margin-top: 1vh;
+}
+
+.success{
+    color: green;
+    margin-top: 1vh;
+}
+
+select {
+    background: transparent;
+    border: none;
+}
+
+select:focus{ outline: none;}
+
+.title{
+    margin-top: 1%;
+}
+ 
+.table{
+    width: 100%;
+}
+
+.compra{
+    color: green;
+}
+
+.venta{
+    color: red;
+}
+
+.delete-button{
+    transform: scale(0.8);
+}
+
+.chart-box {
+    max-width: 100%;
+    margin-top: 10%;
 }
