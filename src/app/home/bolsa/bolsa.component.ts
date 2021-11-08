@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { SerieData } from './serieData';
 import { SerieDataLinear } from './serieDataLinear';
-import * as moment from 'moment';
+import { Favorites } from './favorites';
 
 import {
 	ChartComponent,
@@ -43,10 +43,6 @@ export class BolsaComponent implements OnInit {
 	price: string;
 	ema21: string;
 	ema200 : string;
-	max_ema200 = 0;
-	min_ema200 = 999999;
-	max_ema21 = 0;
-	min_ema21 = 999999;
 	rsi : string;
 	estado_compra : boolean;
 	estado_venta : boolean;
@@ -83,14 +79,24 @@ export class BolsaComponent implements OnInit {
 
 	max_candle : number;
 	min_candle : number;
+	max_ema200 : number;
+	min_ema200 : number;
+	max_ema21 : number;
+	min_ema21 : number;
 	max_vol : number;
 	dif_lenght = 0;
+
+	favorites : Favorites[] = [];
+	fav_price : string;
+	fav_change : string;
+	fav_flag = false;
 
  	constructor(private http: HttpClient) {
 	}
 
   	ngOnInit(): void {
 		this.initializeForm();
+		this.get_favorites();
 		this.find_ticker_form('AAPL');
 	}
 
@@ -101,7 +107,8 @@ export class BolsaComponent implements OnInit {
 	}
 
 	find_ticker(){
-		this.find_ticker_form(this.form.value['ticker'])
+		this.find_ticker_form(this.form.value['ticker']);
+		this.fav_flag = true;
 	}
 
 	find_ticker_form(ticker: any) {
@@ -152,6 +159,9 @@ export class BolsaComponent implements OnInit {
 
 				this.seriesEMA21 = [];
 
+				this.max_ema21 = 0;
+				this.min_ema21 = 999999;
+
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
 					let month = +day.datetime.substr(5,2)-1;
@@ -185,6 +195,9 @@ export class BolsaComponent implements OnInit {
 				this.ema200 = this.ema200.substr(0, this.ema200.length-3);
 
 				this.seriesEMA200 = [];
+
+				this.max_ema200 = 0;
+				this.min_ema200 = 999999;
 
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
@@ -223,7 +236,7 @@ export class BolsaComponent implements OnInit {
 				this.seriesDataLinear = [];
 				this.max_candle = 0;
 				this.min_candle = 9999999999;
-				let max_lenght_candle = 0;
+				let max_lenght_candle = 0;	
 
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
@@ -604,17 +617,59 @@ export class BolsaComponent implements OnInit {
 
 				this.flag_macd = true;
 			});		
-		}
-
-	/*
-	// en caso de necesitar extraer el valor de la fecha más cercana
-	getLast(object_sma: any){
-		let	lastDate = moment('1940-07-01');
-		for(const key in object_sma){
-			lastDate = lastDate.isAfter('2010-10-19') ? lastDate : moment(key);
-		}
-		return lastDate.format('YYYY-MM-DD').toString();
 	}
-	*/
+
+	get_favorites(){
+		this.http.get(`${environment.apiUrl}/stocks/favorites`,{
+			params: {
+			}
+		}).subscribe((response:any)=>{
+			this.favorites = [];
+
+			for(let f of response){
+				this.http.get(`${environment.apiUrl}/twelve-data/price`,{
+					params: {
+					symbol: f.stock_symbol
+					}
+				}).subscribe((response:any)=>{
+					this.fav_price = response.price;
+					this.fav_price = this.fav_price.substr(0, this.fav_price.length-3);
+				});
+
+				this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
+					params: {
+					symbol: f.stock_symbol
+					}
+				}).subscribe((response:any)=>{
+					this.fav_change = response.percent_change;
+					this.fav_change = this.fav_change.substr(0, this.fav_change.length-3);
+					this.fav_change = this.fav_change.concat("%");
+				});
+
+				this.favorites.push(
+					new Favorites(f.id, f.stock_symbol, this.fav_change, this.fav_price)
+				);
+			}	
+		});
+	}
+
+	add_favorite(){
+		let ticker = this.form.value['ticker'];
+
+		this.http.post(`${environment.apiUrl}/stocks/favorites`,{
+			stock_symbol: ticker
+		}).subscribe((response:any)=>{
+			this.get_favorites();
+		}, (error:any)=>{
+			console.log(error);
+		});
+	}
+
+	delete_favorite(id : any){
+		this.http.delete(`${environment.apiUrl}/stocks/favorites/${id}`,{})
+		.subscribe((response:any)=>{
+			this.get_favorites();
+		});
+	}
 		
 }

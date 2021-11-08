@@ -2,7 +2,27 @@
     
     <div class="grid grid-cols-4">
         <div class="container-list">
-            <span class="font-normal text-3xl">Mis listas</span>
+            <span class="font-normal text-3xl">Favoritos</span>
+
+            <div class="container-table">
+                <div class="table-fixed text-center table">
+                    <thead>
+                        <tr>
+                            <th class="font-bold text-base">Ticker</th>
+                            <th class="font-bold text-base">Cambio</th>
+                            <th class="font-bold text-base">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let fav of favorites">
+                            <td (click)="find_ticker_form(fav.ticker)">{{fav.ticker}}</td>
+                            <td>{{fav_change}}</td>
+                            <td>{{fav_price}}</td>
+                            <button mat-icon-button (click)="delete_favorite(fav.id)"><mat-icon class="delete-button">clear</mat-icon></button>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
         </div>
 
         <div class="col-span-3">
@@ -10,10 +30,10 @@
                 <form [formGroup]="form" (ngSubmit)="find_ticker()">
                     <mat-form-field appearance="legacy">
                         <mat-label>Ticker</mat-label>
-                        <input formControlName="ticker" autocomplete="false" matInput>
+                        <input id="ticker" formControlName="ticker" autocomplete="false" matInput>
                     </mat-form-field>
-                    
-                    <button mat-raised-button type="submit">Buscar</button>
+                    <button mat-raised-button type="submit" class="form-button">Buscar</button>
+                    <button [disabled]="!fav_flag" mat-raised-button (click)="add_favorite()" class="form-button">Añadir a Favoritos</button>
                 </form>
 
                 <div class="table-fixed text-center">
