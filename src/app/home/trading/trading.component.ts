@@ -1,14 +1,38 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { SerieData } from './serieDataHour';
 import { Orders } from './orders';
+
+import {
+	ChartComponent,
+	ApexAxisChartSeries,
+	ApexChart,
+	ApexYAxis,
+	ApexXAxis,
+	ApexPlotOptions,
+	ApexDataLabels,
+	ApexStroke,
+	YAxisAnnotations
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+	series: ApexAxisChartSeries;
+	chart: ApexChart;
+	xaxis: ApexXAxis;
+	yaxis: ApexYAxis;
+	plotOptions: ApexPlotOptions;
+	dataLabels: ApexDataLabels;
+	stroke: ApexStroke;
+};
 
 @Component({
   selector: 'app-trading',
   templateUrl: './trading.component.html',
   styleUrls: ['./trading.component.scss']
 })
+
 export class TradingComponent implements OnInit {
 
 	ticker: FormGroup;
@@ -45,6 +69,14 @@ export class TradingComponent implements OnInit {
 	switch: string = "instantanea";
 
 	orders: Orders[] = [];
+
+	@ViewChild("chart") chart: ChartComponent;
+	public chartOptions : any;
+	seriesData : SerieData[] = [];
+
+	min_value = 999999;
+	max_value = 0;
+	flag_chart : boolean;
 
   	constructor(private http: HttpClient) { }
 
@@ -163,6 +195,8 @@ export class TradingComponent implements OnInit {
 		});	
 
 		this.available(ticker);
+
+		this.draw(ticker);
     }
 
 	available(ticker : any){
@@ -339,6 +373,91 @@ export class TradingComponent implements OnInit {
 		.subscribe((response:any)=>{
 			this.get_orders();
 			//actualizar finance
+		});
+	}
+
+	draw(ticker : any){
+		//request for velas + volumen
+		this.http.get(`${environment.apiUrl}/twelve-data/time_series`,{
+		params: {
+			symbol: ticker,
+			interval: '4h',
+			outputsize: '30'
+			}
+		}).subscribe((response:any)=>{
+			this.seriesData = [];
+			let max_lenght_candle = 0;
+
+			for (let hour of response.values){
+				let year = +hour.datetime.substr(0,4);
+				let month = +hour.datetime.substr(5,2)-1;
+				let day = +hour.datetime.substr(8,2);
+				let hour_v = +hour.datetime.substr(11,2);
+				let minute = +hour.datetime.substr(14,2);
+				let close = +hour.close;
+
+				if(close > this.max_value){
+					this.max_value = close;
+				}
+
+				if(close < this.min_value){
+					this.min_value = close;
+				}
+
+				this.seriesData.push(
+					new SerieData(year, month, day, hour_v, minute, close)
+				);	
+			}
+
+			this.chartOptions = {
+				series: [
+					{
+						name: ticker,
+						data: this.seriesData
+					},
+				],
+				chart: {
+					type: "line",
+					height: 300,
+					toolbar: {
+						autoSelected: "pan",
+						show: false
+					}
+				},
+				xaxis: {
+					type: "datetime",
+					position: "bottom",
+					labels:{
+						datetimeFormatter: {
+							year: 'yy',
+							month: "MMM 'yy",
+							day: 'dd MMM',
+							hour: 'HH:mm',
+						}
+					}
+				},	
+				yaxis: {
+					max: this.max_value + 0.5,
+					min: this.min_value - 0.5,
+					decimalsInFloat: 2
+				},
+				title:{
+					text: `${ticker}: Serie de Precios al Cierre 4hour/close/30`,
+					align: "center",
+					margin: 0
+				},
+				stroke: { 
+					width: 2,
+					curve: "smooth",
+					colors: "#1AA7EC"
+				},
+				markers: {
+					size: 0,
+				}
+			};
+
+			this.flag_chart = true;
+			
 		});
 	}
 

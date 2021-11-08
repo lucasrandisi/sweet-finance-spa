@@ -209,7 +209,7 @@
 
         </div>
 
-        <!-- ordenes + recompensas-->
+        <!-- ordenes + gráfico-->
         <div class="col-span-3" align="center">
             
             <h2 class="title">Ordenes abiertas</h2>
@@ -238,6 +238,21 @@
                             <button mat-icon-button (click)="delete_order(order.id)"><mat-icon class="delete-button">delete</mat-icon></button>
                         </tr>
                     </tbody>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div *ngIf="flag_chart" id="chart-serie">
+                    <apx-chart
+                        #chartSerie
+                        [series]="chartOptions.series"
+                        [chart]="chartOptions.chart"
+                        [xaxis]="chartOptions.xaxis"
+                        [yaxis]="chartOptions.yaxis"
+                        [title]="chartOptions.title"     
+                        [stroke]="chartOptions.stroke"
+                        [markers]="chartOptions.markers"
+                    ></apx-chart>
                 </div>
             </div>
 
