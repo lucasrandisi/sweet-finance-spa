@@ -15,7 +15,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let fav of favorites">
-                            <td (click)="find_ticker_form(fav.ticker)">{{fav.ticker}}</td>
+                            <td class="td-ticker" (click)="find_ticker_form(fav.ticker)">{{fav.ticker}}</td>
                             <td>{{fav.change}}</td>
                             <td>{{fav.price}}</td>
                             <button mat-icon-button (click)="delete_favorite(fav.id)"><mat-icon class="delete-button">clear</mat-icon></button>
@@ -35,9 +35,6 @@
                     <button mat-raised-button type="submit" class="form-button">Buscar</button>
                     <button [disabled]="!fav_flag" type="button" mat-raised-button (click)="add_favorite()" class="form-button">Añadir a Favoritos</button>
                 </form>
-
-
-                <!--pasar a un componente diferentes los gráficos-->
 
                 <div class="table-fixed text-center">
                     <thead>
