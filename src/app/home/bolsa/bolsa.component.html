@@ -33,7 +33,7 @@
                         <input id="ticker" formControlName="ticker" autocomplete="false" matInput>
                     </mat-form-field>
                     <button mat-raised-button type="submit" class="form-button">Buscar</button>
-                    <button [disabled]="!fav_flag" mat-raised-button (click)="add_favorite()" class="form-button">Añadir a Favoritos</button>
+                    <button [disabled]="!fav_flag" type="button" mat-raised-button (click)="add_favorite()" class="form-button">Añadir a Favoritos</button>
                 </form>
 
 
