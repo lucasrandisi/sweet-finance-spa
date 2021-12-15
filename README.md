@@ -5,6 +5,7 @@
 3. `sudo npm install -g @angular/cli`
 4. For [Tailwind](https://tailwindcss.com/): `npx tailwindcss -o tailwind.css`
 5. For [ApexCharts](https://apexcharts.com/): `npm install apexcharts --save` and `npm install -S apexcharts ng-apexcharts@latest`
+6. For [Swal](https://sweetalert2.github.io/#download) `npm install --save sweetalert2`
 
 ## Run
 1. `ng serve --open`

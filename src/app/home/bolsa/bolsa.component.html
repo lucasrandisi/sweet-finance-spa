@@ -14,9 +14,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let fav of favorites">
+                        <tr class="tr-hover" *ngFor="let fav of favorites">
                             <td class="td-ticker" (click)="find_ticker_form(fav.ticker)">{{fav.ticker}}</td>
-                            <td>{{fav.change}}</td>
+                            <td [class.compra]="fav.change_status" [class.venta]="!fav.change_status">{{fav.change}}</td>
                             <td>{{fav.price}}</td>
                             <button mat-icon-button (click)="delete_favorite(fav.id)"><mat-icon class="delete-button">clear</mat-icon></button>
                         </tr>
@@ -32,8 +32,8 @@
                         <mat-label>Ticker</mat-label>
                         <input id="ticker" formControlName="ticker" autocomplete="false" matInput>
                     </mat-form-field>
-                    <button mat-raised-button type="submit" class="form-button">Buscar</button>
-                    <button [disabled]="!fav_flag" type="button" mat-raised-button (click)="add_favorite()" class="form-button">Añadir a Favoritos</button>
+                    <button mat-raised-button type="submit" class="form-button">Buscar<mat-icon class="delete-button" >search</mat-icon></button>
+                    <button type="button" mat-raised-button (click)="add_favorite()" class="form-button">Añadir a Favoritos<mat-icon class="delete-button">add</mat-icon></button>
                 </form>
 
                 <div class="table-fixed text-center">

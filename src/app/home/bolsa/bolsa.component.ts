@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { SerieData } from './serieData';
 import { SerieDataLinear } from './serieDataLinear';
 import { Favorites } from './favorites';
+import Swal from 'sweetalert2';
 
 import {
 	ChartComponent,
@@ -86,7 +87,6 @@ export class BolsaComponent implements OnInit {
 	dif_lenght = 0;
 
 	favorites : Favorites[] = [];
-	fav_flag = false;
 
  	constructor(private http: HttpClient) {
 	}
@@ -106,10 +106,22 @@ export class BolsaComponent implements OnInit {
 
 	find_ticker(){
 		this.find_ticker_form(this.form.value['ticker']);
-		this.fav_flag = true;
+	}
+
+	clear(){
+		this.symbol = "";
+		this.name = "";
+		this.mercado = "";
+		this.price = "";
+		this.ema21 = "";
+		this.ema200 = "";
+		this.rsi = "";
+		this.estado_compra = false;
+		this.estado_venta = false;
 	}
 
 	find_ticker_form(ticker: any) {
+		this.clear();
 		//request for ticker data in twelve-data
 		this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
 			params: {
@@ -122,6 +134,8 @@ export class BolsaComponent implements OnInit {
 			this.name = response.name;
 			this.symbol = response.symbol;
 			this.mercado = response.exchange;
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error');
 		});
 
 		//request for actual price
@@ -132,6 +146,8 @@ export class BolsaComponent implements OnInit {
 		}).subscribe((response:any)=>{
 			this.price = response.price;
 			this.price = this.price.substr(0, this.price.length-3);
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 
 		//request for ema21
@@ -178,6 +194,8 @@ export class BolsaComponent implements OnInit {
 						this.min_ema21 = ema21_value;
 					}
 				}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});	
 
 		//request for ema200
@@ -216,6 +234,8 @@ export class BolsaComponent implements OnInit {
 					}
 
 				}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 
 		this.draw(ticker);
@@ -423,6 +443,8 @@ export class BolsaComponent implements OnInit {
 
 				this.flag_candle = true;
 				this.flag_vol = true;
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 
 		//request for RSI
@@ -503,6 +525,8 @@ export class BolsaComponent implements OnInit {
 				};
 
 				this.flag_rsi = true;
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});	
 
 		//request for MACD
@@ -614,6 +638,8 @@ export class BolsaComponent implements OnInit {
 				};
 
 				this.flag_macd = true;
+			}, (error:any)=>{
+				Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 			});		
 	}
 
@@ -648,12 +674,20 @@ export class BolsaComponent implements OnInit {
 					fav_change = fav_change.substr(0, fav_change.length-3);
 					fav_change = fav_change.concat("%");
 
+					let change = +change_obs.percent_change;
+					let change_status = false;
+					if (change>=0){
+						change_status = true;
+					}
+
 					this.favorites.push(
-						new Favorites(f.id, f.stock_symbol, fav_change, fav_price)
+						new Favorites(f.id, f.stock_symbol, fav_change, change_status, fav_price)
 					);
 				});
 				
 			}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 	}
 
@@ -695,13 +729,19 @@ export class BolsaComponent implements OnInit {
 				fav_change = fav_change.substr(0, fav_change.length-3);
 				fav_change = fav_change.concat("%");
 
+				let change = +change_obs.percent_change;
+				let change_status = false;
+				if (change>=0){
+					change_status = true;
+				}
+
 				this.favorites.push(
-					new Favorites(max, ticker, fav_change, fav_price)
+					new Favorites(max, ticker, fav_change, change_status, fav_price)
 				);
 			});
 
 		}, (error:any)=>{
-			console.log(error);
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 	}
 
@@ -715,6 +755,8 @@ export class BolsaComponent implements OnInit {
 				}
 				c = c+1;
 			}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 	}
 		
