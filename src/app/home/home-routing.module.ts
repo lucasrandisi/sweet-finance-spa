@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AccountComponent } from './account/account.component';
 import { BolsaComponent } from './bolsa/bolsa.component';
 import { HomeComponent } from './home/home.component';
 import { InfoComponent } from './info/info.component';
@@ -9,7 +10,7 @@ const routes: Routes = [
 	{
 		path: '',
 		component: HomeComponent,
-		children:[
+		children: [
 			{
 				path: 'info',
 				component: InfoComponent,
@@ -21,8 +22,12 @@ const routes: Routes = [
 			{
 				path: 'trading',
 				component: TradingComponent,
+			},
+			{
+				path: 'account',
+				component: AccountComponent
 			}
-		]	
+		]
 	}
 ];
 

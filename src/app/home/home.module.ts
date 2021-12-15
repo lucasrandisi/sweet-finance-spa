@@ -15,13 +15,15 @@ import { TradingComponent } from './trading/trading.component';
 import { FormsModule } from '@angular/forms';
 
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
   		InfoComponent,
    		BolsaComponent,
-     	TradingComponent
+     	TradingComponent,
+      AccountComponent
 	],
 	imports: [
 		CommonModule,
