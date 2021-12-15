@@ -38,4 +38,30 @@ form{
 #chart-bar {
     margin-top: -1%;
 }
+
+.container-table{
+    margin-top: 5%;
+    height: 90vh;
+    overflow-y: scroll;
+}
+
+.table{
+    width: 100%;
+}
+
+.tr-hover:hover {
+    background-color: #e3e5e5;
+}
+
+.delete-button{
+    transform: scale(0.8);
+}
+
+.form-button{
+    margin-left: 3%;
+}
+
+.td-ticker{
+    cursor: pointer;
+}
   

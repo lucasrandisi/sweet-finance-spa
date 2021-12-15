@@ -4,7 +4,8 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { SerieData } from './serieData';
 import { SerieDataLinear } from './serieDataLinear';
-import * as moment from 'moment';
+import { Favorites } from './favorites';
+import Swal from 'sweetalert2';
 
 import {
 	ChartComponent,
@@ -17,6 +18,7 @@ import {
 	ApexStroke,
 	YAxisAnnotations
 } from "ng-apexcharts";
+import { forkJoin } from 'rxjs';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -43,10 +45,6 @@ export class BolsaComponent implements OnInit {
 	price: string;
 	ema21: string;
 	ema200 : string;
-	max_ema200 = 0;
-	min_ema200 = 999999;
-	max_ema21 = 0;
-	min_ema21 = 999999;
 	rsi : string;
 	estado_compra : boolean;
 	estado_venta : boolean;
@@ -81,17 +79,23 @@ export class BolsaComponent implements OnInit {
 	seriesEMA200 : SerieDataLinear[] = [];
 	seriesEMA21 : SerieDataLinear[] = [];
 
-	max_candle : number;
-	min_candle : number;
+	max_ema200 : number;
+	min_ema200 : number;
+	max_ema21 : number;
+	min_ema21 : number;
 	max_vol : number;
 	dif_lenght = 0;
+
+	favorites : Favorites[] = [];
 
  	constructor(private http: HttpClient) {
 	}
 
   	ngOnInit(): void {
 		this.initializeForm();
+		this.get_favorites();
 		this.find_ticker_form('AAPL');
+		//setTimeout(() => console.log(this.favorites),1000);
 	}
 
 	initializeForm() {
@@ -101,10 +105,23 @@ export class BolsaComponent implements OnInit {
 	}
 
 	find_ticker(){
-		this.find_ticker_form(this.form.value['ticker'])
+		this.find_ticker_form(this.form.value['ticker']);
+	}
+
+	clear(){
+		this.symbol = "";
+		this.name = "";
+		this.mercado = "";
+		this.price = "";
+		this.ema21 = "";
+		this.ema200 = "";
+		this.rsi = "";
+		this.estado_compra = false;
+		this.estado_venta = false;
 	}
 
 	find_ticker_form(ticker: any) {
+		this.clear();
 		//request for ticker data in twelve-data
 		this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
 			params: {
@@ -117,6 +134,8 @@ export class BolsaComponent implements OnInit {
 			this.name = response.name;
 			this.symbol = response.symbol;
 			this.mercado = response.exchange;
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error');
 		});
 
 		//request for actual price
@@ -127,6 +146,8 @@ export class BolsaComponent implements OnInit {
 		}).subscribe((response:any)=>{
 			this.price = response.price;
 			this.price = this.price.substr(0, this.price.length-3);
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 
 		//request for ema21
@@ -152,6 +173,9 @@ export class BolsaComponent implements OnInit {
 
 				this.seriesEMA21 = [];
 
+				this.max_ema21 = 0;
+				this.min_ema21 = 999999;
+
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
 					let month = +day.datetime.substr(5,2)-1;
@@ -170,6 +194,8 @@ export class BolsaComponent implements OnInit {
 						this.min_ema21 = ema21_value;
 					}
 				}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});	
 
 		//request for ema200
@@ -185,6 +211,9 @@ export class BolsaComponent implements OnInit {
 				this.ema200 = this.ema200.substr(0, this.ema200.length-3);
 
 				this.seriesEMA200 = [];
+
+				this.max_ema200 = 0;
+				this.min_ema200 = 999999;
 
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
@@ -205,6 +234,8 @@ export class BolsaComponent implements OnInit {
 					}
 
 				}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 
 		this.draw(ticker);
@@ -221,9 +252,9 @@ export class BolsaComponent implements OnInit {
 			}).subscribe((response:any)=>{
 				this.seriesData = [];
 				this.seriesDataLinear = [];
-				this.max_candle = 0;
-				this.min_candle = 9999999999;
-				let max_lenght_candle = 0;
+				let max_candle = 0;
+				let min_candle = 9999999999;
+				let max_lenght_candle = 0;	
 
 				for (let day of response.values){
 					let year = +day.datetime.substr(0,4);
@@ -240,12 +271,12 @@ export class BolsaComponent implements OnInit {
 						max_lenght_candle = high_lenght;
 					}
 
-					if(high > this.max_candle){
-						this.max_candle = high;
+					if(high > max_candle){
+						max_candle = high;
 					}
 
-					if(low < this.min_candle){
-						this.min_candle = low;
+					if(low < min_candle){
+						min_candle = low;
 					}
 
 					this.seriesData.push(
@@ -253,20 +284,20 @@ export class BolsaComponent implements OnInit {
 					);	
 				}
 
-				if (this.min_ema200 < this.min_candle){
-					this.min_candle = this.min_ema200;
+				if (this.min_ema200 < min_candle){
+					min_candle = this.min_ema200;
 				}
 
-				if (this.max_ema200 > this.max_candle){
-					this.max_candle = this.max_ema200;
+				if (this.max_ema200 > max_candle){
+					max_candle = this.max_ema200;
 				}
 
-				if (this.min_ema21 < this.min_candle){
-					this.min_candle = this.min_ema21;
+				if (this.min_ema21 < min_candle){
+					min_candle = this.min_ema21;
 				}
 
-				if (this.max_ema21 > this.max_candle){
-					this.max_candle = this.max_ema21;
+				if (this.max_ema21 > max_candle){
+					max_candle = this.max_ema21;
 				}
 
 				//corrección de volumenes erroneos provenientes de la API
@@ -331,8 +362,8 @@ export class BolsaComponent implements OnInit {
 						position: "top"
 					},	
 					yaxis: {
-						max: this.max_candle + 0.5,
-						min: this.min_candle - 0.5,
+						max: max_candle + 0.5,
+						min: min_candle - 0.5,
 						decimalsInFloat: 2
 					},
 					title:{
@@ -412,6 +443,8 @@ export class BolsaComponent implements OnInit {
 
 				this.flag_candle = true;
 				this.flag_vol = true;
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
 
 		//request for RSI
@@ -492,6 +525,8 @@ export class BolsaComponent implements OnInit {
 				};
 
 				this.flag_rsi = true;
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});	
 
 		//request for MACD
@@ -603,18 +638,126 @@ export class BolsaComponent implements OnInit {
 				};
 
 				this.flag_macd = true;
+			}, (error:any)=>{
+				Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 			});		
-		}
-
-	/*
-	// en caso de necesitar extraer el valor de la fecha más cercana
-	getLast(object_sma: any){
-		let	lastDate = moment('1940-07-01');
-		for(const key in object_sma){
-			lastDate = lastDate.isAfter('2010-10-19') ? lastDate : moment(key);
-		}
-		return lastDate.format('YYYY-MM-DD').toString();
 	}
-	*/
+
+	get_favorites(){
+		this.http.get(`${environment.apiUrl}/stocks/favorites`,{
+			params: {
+			}
+		}).subscribe((response:any)=>{
+			this.favorites = [];
+
+			for(let f of response){
+				let observable1 = this.http.get(`${environment.apiUrl}/twelve-data/price`,{
+					params: {
+					symbol: f.stock_symbol
+					}
+				});
+		
+				let observable2 = this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
+					params: {
+					symbol: f.stock_symbol
+					}
+				});
+		
+				forkJoin([observable1, observable2]).subscribe((response : any)=>{
+					let price_obs = response[0];
+					let change_obs = response[1];
+		
+					let fav_price = price_obs.price;
+					fav_price = fav_price.substr(0, fav_price.length-3);
+		
+					let fav_change = change_obs.percent_change;
+					fav_change = fav_change.substr(0, fav_change.length-3);
+					fav_change = fav_change.concat("%");
+
+					let change = +change_obs.percent_change;
+					let change_status = false;
+					if (change>=0){
+						change_status = true;
+					}
+
+					this.favorites.push(
+						new Favorites(f.id, f.stock_symbol, fav_change, change_status, fav_price)
+					);
+				});
+				
+			}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
+		});
+	}
+
+	add_favorite(){
+		let ticker = this.form.value['ticker'];
+
+		this.http.post(`${environment.apiUrl}/stocks/favorites`,{
+			stock_symbol: ticker
+		}).subscribe((response:any)=>{
+
+			let max = 0;
+			for(let e of this.favorites){
+				if (e.id > max){
+					max = e.id;
+				}
+			}
+			max = max+1;
+
+			let observable1 = this.http.get(`${environment.apiUrl}/twelve-data/price`,{
+				params: {
+				symbol: ticker
+				}
+			});
+	
+			let observable2 = this.http.get(`${environment.apiUrl}/twelve-data/quote`,{
+				params: {
+				symbol: ticker
+				}
+			});
+	
+			forkJoin([observable1, observable2]).subscribe((response : any)=>{
+				let price_obs = response[0];
+				let change_obs = response[1];
+	
+				let fav_price = price_obs.price;
+				fav_price = fav_price.substr(0, fav_price.length-3);
+	
+				let fav_change = change_obs.percent_change;
+				fav_change = fav_change.substr(0, fav_change.length-3);
+				fav_change = fav_change.concat("%");
+
+				let change = +change_obs.percent_change;
+				let change_status = false;
+				if (change>=0){
+					change_status = true;
+				}
+
+				this.favorites.push(
+					new Favorites(max, ticker, fav_change, change_status, fav_price)
+				);
+			});
+
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
+		});
+	}
+
+	delete_favorite(id : any){
+		this.http.delete(`${environment.apiUrl}/stocks/favorites/${id}`,{})
+		.subscribe((response:any)=>{
+			let c = 0;
+			for (let e of this.favorites){
+				if (e.id == id){
+					this.favorites.splice(c,1);
+				}
+				c = c+1;
+			}
+		}, (error:any)=>{
+			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
+		});
+	}
 		
 }
