@@ -46,6 +46,13 @@ export class AuthService {
 	}
 
 
+	set currentUser(value) {
+		this._currentUser = value;
+
+		window.localStorage.setItem('currentUser', JSON.stringify(this._currentUser));
+	}
+
+
 	registerUser(user: Partial<UserInterface>) {
 		const url = `${environment.apiUrl}/register	`;
 
