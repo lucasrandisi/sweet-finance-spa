@@ -7,23 +7,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { InfoComponent } from './info/info.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatCardModule } from '@angular/material/card'; 
-import { BolsaComponent } from './bolsa/bolsa.component'; 
+import { MatCardModule } from '@angular/material/card';
+import { BolsaComponent } from './bolsa/bolsa.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TradingComponent } from './trading/trading.component';
 import { FormsModule } from '@angular/forms';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { AccountComponent } from './account/account.component';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
-  		InfoComponent,
-   		BolsaComponent,
-     	TradingComponent,
-      AccountComponent
+		InfoComponent,
+		BolsaComponent,
+		TradingComponent,
+		AccountComponent
 	],
 	imports: [
 		CommonModule,
@@ -36,7 +36,8 @@ import { AccountComponent } from './account/account.component';
 		ReactiveFormsModule,
 		NgApexchartsModule,
 		FormsModule,
-		MatIconModule
+		MatIconModule,
+		MatSnackBarModule
 	]
 })
 export class HomeModule { }
