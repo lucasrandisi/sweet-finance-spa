@@ -1,43 +1,46 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarComponent } from 'src/app/shared/components/snackbar/snackbar.component';
 import { UserInterface } from 'src/app/shared/models/user.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { UserService } from 'src/app/shared/services/users.service';
 
 @Component({
-    selector: 'app-account',
-    templateUrl: './account.component.html',
-    styleUrls: ['./account.component.scss']
+    selector: 'app-change-password',
+    templateUrl: './change-password.component.html',
+    styleUrls: ['./change-password.component.scss']
 })
-export class AccountComponent implements OnInit {
+export class ChangePasswordComponent implements OnInit {
     form: FormGroup;
     currentUser: UserInterface;
 
     constructor(
-        private userService: UserService,
         private authService: AuthService,
         private snackBar: MatSnackBar
     ) { }
 
     ngOnInit(): void {
-        this.currentUser = this.authService.currentUser!;
         this.initForm();
     }
 
     initForm() {
         this.form = new FormGroup({
-            email: new FormControl(this.currentUser.email, [Validators.required]),
-            name: new FormControl(this.currentUser.name, [Validators.required]),
+            old_password: new FormControl('', [Validators.required]),
+            new_password: new FormControl('', [Validators.required]),
+            new_password_confirmation: new FormControl('', [Validators.required]),
         });
     }
 
     onSubmit() {
         if (this.form.valid) {
-            this.userService.updateMe(this.form.value).subscribe({
-                next: () => this.openSnackbar('Datos guardados', 'done'),
-                error: () => this.openSnackbar('Ocurrió un error al guardar los datos', 'close')
+            this.authService.changePassword(this.form.value).subscribe({
+                next: () => this.openSnackbar('Contraseña actualizada', 'done'),
+                error: (errorResponse: HttpErrorResponse) => {
+                    if (errorResponse.status === 401) {
+                        this.openSnackbar('Contraseña invalida', 'close')
+                    }
+                }
             });
         }
     }

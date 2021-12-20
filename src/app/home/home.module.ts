@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { AccountComponent } from './account/account.component';
+import { ChangePasswordComponent } from './account/change-password/change-password.component';
 
 @NgModule({
 	declarations: [
@@ -23,7 +24,8 @@ import { AccountComponent } from './account/account.component';
 		InfoComponent,
 		BolsaComponent,
 		TradingComponent,
-		AccountComponent
+		AccountComponent,
+  ChangePasswordComponent
 	],
 	imports: [
 		CommonModule,
