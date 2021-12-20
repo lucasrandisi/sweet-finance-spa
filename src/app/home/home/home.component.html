@@ -1,33 +1,32 @@
-<div class="container-body">
-    <nav class="flex items-center justify-between flex-wrap">
-        <div class="flex items-center">
-            <img class="logo" src="../../../assets/sw_logo.png">
-            <span class="font-extrabold text-xl" style="color: #cccc00"> SWEET FINANCE</span>
-        </div>
+<div class="page">
+	<nav class="flex items-center justify-between flex-wrap">
+		<div class="flex items-center">
+			<img class="logo" src="../../../assets/sw_logo.png">
+			<span class="font-extrabold text-xl" style="color: #cccc00"> SWEET FINANCE</span>
+		</div>
 
-        <div class="text-sm lg:flex-grow">
-            <a [routerLink] = "['bolsa']" class="a-navbar text-bold text-xl">
-              Bolsa de Valores
-            </a>
-            <a [routerLink] = "['']" class="a-navbar ext-bold text-xl">
-              Criptomonedas
-            </a>
-            <a [routerLink] = "['trading']" class="a-navbar ext-bold text-xl">
-              Trading
-            </a>
-            <a [routerLink] = "['']" class="a-navbar ext-bold text-xl">
-                Academia
-            </a>
-        </div>
+		<div class="text-sm lg:flex-grow">
+			<a [routerLink] = "['bolsa']" class="a-navbar text-bold text-xl">
+				Bolsa de Valores
+			</a>
+			<a [routerLink] = "['']" class="a-navbar ext-bold text-xl">
+				Criptomonedas
+			</a>
+			<a [routerLink] = "['trading']" class="a-navbar ext-bold text-xl">
+				Trading
+			</a>
+			<a [routerLink] = "['']" class="a-navbar ext-bold text-xl">
+				Academia
+			</a>
+		</div>
 
-        <div>
-            <button mat-raised-button class="button-info"><a [routerLink] = "['info']">Acerca de SW</a></button>
-            <button mat-raised-button class="button"><a [routerLink] = "['']">Cuenta</a></button>
-        </div>
-    </nav>
+		<div>
+			<button mat-raised-button class="button-info"><a [routerLink] = "['info']">Acerca de SW</a></button>
+			<button mat-raised-button class="button"><a [routerLink] = "['account']">Cuenta</a></button>
+		</div>
+	</nav>
 
-    <router-outlet></router-outlet>
-
-    <!-- <h1>{{name}}</h1> -->
-    
+	<div class="body">
+		<router-outlet></router-outlet>
+	</div>
 </div>
