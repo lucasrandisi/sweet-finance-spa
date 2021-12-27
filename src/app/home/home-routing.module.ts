@@ -6,6 +6,7 @@ import { BolsaComponent } from './bolsa/bolsa.component';
 import { HomeComponent } from './home/home.component';
 import { InfoComponent } from './info/info.component';
 import { TradingComponent } from './trading/trading.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
     {
@@ -19,6 +20,10 @@ const routes: Routes = [
             {
                 path: 'bolsa',
                 component: BolsaComponent,
+            },
+            {
+                path: '',
+                component: DashboardComponent,
             },
             {
                 path: 'trading',
