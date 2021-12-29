@@ -1,18 +1,73 @@
 <div class="grid grid-cols-2">
 
     <div>
-        ASD
+        <span class="font-normal text-3xl" align="center">Bienvenido {{username}}!</span>
+
+    
+
+
+
+        <div class="grid grid-cols-2">
+
+            <div class="container-table" align="center">
+                <span class="font-bold text-base">LO MEJOR</span>
+                <mat-divider></mat-divider>
+                <div class="table-fixed text-center table">
+                    <thead>
+                        <tr>
+                            <th class="font-medium text-base">Ticker</th>
+                            <th class="font-medium text-base">Compañía</th>
+                            <th class="font-medium text-base">Cambio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t of better_tickers">
+                            <td>{{t.ticker}}</td>
+                            <td>{{t.company}}</td>
+                            <td class="compra">{{t.change}}</td>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+
+            <div class="container-table" align="center">
+                <span class="font-bold text-base">LO PEOR</span>
+                <mat-divider></mat-divider>
+                <div class="table-fixed text-center table">
+                    <thead>
+                        <tr>
+                            <th class="font-medium text-base">Ticker</th>
+                            <th class="font-medium text-base">Compañía</th>
+                            <th class="font-medium text-base">Cambio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t of worst_tickers">
+                            <td>{{t.ticker}}</td>
+                            <td>{{t.company}}</td>
+                            <td class="venta">{{t.change}}</td>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+
+        </div>
+
+
     </div>
 
     <div>
         <mat-card class="noticias" *ngFor="let n of news">
-            <mat-card-header>
-                <img mat-card-avatar src={{n.img_url}}>
+            <mat-card-header>    
                 <mat-card-title class="text-sm">{{n.title}}</mat-card-title>
             </mat-card-header>
-            <mat-card-content><p class="text-xs"> {{n.desc}}</p></mat-card-content>
-            <mat-card-actions>
-                <button mat-stroked-button><a href={{n.url}}>Seguir leyendo</a></button>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+                <img class="img-float" src={{n.img_url}}>
+                <p class="text-xs text-justify">{{n.desc}}</p>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-stroked-button class="read-button"><a href={{n.url}}>Seguir leyendo</a></button>
               </mat-card-actions>
         </mat-card>
     </div>

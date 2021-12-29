@@ -1,8 +1,8 @@
 import { Component, OnInit,  } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { News } from './news';
+import { Tickers } from './tickers';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -15,12 +15,29 @@ export class DashboardComponent implements OnInit {
 
   	constructor(private http: HttpClient) { }
 
+	username : string;
+
   	news : News[] = [];
+	better_tickers : Tickers[] = [];
+	worst_tickers : Tickers[] = [];
 
 	ngOnInit(): void {
 
+		this.get_user();
+
 		this.get_news();
 
+		this.get_betterWorst_stocks();
+
+	}
+
+	get_user(){
+		this.http.get(`${environment.apiUrl}/me`,{
+			params: {
+			}
+		}).subscribe((response:any)=>{
+			this.username = response.data.name;
+		});
 	}
 
 	get_news(){
@@ -28,7 +45,7 @@ export class DashboardComponent implements OnInit {
 			params: {
 				path: 'news/all',
 				language: 'es',
-				countries: 'us, ar, br, es, hk, in, mx, ru',
+				countries: 'us, ar, br, cn',
 				page: '1' 
 			}
 		});
@@ -37,10 +54,12 @@ export class DashboardComponent implements OnInit {
 			params: {
 				path: 'news/all',
 				language: 'es',
-				countries: 'us, ar, br, es, hk, in, mx, ru',
+				countries: 'us, ar, br, cn',
 				page: '2' 
 			}
 		});
+
+		this.news = [];
 
 		forkJoin([observable1, observable2]).subscribe((response : any)=>{
 			let n1 = response[0].data;
@@ -55,9 +74,12 @@ export class DashboardComponent implements OnInit {
 					desc = desc.substr(0,250).concat("...");
 				}
 
-				this.news.push(
-					new News(n.title, desc, n.image_url, n.url)
-				)
+				if (desc !== ""){
+					this.news.push(
+						new News(n.title, desc, n.image_url, n.url)
+					)
+				}
+				
 			}
 
 			for (let n of n2){
@@ -69,11 +91,50 @@ export class DashboardComponent implements OnInit {
 					desc = desc.substr(0,250).concat("...");
 				}
 
-				this.news.push(
-					new News(n.title, desc, n.image_url, n.url)
-				)
+				if (desc !== ""){
+					this.news.push(
+						new News(n.title, desc, n.image_url, n.url)
+					)
+				}
 			}			
 		});
 	}
 
+	get_betterWorst_stocks(){
+
+		this.better_tickers = [];
+		this.worst_tickers = [];
+
+		this.http.get(`${environment.apiUrl}/fmp`,{
+			params: {
+			path: "v3/gainers"
+			}
+		}).subscribe((response:any)=>{
+			console.log(response);
+			for (let i = 0; i < 5; i++){
+				let change_length = response[i].changesPercentage.length;
+				let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
+				this.better_tickers.push(
+					new Tickers(response[i].ticker, response[i].companyName, change)
+				)
+			}
+		}, (error:any)=>{
+		});
+
+		this.http.get(`${environment.apiUrl}/fmp`,{
+			params: {
+			path: "v3/losers"
+			}
+		}).subscribe((response:any)=>{
+			console.log(response);
+			for (let i = 0; i < 5; i++){
+				let change_length = response[i].changesPercentage.length;
+				let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
+				this.worst_tickers.push(
+					new Tickers(response[i].ticker, response[i].companyName, change)
+				)
+			}
+		}, (error:any)=>{
+		});
+	}
 }
