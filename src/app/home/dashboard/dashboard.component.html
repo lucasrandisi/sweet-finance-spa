@@ -1,11 +1,20 @@
 <div class="grid grid-cols-2">
 
     <div>
-        <span class="font-normal text-3xl" align="center">Bienvenido {{username}}!</span>
+        <span class="font-normal text-3xl">Bienvenido {{username}}!</span>
 
-    
-
-
+        <div class="chart-box">
+            <div *ngIf="flag_end_draw" id="chart-donut">
+                <apx-chart
+                    #chartDonut
+                    [series]="chartDonutOptions.series"
+                    [labels]="chartDonutOptions.labels"
+                    [chart]="chartDonutOptions.chart"
+                    [title]="chartDonutOptions.title"     
+                ></apx-chart>
+            </div>
+        </div>
+        
 
         <div class="grid grid-cols-2">
 
@@ -56,7 +65,7 @@
 
     </div>
 
-    <div>
+    <div class="container-noticias">
         <mat-card class="noticias" *ngFor="let n of news">
             <mat-card-header>    
                 <mat-card-title class="text-sm">{{n.title}}</mat-card-title>

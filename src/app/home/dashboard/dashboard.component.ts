@@ -1,9 +1,31 @@
-import { Component, OnInit,  } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { News } from './news';
 import { Tickers } from './tickers';
 import { forkJoin } from 'rxjs';
+
+import {
+	ChartComponent,
+	ApexAxisChartSeries,
+	ApexChart,
+	ApexYAxis,
+	ApexXAxis,
+	ApexPlotOptions,
+	ApexDataLabels,
+	ApexStroke,
+	YAxisAnnotations
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+	series: ApexAxisChartSeries;
+	chart: ApexChart;
+	xaxis: ApexXAxis;
+	yaxis: ApexYAxis;
+	plotOptions: ApexPlotOptions;
+	dataLabels: ApexDataLabels;
+	stroke: ApexStroke;
+};
 
 @Component({
 	selector: 'app-dashboard',
@@ -21,11 +43,18 @@ export class DashboardComponent implements OnInit {
 	better_tickers : Tickers[] = [];
 	worst_tickers : Tickers[] = [];
 
+	@ViewChild("chart") chart: ChartComponent;
+	public chartDonutOptions: any;
+
+	flag_end_draw = false;
+
 	ngOnInit(): void {
 
 		this.get_user();
 
 		this.get_news();
+
+		this.draw_stocks();
 
 		this.get_betterWorst_stocks();
 
@@ -100,6 +129,38 @@ export class DashboardComponent implements OnInit {
 		});
 	}
 
+	draw_stocks(){
+		this.http.get(`${environment.apiUrl}/stocks`,{
+			params: {
+			}
+		}).subscribe((response:any)=>{
+
+			let values = [];
+			let labels = [];
+
+			for (let s of response){
+				values.push(s.amount);
+				labels.push(s.stock_symbol);
+			}
+
+			this.chartDonutOptions = {
+				series: values,
+				labels: labels,
+				chart: {
+					type: 'donut',
+					height: 300,
+				},
+				title:{
+					text: "RESUMEN DE ACCIONES EN CARTERA",
+					align: "center",
+					margin: 0
+				}
+			};
+
+			this.flag_end_draw = true;
+		});
+	}
+
 	get_betterWorst_stocks(){
 
 		this.better_tickers = [];
@@ -110,7 +171,6 @@ export class DashboardComponent implements OnInit {
 			path: "v3/gainers"
 			}
 		}).subscribe((response:any)=>{
-			console.log(response);
 			for (let i = 0; i < 5; i++){
 				let change_length = response[i].changesPercentage.length;
 				let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
@@ -126,7 +186,6 @@ export class DashboardComponent implements OnInit {
 			path: "v3/losers"
 			}
 		}).subscribe((response:any)=>{
-			console.log(response);
 			for (let i = 0; i < 5; i++){
 				let change_length = response[i].changesPercentage.length;
 				let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
