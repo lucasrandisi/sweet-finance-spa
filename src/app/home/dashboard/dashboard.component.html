@@ -1,0 +1,85 @@
+<div class="grid grid-cols-2">
+
+    <div>
+        <span class="font-normal text-3xl">Bienvenido {{username}}!</span>
+
+        <div class="chart-box">
+            <div *ngIf="flag_end_draw" id="chart-donut">
+                <apx-chart
+                    #chartDonut
+                    [series]="chartDonutOptions.series"
+                    [labels]="chartDonutOptions.labels"
+                    [chart]="chartDonutOptions.chart"
+                    [title]="chartDonutOptions.title"     
+                ></apx-chart>
+            </div>
+        </div>
+        
+
+        <div class="grid grid-cols-2">
+
+            <div class="container-table" align="center">
+                <span class="font-bold text-base">LO MEJOR</span>
+                <mat-divider></mat-divider>
+                <div class="table-fixed text-center table">
+                    <thead>
+                        <tr>
+                            <th class="font-medium text-base">Ticker</th>
+                            <th class="font-medium text-base">Compañía</th>
+                            <th class="font-medium text-base">Cambio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t of better_tickers">
+                            <td>{{t.ticker}}</td>
+                            <td>{{t.company}}</td>
+                            <td class="compra">{{t.change}}</td>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+
+            <div class="container-table" align="center">
+                <span class="font-bold text-base">LO PEOR</span>
+                <mat-divider></mat-divider>
+                <div class="table-fixed text-center table">
+                    <thead>
+                        <tr>
+                            <th class="font-medium text-base">Ticker</th>
+                            <th class="font-medium text-base">Compañía</th>
+                            <th class="font-medium text-base">Cambio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t of worst_tickers">
+                            <td>{{t.ticker}}</td>
+                            <td>{{t.company}}</td>
+                            <td class="venta">{{t.change}}</td>
+                        </tr>
+                    </tbody>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="container-noticias">
+        <mat-card class="noticias" *ngFor="let n of news">
+            <mat-card-header>    
+                <mat-card-title class="text-sm">{{n.title}}</mat-card-title>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+                <img class="img-float" src={{n.img_url}}>
+                <p class="text-xs text-justify">{{n.desc}}</p>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-stroked-button class="read-button"><a href={{n.url}}>Seguir leyendo</a></button>
+              </mat-card-actions>
+        </mat-card>
+    </div>
+
+
+</div>

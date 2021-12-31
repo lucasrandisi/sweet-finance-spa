@@ -1,0 +1,43 @@
+:host {
+    background-color: #f7f9f9; 
+    flex-grow: 1;
+}
+
+.noticias{
+    margin: 1vh;
+}
+
+.img-float {
+    float: left;
+    width: 10vw;
+    height: 12vh;
+    margin-right: 1vw;
+}
+
+mat-card-content{
+    margin-top: 3vh;
+}
+
+.container-table{
+    margin-top: 5%;
+    width: 90%;
+}
+
+.compra{
+    color: green;
+}
+
+.venta{
+    color: red;
+}
+
+.chart-box{
+    max-width: 100%;
+    margin-top: 2%;
+}
+
+.container-noticias{
+    height: 90vh;
+    overflow-y: scroll;
+}
+

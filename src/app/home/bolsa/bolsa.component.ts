@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { SerieData } from './serieData';
 import { SerieDataLinear } from './serieDataLinear';
 import { Favorites } from './favorites';
+import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import {
@@ -18,7 +19,6 @@ import {
 	ApexStroke,
 	YAxisAnnotations
 } from "ng-apexcharts";
-import { forkJoin } from 'rxjs';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
