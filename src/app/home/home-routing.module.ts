@@ -7,6 +7,13 @@ import { HomeComponent } from './home/home.component';
 import { InfoComponent } from './info/info.component';
 import { TradingComponent } from './trading/trading.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AbceconomiaComponent } from './academia/abceconomia/abceconomia.component';
+import { AnatecnicoComponent } from './academia/anatecnico/anatecnico.component';
+import { CriptosComponent } from './academia/criptos/criptos.component';
+import { FinanzasComponent } from './academia/finanzas/finanzas.component';
+import { HiseconomicaComponent } from './academia/hiseconomica/hiseconomica.component';
+import { MercadosComponent } from './academia/mercados/mercados.component';
+import { VarmacroeconomicasComponent } from './academia/varmacroeconomicas/varmacroeconomicas.component';
 
 const routes: Routes = [
     {
@@ -28,6 +35,34 @@ const routes: Routes = [
             {
                 path: 'trading',
                 component: TradingComponent,
+            },
+            {
+                path: 'abceconomia',
+                component: AbceconomiaComponent,
+            },
+            {
+                path: 'anatecnico',
+                component: AnatecnicoComponent,
+            },
+            {
+                path: 'criptos',
+                component: CriptosComponent,
+            },
+            {
+                path: 'finanzas',
+                component: FinanzasComponent,
+            },
+            {
+                path: 'hiseconomi',
+                component: HiseconomicaComponent,
+            },
+            {
+                path: 'mercados',
+                component: MercadosComponent,
+            },
+            {
+                path: 'vareco',
+                component: VarmacroeconomicasComponent,
             },
             {
                 path: 'account',

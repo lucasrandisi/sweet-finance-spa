@@ -16,8 +16,16 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { AccountComponent } from './account/account.component';
+import { MatMenuModule } from '@angular/material/menu';
 import { ChangePasswordComponent } from './account/change-password/change-password.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AbceconomiaComponent } from './academia/abceconomia/abceconomia.component';
+import { MercadosComponent } from './academia/mercados/mercados.component';
+import { VarmacroeconomicasComponent } from './academia/varmacroeconomicas/varmacroeconomicas.component';
+import { FinanzasComponent } from './academia/finanzas/finanzas.component';
+import { AnatecnicoComponent } from './academia/anatecnico/anatecnico.component';
+import { CriptosComponent } from './academia/criptos/criptos.component';
+import { HiseconomicaComponent } from './academia/hiseconomica/hiseconomica.component';
 
 @NgModule({
 	declarations: [
@@ -27,7 +35,14 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 		TradingComponent,
 		AccountComponent,
 		ChangePasswordComponent,
-		DashboardComponent
+		DashboardComponent,
+  AbceconomiaComponent,
+  MercadosComponent,
+  VarmacroeconomicasComponent,
+  FinanzasComponent,
+  AnatecnicoComponent,
+  CriptosComponent,
+  HiseconomicaComponent
 	],
 	imports: [
 		CommonModule,
@@ -41,7 +56,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 		NgApexchartsModule,
 		FormsModule,
 		MatIconModule,
-		MatSnackBarModule
+		MatSnackBarModule,
+		MatMenuModule
 	]
 })
 export class HomeModule { }
