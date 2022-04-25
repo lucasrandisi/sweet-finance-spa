@@ -5,20 +5,18 @@
 		</div>
 
 		<div class="text-sm lg:flex-grow">
-			<a [routerLink] = "['']" class="a-navbar text-bold text-xl">
+			<a [routerLink] = "['']" class="a-navbar text-xl">
 				Dashboard
 			</a>
-			<a [routerLink] = "['bolsa']" class="a-navbar text-bold text-xl">
+			<a [routerLink] = "['bolsa']" class="a-navbar text-xl">
 				Bolsa de Valores
 			</a>
-			<a [routerLink] = "['trading']" class="a-navbar ext-bold text-xl">
+			<a [routerLink] = "['trading']" class="a-navbar text-xl">
 				Trading
 			</a>
-			<button mat-button [matMenuTriggerFor]="menu" class="a-navbar ext-bold text-xl">
-				<a class="a-navbar ext-bold text-xl">
+			<button mat-button [matMenuTriggerFor]="menu" class="a-navbar text-xl" style="font-weight: 400;">
 				  Academia
-				</a> 
-			  </button>
+			</button>
 			  
 			  <mat-menu #menu="matMenu">
 				<button mat-menu-item>
