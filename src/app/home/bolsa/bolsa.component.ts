@@ -6,6 +6,7 @@ import { SerieData } from './serieData';
 import { SerieDataLinear } from './serieDataLinear';
 import { Favorites } from './favorites';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 import {
@@ -88,7 +89,7 @@ export class BolsaComponent implements OnInit {
 
 	favorites : Favorites[] = [];
 
- 	constructor(private http: HttpClient) {
+ 	constructor(private http: HttpClient, private router: Router) {
 	}
 
   	ngOnInit(): void {
@@ -758,6 +759,10 @@ export class BolsaComponent implements OnInit {
 		}, (error:any)=>{
 			Swal.fire('Error en la carga de datos', 'Por favor, intentalo nuevamente', 'error')
 		});
+	}
+
+	navigate_academy(){
+		this.router.navigateByUrl('/anatecnico');
 	}
 		
 }
