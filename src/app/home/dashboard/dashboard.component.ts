@@ -95,31 +95,26 @@ export class DashboardComponent implements OnInit {
 			let n2 = response[1].data;
 
 			for (let n of n1){
-
 				let desc = n.description;
 				let largo = desc.length;
-
-				if (largo>250){
-					desc = desc.substr(0,250).concat("...");
+				if(desc[largo-1]!="."){
+					desc = desc + ".";
 				}
-
+				desc = desc + " " + n.snippet;
 				if (desc !== ""){
 					this.news.push(
 						new News(n.title, desc, n.image_url, n.url)
 					)
-				}
-				
+				}	
 			}
 
 			for (let n of n2){
-
 				let desc = n.description;
 				let largo = desc.length;
-
-				if (largo>250){
-					desc = desc.substr(0,250).concat("...");
+				if(desc[largo-1]!="."){
+					desc = desc + ".";
 				}
-
+				desc = desc + " " + n.snippet;
 				if (desc !== ""){
 					this.news.push(
 						new News(n.title, desc, n.image_url, n.url)
@@ -153,7 +148,11 @@ export class DashboardComponent implements OnInit {
 				title:{
 					text: "RESUMEN DE ACCIONES EN CARTERA",
 					align: "center",
-					margin: 0
+					margin: 0,
+				},
+				legend: {
+					show: true,
+					floating: true,
 				}
 			};
 

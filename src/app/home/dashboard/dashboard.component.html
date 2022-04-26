@@ -1,7 +1,7 @@
 <div class="grid grid-cols-2">
 
     <div>
-        <span class="font-normal text-3xl">Bienvenido {{username}}!</span>
+        <div class="font-normal text-3xl" align="center" style="margin-top: 2%">¡Bienvenido {{username}}!</div>
 
         <div class="chart-box">
             <div *ngIf="flag_end_draw" id="chart-donut">
@@ -10,13 +10,14 @@
                     [series]="chartDonutOptions.series"
                     [labels]="chartDonutOptions.labels"
                     [chart]="chartDonutOptions.chart"
-                    [title]="chartDonutOptions.title"     
+                    [title]="chartDonutOptions.title"   
+                    [legend]="chartDonutOptions.legend"  
                 ></apx-chart>
             </div>
         </div>
         
 
-        <div class="grid grid-cols-2">
+        <div class="grid grid-cols-2 container-stocks">
 
             <div class="container-table" align="center">
                 <span class="font-bold text-base">LO MEJOR</span>
@@ -68,12 +69,18 @@
     <div class="container-noticias">
         <mat-card class="noticias" *ngFor="let n of news">
             <mat-card-header>    
-                <mat-card-title class="text-sm">{{n.title}}</mat-card-title>
+                <mat-card-title class="text-lg">{{n.title}}</mat-card-title>
             </mat-card-header>
             <mat-divider></mat-divider>
             <mat-card-content>
-                <img class="img-float" src={{n.img_url}}>
-                <p class="text-xs text-justify">{{n.desc}}</p>
+                <div class="flex-row">
+                    <div>
+                      <p class="text-justify text-base">{{n.desc}}</p>
+                    </div>
+                    <div>
+                      <img src={{n.img_url}}/>
+                    </div>
+              </div>
             </mat-card-content>
             <mat-card-actions align="end">
                 <button mat-stroked-button class="read-button"><a href={{n.url}}>Seguir leyendo</a></button>
