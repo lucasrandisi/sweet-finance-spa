@@ -100,7 +100,9 @@ export class DashboardComponent implements OnInit {
 				if(desc[largo-1]!="."){
 					desc = desc + ".";
 				}
-				desc = desc + " " + n.snippet;
+				if(desc.substr(0,10)!=n.snippet.substr(0,10)){
+					desc = desc + " " + n.snippet;
+				}
 				if (desc !== ""){
 					this.news.push(
 						new News(n.title, desc, n.image_url, n.url)
@@ -114,7 +116,9 @@ export class DashboardComponent implements OnInit {
 				if(desc[largo-1]!="."){
 					desc = desc + ".";
 				}
-				desc = desc + " " + n.snippet;
+				if(desc.substr(0,10)!=n.snippet.substr(0,10)){
+					desc = desc + " " + n.snippet;
+				}
 				if (desc !== ""){
 					this.news.push(
 						new News(n.title, desc, n.image_url, n.url)

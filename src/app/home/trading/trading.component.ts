@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { SerieData } from './serieDataHour';
+import { Router } from '@angular/router';
 import { Orders } from './orders';
 
 import {
@@ -44,6 +45,7 @@ export class TradingComponent implements OnInit {
 	stop_limit_sell: FormGroup;
 
 	price : string;
+	change_action : boolean;
 	change: string;
 	max24: string;
 	min24: string;
@@ -54,6 +56,7 @@ export class TradingComponent implements OnInit {
 	ema21_value_number: number;
 	price_number: number;
 	estado: string;
+	estado_action : boolean;
 	symbol: string;
 	finance: number;
 	disponible : number;
@@ -78,7 +81,7 @@ export class TradingComponent implements OnInit {
 	max_value : number;
 	flag_chart : boolean;
 
-  	constructor(private http: HttpClient) { }
+  	constructor(private http: HttpClient, private router: Router) { }
 
   	ngOnInit(): void {
 
@@ -153,6 +156,11 @@ export class TradingComponent implements OnInit {
 			this.symbol = response.symbol;
 			this.change = response.percent_change;
 			this.change = this.change.substr(0, this.change.length-3);
+			if (this.change.substring(0,1) == "-"){
+				this.change_action = false;
+			} else {
+				this.change_action = true;
+			}
 			this.change = this.change.concat("%");
 			this.max24 = response.high;
 			this.max24 = this.max24.substr(0, this.max24.length-3);
@@ -189,8 +197,10 @@ export class TradingComponent implements OnInit {
 				this.price_number = +this.price;
 				if (this.ema21_value_number <= this.price_number){
 					this.estado = "COMPRA";
+					this.estado_action = true;
 				} else {
 					this.estado = "VENTA";
+					this.estado_action = false;
 				}
 		});	
 
@@ -205,8 +215,10 @@ export class TradingComponent implements OnInit {
 			for (let stock of response){
 				if(stock.stock_symbol == ticker){
 					this.disponible = stock.amount;
+					return;
 				}
 			}
+			this.disponible = 0;
 		});
 	}
 
@@ -360,9 +372,11 @@ export class TradingComponent implements OnInit {
 					order.stop = "-";
 				}
 
+				let fecha = order.created_at.substring(0,10);
+
 				this.orders.push(
 					new Orders(order.id, order.action, action_boolean, order.stock_symbol, order.amount,
-						order.stop, order.limit)
+						order.stop, order.limit, fecha)
 				);
 			}
 		});
@@ -374,6 +388,10 @@ export class TradingComponent implements OnInit {
 			this.get_orders();
 			//actualizar finance
 		});
+	}
+
+	navigate_academy(){
+		this.router.navigateByUrl('/anatecnico');
 	}
 
 	draw(ticker : any){

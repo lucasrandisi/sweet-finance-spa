@@ -6,10 +6,10 @@ export class Orders{
     limit: string;
     stop: string;
     ticker: string;
-    //fecha: string;
+    fecha: string;
 
 	constructor(id: number, action:string, action_boolean: boolean, ticker:string, 
-        amount:number, stop: string, limit: string){
+        amount:number, stop: string, limit: string, fecha: string){
             this.id = id;
 			this.action = action;
             this.action_boolean = action_boolean;
@@ -17,5 +17,6 @@ export class Orders{
             this.amount = amount;
             this.stop = stop;
             this.limit = limit;
+            this.fecha = fecha;
 	}
 }

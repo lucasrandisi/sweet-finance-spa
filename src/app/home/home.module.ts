@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { BolsaComponent } from './bolsa/bolsa.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { TradingComponent } from './trading/trading.component';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -36,13 +37,13 @@ import { HiseconomicaComponent } from './academia/hiseconomica/hiseconomica.comp
 		AccountComponent,
 		ChangePasswordComponent,
 		DashboardComponent,
-  AbceconomiaComponent,
-  MercadosComponent,
-  VarmacroeconomicasComponent,
-  FinanzasComponent,
-  AnatecnicoComponent,
-  CriptosComponent,
-  HiseconomicaComponent
+		AbceconomiaComponent,
+		MercadosComponent,
+		VarmacroeconomicasComponent,
+		FinanzasComponent,
+		AnatecnicoComponent,
+		CriptosComponent,
+		HiseconomicaComponent
 	],
 	imports: [
 		CommonModule,
@@ -51,6 +52,7 @@ import { HiseconomicaComponent } from './academia/hiseconomica/hiseconomica.comp
 		MatDividerModule,
 		MatCardModule,
 		MatInputModule,
+		MatSelectModule,
 		MatFormFieldModule,
 		ReactiveFormsModule,
 		NgApexchartsModule,

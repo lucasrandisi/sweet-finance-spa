@@ -10,31 +10,40 @@ form{
     }
 }
 
+.box-form{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+    padding: 2%;
+    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.15);
+    background-color: white;
+}
+
 .container-trading-insta{
     width: 70%;
-    height: 55vh;
-    border: 1px solid black;
+    height: 30vh;
     padding: 2%;
-    border-radius: 5%;
     margin-top: 2%;
+    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.15);
+    background-color: white;
 }
 
 .container-trading-limit{
     width: 70%;
-    height: 70vh;
-    border: 1px solid black;
+    height: 33vh;
     padding: 2%;
-    border-radius: 5%;
     margin-top: 2%;
+    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.15);
+    background-color: white;
 }
 
 .container-trading-stop{
     width: 70%;
-    height: 88vh;
-    border: 1px solid black;
+    height: 40vh;
     padding: 2%;
-    border-radius: 5%;
     margin-top: 2%;
+    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.15);
+    background-color: white;
 }
 
 span{
@@ -56,21 +65,28 @@ span{
 
 .container-hint{
     width: 100%;
-    height: 35vh;
+    height: 17vh;
     border: 1px solid black;
     padding: 2%;
     border-radius: 2%;
     margin-top: 2%;
     background-color: #cccc00;
-
-    p{
-        color: #f7f9f9;
-    }
 }
 
 .container-table{
     height: 25vh;
     overflow-y: scroll;
+    box-shadow: 0 0 1vh rgba(0, 0, 0, 0.15);
+    background-color: white;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+    padding: 2%;
+}
+
+.form-flex{
+    display: flex;
+    flex-direction: row;
 }
 
 .error{
@@ -83,12 +99,11 @@ span{
     margin-top: 1vh;
 }
 
-select {
+mat-select {
     background: transparent;
     border: none;
+    width: 30%;
 }
-
-select:focus{ outline: none;}
 
 .title{
     margin-top: 1%;
@@ -96,6 +111,15 @@ select:focus{ outline: none;}
  
 .table{
     width: 100%;
+}
+
+.table th, .table td {
+    padding: 1%;
+    text-align: center;
+}
+
+.table tbody tr:nth-of-type(odd) {
+    background-color: #f3f3f3;
 }
 
 .compra{
@@ -112,5 +136,9 @@ select:focus{ outline: none;}
 
 .chart-box {
     max-width: 100%;
-    margin-top: 10%;
+    margin: 5%;
+}
+
+.form-button{
+    margin-left: 3%;
 }
