@@ -11,7 +11,7 @@
   
 <div class="grid grid-cols-2">
     <div class="texto">
-        <div #target><h2 class="titulo1">Introducción.</h2></div>
+        <div #target><h2 class="titulo1">Introducción</h2></div>
         <p>
         El análisis técnico es un tipo de análisis bursátil que estudia los movimientos de las cotizaciones a través de gráficos e 
         indicadores basados en los precios de los activos. 
@@ -23,7 +23,30 @@
           esos movimientos utiliza diversas herramientas, las cuales veremos más tarde.
         </p>
 
-        <div #target2><h2 class="titulo2">Serie de Fibonacci. Teoría de Elliott. Teoría de Gann.</h2></div>
+        <div #target1><h2 class="titulo2">Datos sobre acciones y método</h2></div>
+
+        <p>Las acciones se identifican por un Ticker. En ciertos casos una acción puede ser identificada por distintos
+            Tickers dependiendo del país que la esté operando. Para operar en nuestra plataforma, se tomará de referencia
+            los símbolos que utiliza la Bolsa de Estados Unidos. Una lista completa puede ser vista <a href="https://es.tradingview.com/markets/stocks-usa/market-movers-all-stocks/">clickeando aquí</a>. 
+        </p>
+
+        <p>En la página de Bolsa es posible buscar un Ticker, obtener su información de mercado mediante diferentes gráficos y a su vez cierta información directa de los mismos.
+            En primer lugar se hará visible el nombre completo de la Compañía y luego el índice al cual pertenece en el mercado.
+            Sucesivamente el valor de la última cotización junto al valor de la EMA21, EMA200 y RSI. Estos valores serán profundizados más adelante.
+            Por último, el estado se calcula en valor a la cotización actual y la EMA21. Si el precio está por encima es COMPRA y por debajo es VENTA.
+        </p>
+
+        <p>
+            Por otro lado, en la página de Trading, se visualizan datos más específicos como el cambio en % entre la cotización inicial y actual del día.
+            Además, el máximo y mínimo del día, el Volumen que refiere a la cantidad en millones de acciones comercializadas, y el máximo y mínimo en 52 semanas (un año).
+            Nuevamente se refiere al estado como se explicó anteriormente.
+        </p>
+
+        <p>Las acciones se pueden operar de forma inmediata, es decir, a precio de mercado; de forma LIMIT a través de precios límites donde se quiera ejecutar
+            la orden; y por último en forma de STOP añadiendo un valor de parada para que la orden se cancele en caso de atravesar por dicho monto.
+        </p>
+
+        <div #target2><h2 class="titulo2">Serie de Fibonacci - Teoría de Elliott - Teoría de Gann</h2></div>
         <p>
         En matemáticas, la sucesión de Fibonacci (a veces mal llamada serie de Fibonacci) es la sucesión infinita de números naturales.
         </p>
@@ -69,7 +92,7 @@
             escribió sus fundamentos para operar en bolsa en su obra «The basis of My Forecasting Method». Esta obra, 
             que consta de algo más de 30 páginas a modo de manual, fue publicada en 1935.
         </p>
-            <div #target3><h2 class="titulo3">Escalas y períodos de un gráfico.</h2></div>  
+            <div #target3><h2 class="titulo3">Escalas y períodos de un gráfico</h2></div>  
         <p>
             En el análisis técnico, los gráficos habitualmente representan los períodos o compresión de tiempo en 
             el eje horizontal inferior, y los precios del activo en cuestión se representan en el eje vertical derecho. 
@@ -106,7 +129,7 @@
              que la escala de precios no está espaciada uniformemente, se va reduciendo progresivamente
              hacia arriba.
         </p>
-            <div #target4><h2 class="titulo4">Análisis de velas.</h2> </div>        
+            <div #target4><h2 class="titulo4">Análisis de velas</h2> </div>        
         <p>
             Las velas japonesas son una forma de representación gráfica de la información esencial de la 
             cotización de un activo financiero en un determinado periodo de tiempo.
@@ -152,7 +175,7 @@
              con implicaciones alcistas y bajistas.
 
         </p>  
-            <div #target5><h2 class="titulo5">Volumen e interés abierto.</h2></div>     
+            <div #target5><h2 class="titulo5">Volumen e interés abierto</h2></div>     
         <p>
             El volumen bursátil es el número de títulos o contratos que se negocian de un activo
              financiero en un mercado.
@@ -196,7 +219,7 @@
         </p>
 
      
-            <div #target6><h2 class="titulo6">Tendencias. Soportes y resistencias.</h2></div> 
+            <div #target6><h2 class="titulo6">Tendencias - Soportes y resistencias</h2></div> 
         <p>
             La tendencia, en economía, es el patrón de movimiento que siguen una serie 
             de observaciones de una serie temporal en un momento determinado del tiempo.
@@ -245,7 +268,38 @@
         <p>La resistencia en un indicador bursátil de tipo chartista que sirve para localizar techos de precios, es decir, zonas dónde el precio se encuentra sobrecomprado y por tanto al subir hasta ese nivel rebota hacia abajo. Lo contrario a la resistencia es el soporte.</p>
         <p>La teoría del análisis técnico dice que cuando el precio llega a una resistencia la operación que se tiene que llevar a cabo es una orden de venta o posición corta, y esto es únicamente posible a través de derivados financieros. Sin embargo, también existen operadores de mercado que atacan el precio de forma agresiva una vez éste supera con holgura en un determinado porcentaje la resistencia marcada, dado que se espera que al romper la resistencia el precio suba bruscamente.</p>
         <p>La consideración de zona de resistencia se tiene que dar cuando ya en el pasado haya actuado como zona de conflicto de precios, siempre y cuando esté acompañada de un importante volumen de negociación de venta. En este aspecto, cuánto más volumen exista, mayor fiabilidad tendrá la resistencia y más seguros nos encontraremos en esa operación.</p>
-        <div #target7><h2 class="titulo6">Figuras chartistas.</h2></div> 
+        
+        
+        <div #target8><h2 class="titulo2">EMA - MACD - RSI</h2></div> 
+
+        <p>El indicador técnico "Media Móvil" (Moving Average, MA) muestra el valor medio del precio de un instrumento durante un determinado período de tiempo. Dicho período se especifica en su nombre (por ejemplo, MA20 refiere a 20 unidades de tiempo). Cuando se calcula Moving Average, se promedia matemáticamente el precio del instrumento durante un período de tiempo dado. En función del cambio del precio, su valor medio va aumentando o disminuyendo.
+
+            Hay varios tipos de medias móviles: simple (SMA), exponencial (EMA), suavizada y ponderada. La Moving Average puede ser calculada para cualquier conjunto secuencial de datos, incluyendo los precios de apertura y cierre, mínimos y máximos, volumen de trading o valores de otros indicadores. A menudo se utilizan las medias móviles de las mismas medias móviles.
+            
+            Lo único en que se diferencian sustancialmente las Medias Móviles de diferentes tipos son diferentes coeficientes ponderales que se asignan a los últimos datos. En caso de la Media Móvil Simple (Simple Moving Average), todos los precios del período considerado tienen el mismo peso. La Media Móvil Exponencial y la Pondera (Exponential Moving Average y Linear Weighted Moving Average) asignan más valor a los últimos precios.</p>
+        
+        <p>El indicador MACD o media móvil de convergencia/divergencia es un indicador de análisis técnico usado para identificar cambios en el impulso del precio de una acción. El indicador MACD recoge información de diferentes medias móviles y, así, ayuda a identificar posibles oportunidades de inversión cercanas a los niveles de soporte y resistencia.
+
+            Convergencia significa que dos medias móviles se están acercando, mientras que divergencia significa que se están alejando la una de la otra.
+            
+            El indicador MACD está formado por tres componentes: la línea MACD, que mide la distancia entre dos medias móviles; la línea de señal, que detecta cambios en el impulso de un precio y activa señales de compra y venta; y el histograma, que representa la diferencia entre la MACD y la línea de señal.
+        
+            Una estrategia con una media móvil simple puede ser útil para configurar las señales de compra y venta, pero esta estimación puede retrasarse y, por lo tanto, las condiciones del mercado podrían cambiar antes de ejecutar una orden. La media móvil convergencia/divergencia goza de popularidad porque proporciona una representación actualizada de lo que acontece en el mercado.
+        </p>
+
+        <p>
+            El RSI o índice de fuerza relativa es un oscilador que refleja la fuerza relativa, valga la redundancia, entre la tendencia alcista y bajista. Mide la relación entre los movimientos ascendente, descendentes y normaliza el cálculo para que este fluctúe en una escala del 0 al 100.
+            Entre los 50 y 30 puntos: Camino niveles de sobre venta, por lo que el precio podría caer bruscamente debido a la pérdida de fuerza de la tendencia.
+            Entre los 50 y 70 puntos: Dirección hacia niveles de sobre compra, el precio ha subido con fuerza pero está perdiendo potencia la tendencia alcista.
+            Cruce 30, 50 y 70 puntos: La superación de estos niveles será la que nos dará una señal de trading para entrar o salir del mercado.
+
+            Si se produce una ruptura de los 70 puntos, el mercado está confirmando la sobre compra, por lo que es posible que el precio gire a la baja. Las ventas se realizan cuando gira a la baja.
+            Si se da el quiebre de los 30 puntos, se confirma el escenario de sobre venta, por lo que le precio puede repuntar al alza. Las compras se realizan cuando gira al alza.
+            Por último, si supera los 50 puntos el escenario será alcista, si lo quiebra es bajista, por lo que es un punto intermedio.
+        </p>
+
+
+        <div #target7><h2 class="titulo6">Figuras chartistas</h2></div> 
         <p>Partimos de que la cotización es el precio al que se ha realizado la compra/venta de una acción en bolsa. Es decir, es el precio de equilibrio para un título en función de la oferta y la demanda. </p>
         <p>Actualmente en las bolsas españolas, incluso en los mercados de corros, la cotización se expresa en Euros. A lo largo de una sesión de bolsa hay muchas operaciones de compra venta a diferentes precios por lo que hay muchas cotizaciones, que se concentran entre las cotizaciones máxima y mínima de la sesión. Al precio de la última operación de compra venta de la sesión, se le llama cotización de cierre.</p>
         <p>En un Chart, esto se refleja con una barra vertical de la cotizacion de cada dia (o intradia) que va desde el mínimo del dia al máximo, una pequeña barra horizontal a la derecha de la misma a la altura del precio de cierre, y una pequeña barra horizontal a la izquierda a la altura del precio de apertura. </p>
@@ -258,25 +312,31 @@
             <span class="font-normal text-4xl">INDICE</span>
         </div>
         <div>
-            <button (click)="scroll(target)" class="iale"><span class="font-normal text-2xl">Introducción.</span></button>
+            <button (click)="scroll(target)" class="iale"><span class="font-normal text-2xl">Introducción</span></button>
         </div>
         <div>
-            <button (click)="scroll(target2)" class="iale"><span class="font-normal text-2xl">Serie de Fibonacci. Teoría de Elliott. Teoría de Gann.</span></button>
+            <button (click)="scroll(target1)" class="iale"><span class="font-normal text-2xl">Datos sobre acciones y método</span></button>
         </div>
         <div>
-            <button (click)="scroll(target3)" class="iale"><span class="font-normal text-2xl">Escalas y períodos de un gráfico.</span></button>
+            <button (click)="scroll(target2)" class="iale"><span class="font-normal text-2xl">Serie de Fibonacci - Teoría de Elliott y de Gann</span></button>
         </div>
         <div>
-            <button (click)="scroll(target4)" class="iale"><span class="font-normal text-2xl">Análisis de velas.</span></button>
+            <button (click)="scroll(target3)" class="iale"><span class="font-normal text-2xl">Escalas y períodos de un gráfico</span></button>
         </div>
         <div>
-            <button (click)="scroll(target5)" class="iale"><span class="font-normal text-2xl">Volumen e interés abierto.</span></button>
+            <button (click)="scroll(target4)" class="iale"><span class="font-normal text-2xl">Análisis de velas</span></button>
         </div>
         <div>
-            <button (click)="scroll(target6)" class="iale"><span class="font-normal text-2xl">Tendencias. Soportes y resistencias.</span></button>
+            <button (click)="scroll(target5)" class="iale"><span class="font-normal text-2xl">Volumen e interés abierto</span></button>
         </div>
         <div>
-            <button (click)="scroll(target7)" class="iale"><span class="font-normal text-2xl">Figuras chartistas.</span></button>
+            <button (click)="scroll(target6)" class="iale"><span class="font-normal text-2xl">Tendencias - Soportes y resistencias</span></button>
+        </div>
+        <div>
+            <button (click)="scroll(target8)" class="iale"><span class="font-normal text-2xl">EMA - MACD - RSI</span></button>
+        </div>
+        <div>
+            <button (click)="scroll(target7)" class="iale"><span class="font-normal text-2xl">Figuras chartistas</span></button>
         </div>
     </div>
 </div>

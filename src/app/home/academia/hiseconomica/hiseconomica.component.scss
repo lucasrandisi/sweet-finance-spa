@@ -1,9 +1,4 @@
-.fondo{
-    background-image: url(/../../../../../../../../assets/trama_cursos.png);
-    background-size: 100%;  
-    background-size: cover;
-    min-height: 100vh;
-}
+
 .ABC{
     color: white;
     margin-left: 11vw; /*VW*/
@@ -17,7 +12,11 @@
     overflow: auto;
     height: 75vh; /*vh*/
     width: 51vw;
-    margin-left: 24vh;
+    margin-left: 21vh;
+    padding: 1%;
+}
+p{
+    text-align: justify;
 }
 .cuerpoindice{
     margin-left: 30vh;
