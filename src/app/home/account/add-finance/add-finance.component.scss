@@ -1,0 +1,24 @@
+:host {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    mat-card {
+        padding: 4vh 2vw;
+        max-width: 30vw;
+
+        form {
+            margin-top: 2vh;
+
+            mat-form-field {
+                width: 100%;
+            }
+    
+            .submit {
+                margin-top: 2vh;
+                margin-right: 2vw;
+            }
+        }
+    }
+}

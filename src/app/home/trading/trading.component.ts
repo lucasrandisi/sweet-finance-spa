@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { SerieData } from './serieDataHour';
 import { Router } from '@angular/router';
 import { Orders } from './orders';

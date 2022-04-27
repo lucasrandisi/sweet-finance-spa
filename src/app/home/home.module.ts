@@ -27,6 +27,7 @@ import { FinanzasComponent } from './academia/finanzas/finanzas.component';
 import { AnatecnicoComponent } from './academia/anatecnico/anatecnico.component';
 import { CriptosComponent } from './academia/criptos/criptos.component';
 import { HiseconomicaComponent } from './academia/hiseconomica/hiseconomica.component';
+import { AddFinanceComponent } from './account/add-finance/add-finance.component';
 
 @NgModule({
 	declarations: [
@@ -43,7 +44,8 @@ import { HiseconomicaComponent } from './academia/hiseconomica/hiseconomica.comp
 		FinanzasComponent,
 		AnatecnicoComponent,
 		CriptosComponent,
-		HiseconomicaComponent
+		HiseconomicaComponent,
+  AddFinanceComponent
 	],
 	imports: [
 		CommonModule,
