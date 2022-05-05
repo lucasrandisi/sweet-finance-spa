@@ -2,16 +2,18 @@
     background-color: #cccc00;
     color: black;
     border: 1px solid #212245;
-    margin: 1vh;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    width: 8vw;
+    height: 5vh;
 }
 
 .title{
     margin-left: 8%;
+    margin-top: 2%;
     
     .sweet-title{
-        font-size: 50px;
         color: #cccc00;
-        margin-top: 2%;
     }
 }
 
@@ -23,22 +25,25 @@
 }
 
 .container-form{
-    background-color: #f7f9f9;
-    width: 70%;
-    margin-top: 5%;
-    margin-bottom: 0;
-    height: 50vh;
-    border: 1px solid ;
-    padding: 5%;
-    border-radius: 5%;
+    width: 75%;
+    height: 70%;
+    padding: 2%;
+    margin-top: 8%;
+    border-radius: 2%;
+    background-color: transparent;
 }
 
 form{
     margin: 2%;
 
     mat-form-field{
-        width: 100%;
+        width: 100% !important;
     }
+
+    ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+        background-color: white;
+        border-radius: 5px;
+      }
 }
 
 mat-divider{
@@ -47,54 +52,6 @@ mat-divider{
     margin-bottom: 5%;
 }
 
-.recover{
-    font-size: small;
-    color: #cccc00;
-}
-
-.footer{
-    text-align: center;
-    color: white;
-    font-size: smaller;
-    margin-top: 5vh;
-}
-
-.img-4{
-    height: 5vh;
-    width: 6vh;
-}
-
-.container-carousel{
-    background-color: transparent;
-    margin-top: 10%;
-    margin-bottom: 20%;
-    height: 30vh;
-    width: 50%;
-}
-
-.carousel-open:checked + .carousel-item {
-    position: static;
-    opacity: 100;
-}
-
-.carousel-item {
-    -webkit-transition: opacity 2s ease-out;
-    transition: opacity 2s ease-out;
-
-    img{
-        height: 100%;
-        width: 100%;
-    }
-}
-
-.carousel-indicators {
-    position: absolute;
-    bottom: 2%;
-    left: 0;
-    right: 0;
-    text-align: center;
-    color: red;
-}
 
 
 

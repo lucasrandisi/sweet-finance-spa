@@ -61,6 +61,7 @@
 		<div>
 			<button mat-raised-button class="button-info"><a [routerLink] = "['info']">Acerca de SW</a></button>
 			<button mat-raised-button class="button"><a [routerLink] = "['account']">Cuenta</a></button>
+			<button (click)="logout()" mat-raised-button class="button-logout">Cerrar Sesión</button>
 		</div>
 	</nav>
 

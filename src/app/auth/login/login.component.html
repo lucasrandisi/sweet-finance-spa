@@ -1,102 +1,38 @@
 <div class="container-body">
     
     <div align="right">
-        <button mat-raised-button class="button"><a [routerLink] = "['../register']">Registrese</a></button>
+        <button mat-raised-button></button>
     </div>
     
     <div class="title">
-        <p class="sweet-title italic font-extrabold">SWEET</p>
-        <p class="sweet-title italic font-extrabold">FINANCE</p>
-        <span class="text-base" style="color: white"> Una nueva forma de ahorrar</span>
+        <p class="sweet-title italic font-extrabold text-6xl">SWEET</p>
+        <p class="sweet-title italic font-extrabold text-6xl">FINANCE</p>
+        <span class="text-xl italic font-medium" style="color: white"> Una nueva forma de ahorrar</span>
     </div>
 
     <div class="grid grid-cols-2">
         <div class="container-form mx-auto">
-            <span class="font-extrabold text-xl" style="color: #cccc00"> Iniciar Sesión</span>
-            <mat-divider></mat-divider>
-
             <form [formGroup]="form" (ngSubmit)="submit()" class="form">
-                <p>
-                    <mat-form-field appearance="legacy">
-                        <mat-label>Email</mat-label>
-                        <input formControlName="email" autocomplete="false" matInput>
-                    </mat-form-field>
-                </p>
+                <p class="text-xl font-medium" style="color: yellow">Email</p>
+                <mat-form-field appearance="outline">
+                    <input formControlName="email" autocomplete="false" matInput required>
+                </mat-form-field>
 
-                <p>
-                    <mat-form-field appearance="legacy">
-                        <mat-label>Contraseña</mat-label>
-                        <input formControlName="password" type="password" matInput>
-                    </mat-form-field>
-                </p>
-
-                <a class="recover" href="">¿Olvidaste el email o la contraseña?</a>
+                <p class="text-xl font-medium" style="color: yellow">Contraseña</p>
+                <mat-form-field appearance="outline">
+                    <input formControlName="password" type="password" matInput required>
+                </mat-form-field>
 
                 <div align="right">
-                    <button mat-raised-button class="button" type="submit">Entrar</button>
+                    <button mat-raised-button class="button" type="submit">Ingresar</button>
                 </div>
+
+                <div align="center">
+                    <p><a class="text-lg" style="color: yellow" [routerLink] = "['../register']">¿Aún no tienes cuenta? ¡Regístrate aquí!</a></p>
+                    <p style="color:white">Ante cualquier inconveniente comunicarse a soporte@sweetfinance.com</p>
+                </div>
+                
             </form>
         </div>
-
-        <!--
-        <div>
-            <div class="container-carousel mx-auto">
-                <div class="carousel relative">
-                    <div class="carousel-inner relative overflow-hidden">
-                     
-                        <input class="carousel-open" type="radio" id="carousel-1" name="carousel" aria-hidden="true" hidden="" checked="checked">
-                        <div class="carousel-item absolute opacity-0" style="height:30vh;">
-                            <img src="../../../assets/trader.png">
-                        </div>
-                        
-                        <input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true" hidden="">
-                        <div class="carousel-item absolute opacity-0" style="height:30vh;">
-                            <img src="../../../assets/criptos.png">
-                        </div>
-                        
-                        <input class="carousel-open" type="radio" id="carousel-3" name="carousel" aria-hidden="true" hidden="">
-                        <div class="carousel-item absolute opacity-0" style="height:30vh;">
-                            <img src="../../../assets/getting_started.png">
-                        </div>
-                
-                        <ol class="carousel-indicators">
-                            <li class="inline-block mr-5">
-                                <label for="carousel-1" class="carousel-bullet cursor-pointer block text-4xl text-white">•</label>
-                            </li>
-                            <li class="inline-block mr-5">
-                                <label for="carousel-2" class="carousel-bullet cursor-pointer block text-4xl text-white">•</label>
-                            </li>
-                            <li class="inline-block mr-5">
-                                <label for="carousel-3" class="carousel-bullet cursor-pointer block text-4xl text-white">•</label>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
     </div>
-
-    <!--
-    <div class="grid grid-cols-4">
-        <div align="center">
-            <span class="font-black text-3xl" style="color: #cccc00">MERCADOS</span>
-            <img class="img-4" src="../../../assets/market_logo.png">
-        </div>
-        <div align="center">
-            <img class="img-4" src="../../../assets/trading_logo.png">
-            <span class="font-black text-3xl" style="color: #cccc00">TRADING</span>
-        </div>
-        <div></div>
-        <div></div>
-        <div align="center">
-            <span class="font-black text-3xl" style="color: #cccc00">ACADEMIA</span>
-            <img class="img-4" src="../../../assets/academy_logo.png">
-        </div>
-        <div align="center">
-            <img class="img-4" src="../../../assets/btc_logo.png">
-            <span class="font-black text-3xl" style="color: #cccc00">CRIPTOS</span>
-        </div>
-    </div>
-    -->
 </div>

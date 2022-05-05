@@ -1,8 +1,12 @@
-.container-body{
-    background-image: url(../../../assets/bg_space.jpg); 
-    background-size: 100%;  
+.body{
+    background-image: url(/../../../../../../../../assets/trama_cursos2.png); 
     background-size: cover;
-    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
 }
 
 .logo{
@@ -18,14 +22,31 @@ nav{
 }
 
 .container-form{
-    background-color: #f7f9f9;
+    background-color: transparent;
     width: 35%;
     margin-top: 3%;
     margin-bottom: 5%;
     height: 67vh;
-    border: 1px solid #cccc00;
     padding: 1%;
-    border-radius: 3%;
+}
+
+mat-form-field{
+    width: 100% !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.button-register{
+    background-color: #cccc00;
+    color: black;
+    border: 1px solid #212245;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    width: 8vw;
+    height: 5vh;
 }
 
 .button{
