@@ -9,3 +9,7 @@
 
 ## Run
 1. `ng serve --open`
+
+## API
+
+Link to API repository: https://github.com/lucasrandisi/sweet-finance-api
