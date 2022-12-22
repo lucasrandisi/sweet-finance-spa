@@ -4,21 +4,20 @@
      
     nav{
         background-color: #0d0e1c;
-        height: 8vh;
+        height: 80px;
 
        .logo{
-            height: 4vh;
-            width: 5vh;
-            margin-right: 2vh;
-            margin-left: 3vh;
-            margin-bottom: 0.5vh;
+            height: 40px;
+            width: 50px;
+            margin-right: 10px;
+            margin-left: 30px;
         }
 
         .button{
             background-color: #cccc00;
             color: black;
             border: 1px solid #212245;
-            margin: 1vh;
+            height: 40px;
         }
 
         .button-logout{
@@ -26,7 +25,7 @@
             color: black;
             border: 1px solid #212245;
             margin: 1vh;
-            height: 4.2vh;
+            height: 40px;
         }
 
         .a-navbar{
@@ -38,7 +37,8 @@
             background-color: #f7f9f9;
             color: black;
             border: 1px solid #212245;
-            margin: 1vh;
+            margin: 10px;
+            height: 40px;
         } 
     }
     
