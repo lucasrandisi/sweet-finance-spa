@@ -69,11 +69,24 @@
     </div>
 
     <div class="container-noticias">
-        <mat-card class="noticias" *ngFor="let n of news">
-            <mat-card-header>    
-                <mat-card-title class="text-lg">{{n.title}}</mat-card-title>
-            </mat-card-header>
+        <div class="noticias" *ngFor="let n of news"> 
+            <div class="titulo">{{n.title}}</div>
             <mat-divider></mat-divider>
+            <div class="contenido">
+                <div class="descripcion">
+                    <p class="text-justify text-base">{{n.desc}}</p>
+                </div>
+                <div class="imagen" [style.background-image]="'url(' + n.img_url + ')'">
+                </div>
+            </div>
+            <div class="acciones">
+                <button mat-stroked-button class="read-button"><a href={{n.url}}>Seguir leyendo</a></button>
+            </div>
+            
+    </div>
+
+    <!--
+        <mat-divider></mat-divider>
             <mat-card-content>
                 <div class="flex-row">
                     <div>
@@ -85,10 +98,10 @@
               </div>
             </mat-card-content>
             <mat-card-actions align="end">
-                <button mat-stroked-button class="read-button"><a href={{n.url}}>Seguir leyendo</a></button>
+                
               </mat-card-actions>
         </mat-card>
-    </div>
+    -->
 
 
 </div>
