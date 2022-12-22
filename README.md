@@ -8,4 +8,9 @@
 6. For [Swal](https://sweetalert2.github.io/#download) `npm install --save sweetalert2`
 
 ## Run
+
 1. `ng serve --open`
+
+## API
+
+Link to API repository: https://github.com/lucasrandisi/sweet-finance-api
