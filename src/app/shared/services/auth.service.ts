@@ -54,7 +54,7 @@ export class AuthService {
 
 
     registerUser(user: Partial<UserInterface>) {
-        const url = `${environment.apiUrl}/register	`;
+        const url = `${environment.apiEndpoint}/register	`;
 
         return this.httpClient.post(url, user).pipe(
             tap((response: any) => {
@@ -69,7 +69,7 @@ export class AuthService {
 
 
     login(credentials: { email: string, password: string }) {
-        const url = `${environment.apiUrl}/login`;
+        const url = `${environment.apiEndpoint}/login`;
 
         return this.httpClient.post(url, credentials).pipe(
             tap((response: any) => {
@@ -83,7 +83,7 @@ export class AuthService {
     }
 
     logout() {
-        const url = `${environment.apiUrl}/logout`;
+        const url = `${environment.apiEndpoint}/logout`;
 
         return this.httpClient.post(url, null).pipe(
             tap(() => {
@@ -102,7 +102,7 @@ export class AuthService {
         new_password: string,
         new_password_confirmation: string
     }) {
-        const url = `${environment.apiUrl}/change-password`;
+        const url = `${environment.apiEndpoint}/change-password`;
 
         return this.httpClient.post(url, data);
     }

@@ -17,7 +17,7 @@ export class UserService {
     }
 
     updateMe(data: UserInterface) {
-        const url = `${environment.apiUrl}/me	`;
+        const url = `${environment.apiEndpoint}/me	`;
 
         return this.httpClient.patch<UserInterface>(url, data).pipe(
             tap(data => this.authService.currentUser = data)

@@ -7,7 +7,7 @@
 
         <div>
             <span class="font-light text-lg" style="color: #cccc00">¿Ya tienes cuenta?</span>
-            <button mat-raised-button class="button"><a [routerLink] = "['../login']">Iniciar Sesión</a></button>
+            <button mat-raised-button class="button"><a (click)="navegar('/login')">Iniciar Sesión</a></button>
         </div>
     </nav>
 

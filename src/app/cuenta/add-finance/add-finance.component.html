@@ -1,0 +1,27 @@
+<app-menu></app-menu>
+
+<div class="fondo">
+    <mat-card>
+        <mat-card-title>Añadir Finance</mat-card-title>
+        <mat-divider></mat-divider>
+        <p class="font-bold text-base" style="margin-top: 5%">Mediante transferencia</p>
+        <p class="text-justify">Realizá desde tu banco o billetera virtual una transferencia a la siguiente cuenta:</p>
+        <p align="center" class="font-semibold">sweet.finance.mp</p>
+        <p class="text-justify">No olvides ingresar el email de tu cuenta en la referencia de la misma. 
+            Tendrás disponibles los créditos en un plazo de 2hs aproximadamente.
+            Ante cualquier inconveniente comunicarse a soporte@sweetfinance.com.
+        </p>
+        <p>Finance actuales: {{finance}}</p>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <mat-form-field>
+                <mat-label>Ingrese los $F a recargar</mat-label>
+                <input matInput required formControlName="finance">
+            </mat-form-field>
+            <p>1 F$ = 1 AR$</p>
+    
+            <button mat-raised-button class="bg-primary submit" type="submit">Recargar</button>
+            <button mat-stroked-button routerLink="/cuenta" type="button">Editar datos personales</button>
+        </form>
+    </mat-card>
+</div>
+

@@ -1,0 +1,25 @@
+.fondo{
+    background-image: url(../../../assets/trama_cursos2.png); 
+    background-size: 100%;  
+    background-size: cover;
+    min-height: 92vh;
+}
+
+.container-card{
+    width: 70%;
+    margin-bottom: 5%;
+    height: 67vh;
+    padding: 1%;
+}
+
+mat-card{
+    border: 0.1vh solid #cccc00;
+    width: 80%;
+
+    img{
+        margin-top: 1%;
+        border-radius: 50%;
+        width: 70%;
+        height: 70%;
+    }
+}

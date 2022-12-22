@@ -1,0 +1,275 @@
+<app-menu></app-menu>
+
+<div class="main grid grid-cols-8">
+
+    <!--menú de trade-->
+    <div class="col-span-4" align="center"> 
+
+        <h2 class="title">Dinero disponible: $F {{finance}}</h2>
+        
+        <div class="box-form">
+
+            <form [formGroup]="ticker" (ngSubmit)="find_ticker()">
+                <mat-form-field appearance="legacy">
+                    <mat-label>Ticker</mat-label>
+                    <input formControlName="ticker" autocomplete="false" matInput>
+                </mat-form-field>
+                
+                <button mat-raised-button type="submit">Buscar<mat-icon class="delete-button" >search</mat-icon></button>
+                <button type="button" mat-raised-button (click)="navigate_academy()" class="form-button">Información<mat-icon class="delete-button">info</mat-icon></button>
+            </form>
+
+            <div class="grid grid-cols-4">
+                <span class="font-bold">Cotización</span>
+                <span class="font-bold">Cambio en 24h</span>
+                <span class="font-bold">Máx en 24h</span>
+                <span class="font-bold">Mín en 24h</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="price">{{price}}</span>
+                <span *ngIf="price" [class.compra]="change_action" [class.venta]="!change_action">{{change}}</span>
+                <span *ngIf="price">{{max24}}</span>
+                <span *ngIf="price">{{min24}}</span>
+                <span class="font-bold">Estado</span>
+                <span class="font-bold">Volumen</span>
+                <span class="font-bold">Máx en 52s</span>
+                <span class="font-bold">Mín en 52s</span>
+                <span *ngIf="!estado" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="!price" style="color: #f7f9f9"> 0</span>
+                <span *ngIf="estado" [class.compra]="estado_action" [class.venta]="!estado_action">{{estado}}</span>
+                <span *ngIf="price">{{volume}}</span>
+                <span *ngIf="price">{{max52}}</span>
+                <span *ngIf="price">{{min52}}</span>
+            </div>
+        </div>
+        
+        <div [class.container-trading-insta]="insta" 
+            [class.container-trading-limit]="lim"
+            [class.container-trading-stop]="stop">
+
+            <span>Seleccione el tipo de orden: </span>
+
+            <mat-select [(ngModel)]="switch" (ngModelChange)="onChangeHeight($event)">
+                <mat-option value="instantanea"> Instantánea </mat-option>
+                <mat-option value="limit"> Orden Limit </mat-option>
+                <mat-option value="stop-limit"> Orden Stop-Limit </mat-option>
+            </mat-select>
+            <mat-divider></mat-divider>
+
+            <div [ngSwitch]="switch">
+
+                <div *ngSwitchCase="'instantanea'">
+                    <div class="grid grid-cols-3">
+                        <div class="col-span-2">
+                            <div class="font-medium text-base">Ticker: {{symbol}}</div>
+                            <div class="font-medium text-base disponible">En cartera: {{disponible}}</div>
+
+                            <div class="form-flex">
+                                <form [formGroup]="buy" (ngSubmit)="buy_ticker()">
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Cantidad a comprar</mat-label>
+                                        <input formControlName="amount" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    
+                                    <button mat-stroked-button class="button-buy" type="submit">Comprar</button>
+                                </form>
+
+                                <form [formGroup]="sell" (ngSubmit)="sell_ticker()">
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Cantidad a vender</mat-label>
+                                        <input formControlName="amount" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    
+                                    <button mat-stroked-button class="button-sell" type="submit">Vender</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="container-hint">
+                            <p class="text-xs">
+                                En esta sección podrás convertir al instante dinero de Sweet Finance ($F) 
+                                a tickers mediante la compra de acciones (por ejemplo IBM) o 
+                                viceversa mediante la venta.
+                            </p>
+                            <p class="text-xs">
+                                Si no cuentas con el mínimo requerido de $F puedes recargar 
+                                ingresando a Tu Cuenta.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngSwitchCase="'limit'">
+                    <div class="grid grid-cols-3">
+                        <div class="col-span-2">
+                            <div class="font-medium text-base">Ticker: {{symbol}}</div>
+                            <div class="font-medium text-base disponible">En cartera: {{disponible}}</div>
+
+                            <div class="form-flex">
+                                <form [formGroup]="limit_buy" (ngSubmit)="limit_buy_ticker()">
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Precio LIMIT</mat-label>
+                                        <input formControlName="limit" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Cantidad a comprar</mat-label>
+                                        <input formControlName="amount" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    
+                                    <button mat-stroked-button class="button-buy" type="submit">Comprar</button>
+                                </form>
+
+                                <form [formGroup]="limit_sell" (ngSubmit)="limit_sell_ticker()">
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Precio LIMIT</mat-label>
+                                        <input formControlName="limit" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Cantidad a vender</mat-label>
+                                        <input formControlName="amount" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    
+                                    <button mat-stroked-button class="button-sell" type="submit">Vender</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="container-hint">
+                            <p class="text-xs">
+                                En esta sección podrás crear ordenes de tipo LIMIT utilizando  
+                                un precio objetivo de disparo expresado en $F, tanto en compra
+                                como en venta.
+                            </p>
+                            <p class="text-xs">
+                                Si no cuentas con el mínimo requerido de $F puedes recargar 
+                                ingresando a Tu Cuenta.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div *ngSwitchCase="'stop-limit'">
+                    <div class="grid grid-cols-3">
+                        <div class="col-span-2">
+                            <div class="font-medium text-base">Ticker: {{symbol}}</div>
+                            <div class="font-medium text-base disponible">En cartera: {{disponible}}</div>
+
+                            <div class="form-flex">
+                                <form [formGroup]="stop_limit_buy" (ngSubmit)="stop_limit_buy_ticker()">
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Precio STOP</mat-label>
+                                        <input formControlName="stop" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Precio LIMIT</mat-label>
+                                        <input formControlName="limit" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Cantidad a comprar</mat-label>
+                                        <input formControlName="amount" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    
+                                    <button mat-stroked-button class="button-buy" type="submit">Comprar</button>
+                                </form>
+
+                                <form [formGroup]="stop_limit_sell" (ngSubmit)="stop_limit_sell_ticker()">
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Precio STOP</mat-label>
+                                        <input formControlName="stop" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Precio LIMIT</mat-label>
+                                        <input formControlName="limit" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="legacy">
+                                        <mat-label>Cantidad a vender</mat-label>
+                                        <input formControlName="amount" autocomplete="false" matInput>
+                                    </mat-form-field>
+                                    
+                                    <button mat-stroked-button class="button-sell" type="submit">Vender</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="container-hint">
+                            <p class="text-xs">
+                                En esta sección podrás crear ordenes de tipo STOP-LIMIT utilizando  
+                                un precio objetivo de disparo y un precio objetivo de
+                                activación, expresados en $F.
+                            </p>
+                            <p class="text-xs">
+                                Si no cuentas con el mínimo requerido de $F puedes recargar 
+                                ingresando a Tu Cuenta.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <div *ngIf="wait" [class.error]="error_flag" [class.success]="!error_flag">
+                {{feedback_message}}</div>
+
+        </div>
+
+
+
+    </div>
+
+    <!-- ordenes + gráfico-->
+    <div class="col-span-4" align="center">
+        
+        <h2 class="title">Ordenes abiertas</h2>
+
+        <div class="container-table">
+            <div class="table-fixed text-center table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Ticker</th>
+                        <th>Tamaño</th>
+                        <th>STOP</th>
+                        <th>LIMIT</th>
+                        <th>Creación</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of orders">
+                        <td [class.compra]="order.action_boolean" [class.venta]="!order.action_boolean">{{order.action}}</td>
+                        <td>{{order.ticker}}</td>
+                        <td>{{order.amount}}</td>
+                        <td>{{order.stop}}</td>
+                        <td>{{order.limit}}</td>
+                        <td>{{order.fecha}}</td>
+                        <button mat-icon-button (click)="delete_order(order.id)"><mat-icon class="delete-button">delete</mat-icon></button>
+                    </tr>
+                </tbody>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <div *ngIf="flag_chart" id="chart-serie">
+                <apx-chart
+                    #chartSerie
+                    [series]="chartOptions.series"
+                    [chart]="chartOptions.chart"
+                    [xaxis]="chartOptions.xaxis"
+                    [yaxis]="chartOptions.yaxis"
+                    [title]="chartOptions.title"     
+                    [stroke]="chartOptions.stroke"
+                    [markers]="chartOptions.markers"
+                ></apx-chart>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+

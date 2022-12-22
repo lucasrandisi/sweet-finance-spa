@@ -20,9 +20,9 @@ export class User implements UserInterface {
 
     static getModelRoute(id?: number) {
         if (id) {
-            return `${environment.apiUrl}/${this.modelUrl}/${id}`;
+            return `${environment.apiEndpoint}/${this.modelUrl}/${id}`;
         }
 
-        return `${environment.apiUrl}/${this.modelUrl}`;
+        return `${environment.apiEndpoint}/${this.modelUrl}`;
     }
 }

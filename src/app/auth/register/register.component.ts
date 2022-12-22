@@ -34,4 +34,8 @@ export class RegisterComponent implements OnInit {
 			() => this.router.navigate([''])
 		);
 	}
+
+	navegar(path: string){
+		this.router.navigateByUrl(path);
+	}
 }

@@ -3,26 +3,46 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { LoggedInGuard } from './shared/guards/logged-in.guard';
-import { LoggedOutGuard } from './shared/guards/logged-out.guard';
-
 
 const routes: Routes = [
 	{
 		path: 'login',
 		component: LoginComponent,
-		canActivate: [LoggedOutGuard]
 	},
 	{
 		path: 'register',
 		component: RegisterComponent,
-		canActivate: [LoggedOutGuard]
 	},
 	{
-		path: '',
-		loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
-		canActivateChild: [LoggedInGuard]
-	}
-	
+        path: 'academia',
+        canActivate: [LoggedInGuard],
+        loadChildren: () => import('./academia/academia.module').then(m => m.AcademiaModule), 
+    },
+	{
+        path: 'cuenta',
+        canActivate: [LoggedInGuard],
+        loadChildren: () => import('./cuenta/cuenta.module').then(m => m.CuentaModule), 
+    },
+	{
+        path: 'bolsa',
+        canActivate: [LoggedInGuard],
+        loadChildren: () => import('./bolsa/bolsa.module').then(m => m.BolsaModule), 
+    },
+	{
+        path: '',
+        canActivate: [LoggedInGuard],
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule), 
+    },
+	{
+        path: 'trading',
+        canActivate: [LoggedInGuard],
+        loadChildren: () => import('./trading/trading.module').then(m => m.TradingModule), 
+    },
+	{
+        path: 'info',
+        canActivate: [LoggedInGuard],
+        loadChildren: () => import('./info/info.module').then(m => m.InfoModule), 
+    },
 ];
 
 @NgModule({

@@ -1,0 +1,67 @@
+<div class="page">
+	<nav class="flex items-center justify-between flex-wrap">
+		<div class="flex items-center">
+			<img class="logo" src="../../../assets/sw_logo.png">
+		</div>
+
+		<div class="text-sm lg:flex-grow">
+			<a (click)="navegar('/')" class="a-navbar text-xl">
+				Dashboard
+			</a>
+			<a (click)="navegar('/bolsa')" class="a-navbar text-xl">
+				Bolsa de Valores
+			</a>
+			<a (click)="navegar('/trading')" class="a-navbar text-xl">
+				Trading
+			</a>
+			<button mat-button [matMenuTriggerFor]="menu" class="a-navbar text-xl" style="font-weight: 400;">
+				  Academia
+				  <mat-icon>keyboard_arrow_down</mat-icon>
+			</button>
+			  
+			  <mat-menu #menu="matMenu">
+				<button mat-menu-item>
+				  <a (click)="navegar('/academia/abceconomia')">
+					ABC ECONOMÍA
+				  </a>
+				</button>
+				<button mat-menu-item>
+					<a (click)="navegar('/academia/mercados')">
+						MERCADOS
+					</a>
+				</button>
+				<button mat-menu-item>
+					<a (click)="navegar('/academia/vareco')">
+						VARIABLES MACROECONOMICAS
+					</a>
+				</button>
+				<button mat-menu-item>
+					<a (click)="navegar('/academia/finanzas')">
+						FINANZAS
+					</a> 
+				</button>
+				<button mat-menu-item>
+					<a (click)="navegar('/academia/anatecnico')">
+						ANÁLISIS TÉCNICO
+					</a>
+				</button>
+				<button mat-menu-item>
+					<a (click)="navegar('/academia/criptos')">
+						CRIPTOMONEDAS
+					</a>
+				</button>
+				<button mat-menu-item>
+					<a (click)="navegar('/academia/hiseconomi')">
+						HISTORIA ECONÓMICA
+					</a>
+				</button>
+			  </mat-menu>
+		</div>
+
+		<div>
+			<button mat-raised-button class="button-info"><a (click)="navegar('/info')">Acerca de SW</a></button>
+			<button mat-raised-button class="button"><a (click)="navegar('/cuenta')">Cuenta</a></button>
+			<button (click)="logout()" mat-raised-button class="button-logout">Cerrar Sesión</button>
+		</div>
+	</nav>
+</div>
