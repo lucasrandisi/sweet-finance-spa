@@ -97,7 +97,7 @@ export class ApiService {
                 this.snackBar.show(e.error.message);
             }
             if (e.status === 401 && this.mostrarMensajes) {
-                this.snackBar.show(e.error.message);
+                this.snackBar.show('Las credenciales no coinciden.');
                 window.scroll(0,0);   
             }
             if (e.status === 403 && this.mostrarMensajes){

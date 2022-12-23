@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { SnackBarService } from 'src/app/shared/services/snack-bar.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,10 +12,12 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
 	form: FormGroup;
+	public hidePassword     : boolean = true;
 
 	constructor(
 		private authService: AuthService,
-		private router: Router
+		private router: Router,
+		private snackBar : SnackBarService,
 	) { }
 
 	ngOnInit(): void {
@@ -28,12 +31,22 @@ export class LoginComponent implements OnInit {
 		});
 	}
 
-	submit() {
-		this.authService.login(this.form.value).subscribe(
-			() => this.router.navigate(['']),
-			(error:any)=>{
-				Swal.fire('Usuario o contraseña incorrectos', 'Por favor, intentalo nuevamente', 'error');
-		});
-		
+	async submit() {
+		if(this.form.get("email")?.value == '' || this.form.get("password")?.value == ''){
+            return;
+        }
+
+        if(!this.form.get("email")?.value.includes('@')){
+            this.snackBar.show("El email no es una dirección de correo válida.");
+            return;
+        }
+
+        await this.authService.login(
+            this.form.get("email")?.value,
+            this.form.get("password")?.value,
+        );
+        
+		this.router.navigate(['']);
+
 	}
 }

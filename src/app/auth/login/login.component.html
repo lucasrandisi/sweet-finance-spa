@@ -20,7 +20,10 @@
 
                 <p class="text-xl font-medium" style="color: yellow">Contraseña</p>
                 <mat-form-field appearance="outline">
-                    <input formControlName="password" type="password" matInput required>
+                    <input formControlName="password" matInput [type]="hidePassword ? 'password' : 'text'" required>
+                <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                    <mat-icon alt="icono-password">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
                 </mat-form-field>
 
                 <div align="right">

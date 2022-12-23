@@ -21,10 +21,9 @@ export class MenuComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    logout() {
-		this.authService.logout().subscribe(
-			() => this.router.navigate(['/login'])
-		)
+    async logout() {
+		await this.authService.logout();
+		this.router.navigateByUrl('/login');
     }
 
 	navegar(path: string){

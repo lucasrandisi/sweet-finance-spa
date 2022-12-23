@@ -16,6 +16,7 @@ import {
 	ApexStroke,
 	YAxisAnnotations
 } from "ng-apexcharts";
+import { UserService } from 'src/app/shared/services/users.service';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -35,7 +36,10 @@ export type ChartOptions = {
 
 export class DashboardComponent implements OnInit {
 
-  	constructor(private http: HttpClient) { }
+  	constructor(
+		private http: HttpClient,
+		private userService : UserService
+	) { }
 
 	username : string;
 
@@ -50,7 +54,7 @@ export class DashboardComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.get_user();
+		this.getUser();
 
 		this.get_news();
 
@@ -60,13 +64,8 @@ export class DashboardComponent implements OnInit {
 
 	}
 
-	get_user(){
-		this.http.get(`${environment.apiEndpoint}/me`,{
-			params: {
-			}
-		}).subscribe((response:any)=>{
-			this.username = response.data.name;
-		});
+	getUser(){
+		//this.userService.
 	}
 
 	get_news(){

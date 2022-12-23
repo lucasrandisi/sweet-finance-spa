@@ -3,6 +3,7 @@ import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { UserInterface } from '../models/user.model';
+import { ApiService } from './api.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,10 @@ export class AuthService {
     private _currentUser: UserInterface | null;
     private _accessToken: string;
 
-    constructor(httpClient: HttpClient) {
+    constructor(
+        httpClient: HttpClient,
+        private apiService : ApiService,
+    ) {
         this.httpClient = httpClient;
     }
 
@@ -53,47 +57,30 @@ export class AuthService {
     }
 
 
-    registerUser(user: Partial<UserInterface>) {
-        const url = `${environment.apiEndpoint}/register	`;
-
-        return this.httpClient.post(url, user).pipe(
-            tap((response: any) => {
-                this._currentUser = response.user;
-                this._accessToken = response.access_token;
-
-                window.localStorage.setItem('currentUser', JSON.stringify(this._currentUser));
-                window.localStorage.setItem('accessToken', this._accessToken);
-            })
-        );
+    public async registrar (nombre:string, email:string, password:string, password_confirmation:string) {
+        await this.apiService.post("/register",{
+            name : nombre,
+            email : email,
+            password : password,
+            password_confirmation: password_confirmation
+        });
     }
 
+    public async login(email:string,password:string) : Promise<void> {
+        const response = await this.apiService.post("/login",{
+            email    : email,
+            password : password,
+        });
 
-    login(credentials: { email: string, password: string }) {
-        const url = `${environment.apiEndpoint}/login`;
-
-        return this.httpClient.post(url, credentials).pipe(
-            tap((response: any) => {
-                this._currentUser = response.user;
-                this._accessToken = response.access_token
-
-                window.localStorage.setItem('currentUser', JSON.stringify(this._currentUser));
-                window.localStorage.setItem('accessToken', this._accessToken);
-            })
-        );
+        localStorage.setItem('accessToken', response.access_token);
+        localStorage.setItem('usuario_actual', JSON.stringify(response.user));
     }
 
-    logout() {
-        const url = `${environment.apiEndpoint}/logout`;
+    public async logout() : Promise<any> {
+        await this.apiService.post("/logout",{});
 
-        return this.httpClient.post(url, null).pipe(
-            tap(() => {
-                this._currentUser = null;
-                this._accessToken = '';
-
-                window.localStorage.removeItem('currentUser');
-                window.localStorage.removeItem('accessToken');
-            })
-        );
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('usuario_actual');
     }
 
 

@@ -18,22 +18,28 @@
         <form [formGroup]="form" (ngSubmit)="submit()" class="form">
             <p class="text-xl font-medium" style="color: yellow">Nombre Completo</p>
             <mat-form-field appearance="outline">
-                <input formControlName="name" autocomplete="false" matInput>
+                <input formControlName="name" autocomplete="false" matInput required>
             </mat-form-field>
 
             <p class="text-xl font-medium" style="color: yellow">Email</p>
             <mat-form-field appearance="outline">
-                <input formControlName="email" autocomplete="false" matInput>
+                <input formControlName="email" autocomplete="false" matInput required>
             </mat-form-field>
 
             <p class="text-xl font-medium" style="color: yellow">Constraseña</p>
             <mat-form-field appearance="outline">
-                <input formControlName="password" type="password" matInput>
+                <input formControlName="password" matInput [type]="hidePassword ? 'password' : 'text'" required>
+                <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                    <mat-icon alt="icono-password">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
             </mat-form-field>
 
             <p class="text-xl font-medium" style="color: yellow">Confirmar Contraseña</p>
             <mat-form-field appearance="outline">
-                <input matInput formControlName="password_confirmation" type="password">
+                <input matInput formControlName="password_confirmation" [type]="hideConfirmPassword ? 'password' : 'text'" required>
+                <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+                    <mat-icon alt="icono-password">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
             </mat-form-field>
 
 
