@@ -1,7 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { UserInterface } from '../models/user.model';
 import { ApiService } from './api.service';
 
@@ -9,53 +6,18 @@ import { ApiService } from './api.service';
     providedIn: 'root'
 })
 export class AuthService {
-    private httpClient: HttpClient;
-
-    private _currentUser: UserInterface | null;
-    private _accessToken: string;
 
     constructor(
-        httpClient: HttpClient,
         private apiService : ApiService,
-    ) {
-        this.httpClient = httpClient;
+    ) {}
+
+    public async getCurrentUser() {
+        return JSON.parse(localStorage.getItem('usuario_actual')!);
     }
 
-    get accessToken() {
-        if (this._accessToken) {
-            return this._accessToken;
-        }
-
-        const storageAccessToken = window.localStorage.getItem('accessToken');
-
-        if (storageAccessToken) {
-            this._accessToken = storageAccessToken;
-        }
-
-        return this._accessToken;
+    public getAccessToken() : string | null {
+        return localStorage.getItem('accessToken');
     }
-
-    get currentUser() {
-        if (this._currentUser) {
-            return this._currentUser;
-        }
-
-        const storageCurrentUser = window.localStorage.getItem('currentUser');
-
-        if (storageCurrentUser) {
-            this._currentUser = JSON.parse(storageCurrentUser);
-        }
-
-        return this._currentUser;
-    }
-
-
-    set currentUser(value) {
-        this._currentUser = value;
-
-        window.localStorage.setItem('currentUser', JSON.stringify(this._currentUser));
-    }
-
 
     public async registrar (nombre:string, email:string, password:string, password_confirmation:string) {
         await this.apiService.post("/register",{
@@ -84,14 +46,12 @@ export class AuthService {
     }
 
 
-    changePassword(data: {
+    public changePassword(data: {
         old_password: string,
         new_password: string,
         new_password_confirmation: string
     }) {
-        const url = `${environment.apiEndpoint}/change-password`;
-
-        return this.httpClient.post(url, data);
+        return this.apiService.post('/change-password', data);
     }
 }
 

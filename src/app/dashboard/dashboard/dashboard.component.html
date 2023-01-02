@@ -2,17 +2,21 @@
 
 <div class="grid grid-cols-2">
     <div>
-        <div class="font-normal text-3xl" align="center" style="margin: 2%">¡Bienvenido {{username}}!</div>
+        <div class="font-normal text-3xl" align="center" style="margin: 2%">¡Bienvenido {{user.name}}!</div>
 
-        <div class="chart-box">
-            <div *ngIf="flag_end_draw" id="chart-donut">
+        <div class="chart-box-empty "*ngIf="acciones.length == 0">
+            Aún no tienes acciones en cartera, ¡visita la sección de Trading y adquiere algunas!
+        </div>
+
+        <div class="chart-box" *ngIf="acciones.length != 0">
+            <div *ngIf="chartOptions != null" id="chart-donut">
                 <apx-chart
                     #chartDonut
-                    [series]="chartDonutOptions.series"
-                    [labels]="chartDonutOptions.labels"
-                    [chart]="chartDonutOptions.chart"
-                    [title]="chartDonutOptions.title"   
-                    [legend]="chartDonutOptions.legend"  
+                    [series]="chartOptions.series"
+                    [labels]="chartOptions.labels"
+                    [chart]="chartOptions.chart"
+                    [title]="chartOptions.title"   
+                    [legend]="chartOptions.legend"  
                 ></apx-chart>
             </div>
         </div>
@@ -32,10 +36,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let t of better_tickers">
-                            <td>{{t.ticker}}</td>
-                            <td>{{t.company}}</td>
-                            <td class="compra">{{t.change}}</td>
+                        <tr *ngFor="let ticker of mejoresAcciones">
+                            <td>{{ticker.ticker}}</td>
+                            <td>{{ticker.company}}</td>
+                            <td class="compra">{{ticker.change}}</td>
                         </tr>
                     </tbody>
                 </div>
@@ -53,10 +57,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let t of worst_tickers">
-                            <td>{{t.ticker}}</td>
-                            <td>{{t.company}}</td>
-                            <td class="venta">{{t.change}}</td>
+                        <tr *ngFor="let ticker of peoresAcciones">
+                            <td>{{ticker.ticker}}</td>
+                            <td>{{ticker.company}}</td>
+                            <td class="venta">{{ticker.change}}</td>
                         </tr>
                     </tbody>
                 </div>
@@ -68,18 +72,18 @@
     </div>
 
     <div class="container-noticias">
-        <div class="noticias" *ngFor="let n of news"> 
-            <div class="titulo">{{n.title}}</div>
+        <div class="noticias" *ngFor="let noticia of noticias"> 
+            <div class="titulo">{{noticia.title}}</div>
             <mat-divider></mat-divider>
             <div class="contenido">
                 <div class="descripcion">
-                    <p class="text-justify text-base">{{n.desc}}</p>
+                    <p class="text-justify text-base">{{noticia.desc}}</p>
                 </div>
-                <div class="imagen" [style.background-image]="'url(' + n.img_url + ')'">
+                <div class="imagen" [style.background-image]="'url(' + noticia.img_url + ')'">
                 </div>
             </div>
             <div class="acciones">
-                <button mat-stroked-button class="read-button"><a href={{n.url}}>Seguir leyendo</a></button>
+                <button mat-stroked-button class="read-button"><a href={{noticia.url}} target="_blank">Seguir leyendo</a></button>
             </div>
             
     </div>

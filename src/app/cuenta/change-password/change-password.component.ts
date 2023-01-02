@@ -32,6 +32,7 @@ export class ChangePasswordComponent implements OnInit {
     }
 
     onSubmit() {
+        /*
         if (this.form.valid) {
             this.authService.changePassword(this.form.value).subscribe({
                 next: () => console.log('Contraseña actualizada', 'done'),
@@ -42,5 +43,6 @@ export class ChangePasswordComponent implements OnInit {
                 }
             });
         }
+        */
     }
 }

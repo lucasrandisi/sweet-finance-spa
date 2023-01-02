@@ -13,7 +13,7 @@ export class LoggedInGuard implements CanActivate, CanActivateChild {
 
 
 	canActivate() {
-		const accessToken = this.authService.accessToken;
+		const accessToken = this.authService.getAccessToken();
 
 		if (!accessToken) {
 			this.router.navigate(['/login']);

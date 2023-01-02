@@ -17,10 +17,12 @@ export class UserService {
     }
 
     updateMe(data: UserInterface) {
+        /*
         const url = `${environment.apiEndpoint}/me	`;
 
         return this.httpClient.patch<UserInterface>(url, data).pipe(
-            tap(data => this.authService.currentUser = data)
+            tap(data => this.authService.getCurrentUser() = data)
         );
+        */
     }
 }

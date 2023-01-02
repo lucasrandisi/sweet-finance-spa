@@ -12,7 +12,7 @@ import { UserService } from 'src/app/shared/services/users.service';
 })
 export class MisDatosComponent implements OnInit {
 	form: FormGroup;
-	currentUser: UserInterface;
+	currentUser: any;
 
 	constructor(
 		private userService: UserService,
@@ -21,7 +21,7 @@ export class MisDatosComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.currentUser = this.authService.currentUser!;
+		this.currentUser = this.authService.getCurrentUser();
 		this.initForm();
 	}
 
@@ -34,10 +34,12 @@ export class MisDatosComponent implements OnInit {
 
 	onSubmit() {
 		if (this.form.valid) {
+			/*
 			this.userService.updateMe(this.form.value).subscribe({
 				next: () => console.log('Datos guardados', 'done'),
 				error: () => console.log('Ocurrió un error al guardar los datos', 'close')
 			});
+			*/
 		}
 	}
 

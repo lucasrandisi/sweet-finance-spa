@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { News } from '../news';
 import { Tickers } from '../tickers';
-import { forkJoin } from 'rxjs';
+import { LocatorService } from 'src/app/shared/services/locator.service';
+import { SpinnerService } from 'src/app/shared/services/spinner.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 import {
 	ChartComponent,
@@ -14,9 +15,7 @@ import {
 	ApexPlotOptions,
 	ApexDataLabels,
 	ApexStroke,
-	YAxisAnnotations
 } from "ng-apexcharts";
-import { UserService } from 'src/app/shared/services/users.service';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -35,167 +34,126 @@ export type ChartOptions = {
 })
 
 export class DashboardComponent implements OnInit {
+	protected spinnerService  = LocatorService.injector.get(SpinnerService);
 
   	constructor(
-		private http: HttpClient,
-		private userService : UserService
+		private authService : AuthService,
+		private apiService : ApiService,
 	) { }
 
-	username : string;
-
-  	news : News[] = [];
-	better_tickers : Tickers[] = [];
-	worst_tickers : Tickers[] = [];
+	public user : any = {
+		name: ''
+	};
+  	public noticias : News[] = [];
+	public acciones : any = [];
+	public mejoresAcciones : Tickers[] = [];
+	public peoresAcciones : Tickers[] = [];
 
 	@ViewChild("chart") chart: ChartComponent;
-	public chartDonutOptions: any;
+	public chartOptions: any;
 
-	flag_end_draw = false;
-
-	ngOnInit(): void {
-
-		this.getUser();
-
-		this.get_news();
-
-		this.draw_stocks();
-
-		this.get_betterWorst_stocks();
-
+	async ngOnInit(): Promise<void> {
+		this.spinnerService.go(async() => {
+			this.authService.getCurrentUser().then((usuario) => {
+				this.user = usuario;
+			});
+			await this.obtenerNoticias();
+			await this.dibujarGraficoAcciones();
+			await this.dibujarTablas();
+		});
 	}
 
-	getUser(){
-		//this.userService.
-	}
+	public async obtenerNoticias(){
+		let noticias: any[] = [];
 
-	get_news(){
-		let observable1 = this.http.get(`${environment.apiEndpoint}/marketaux`,{
-			params: {
-				path: 'news/all',
-				language: 'es',
-				countries: 'us, ar, br, cn',
-				page: '1' 
-			}
+		let noticiasPrimeraPagina = await this.apiService.getData('/marketaux', {
+			path: 'news/all',
+			language: 'es',
+			countries: 'us, ar, br, cn',
+			page: '1'
+		}); 
+
+		let noticiasSegundaPagina = await this.apiService.getData('/marketaux', {
+			path: 'news/all',
+			language: 'es',
+			countries: 'us, ar, br, cn',
+			page: '2'
+		}); 
+
+		noticiasPrimeraPagina.data.forEach((noticia : any) => {
+			noticias.push(noticia);
 		});
 
-		let observable2 = this.http.get(`${environment.apiEndpoint}/marketaux`,{
-			params: {
-				path: 'news/all',
-				language: 'es',
-				countries: 'us, ar, br, cn',
-				page: '2' 
-			}
+		noticiasSegundaPagina.data.forEach((noticia : any) => {
+			noticias.push(noticia);
 		});
 
-		this.news = [];
-
-		forkJoin([observable1, observable2]).subscribe((response : any)=>{
-			let n1 = response[0].data;
-			let n2 = response[1].data;
-
-			for (let n of n1){
-				let desc = n.description;
-				let largo = desc.length;
-				if(desc[largo-1]!="."){
-					desc = desc + ".";
+		noticias.forEach((noticia :any) => {
+			let descripcion = noticia.description;
+				if(descripcion.substr(0,10)!=noticia.snippet.substr(0,10)){
+					descripcion = descripcion + ' ' + noticia.snippet;
 				}
-				if(desc.substr(0,10)!=n.snippet.substr(0,10)){
-					desc = desc + " " + n.snippet;
-				}
-				if (desc !== ""){
-					this.news.push(
-						new News(n.title, desc, n.image_url, n.url)
-					)
-				}	
-			}
-
-			for (let n of n2){
-				let desc = n.description;
-				let largo = desc.length;
-				if(desc[largo-1]!="."){
-					desc = desc + ".";
-				}
-				if(desc.substr(0,10)!=n.snippet.substr(0,10)){
-					desc = desc + " " + n.snippet;
-				}
-				if (desc !== ""){
-					this.news.push(
-						new News(n.title, desc, n.image_url, n.url)
+				if (descripcion != ''){
+					this.noticias.push(
+						new News(noticia.title, descripcion, noticia.image_url, noticia.url)
 					)
 				}
-			}			
 		});
 	}
 
-	draw_stocks(){
-		this.http.get(`${environment.apiEndpoint}/stocks`,{
-			params: {
+	public async dibujarGraficoAcciones(){
+		this.acciones = await this.apiService.getData('/stocks');
+
+		let values = [];
+		let labels = [];
+
+		for (let accion of this.acciones){
+			values.push(accion.amount);
+			labels.push(accion.stock_symbol);
+		}
+
+		this.chartOptions = {
+			series: values,
+			labels: labels,
+			chart: {
+				type: 'donut',
+				height: 300,
+			},
+			title:{
+				text: "RESUMEN DE ACCIONES EN CARTERA",
+				align: "center",
+				margin: 0,
+			},
+			legend: {
+				show: true,
+				floating: true,
 			}
-		}).subscribe((response:any)=>{
-
-			let values = [];
-			let labels = [];
-
-			for (let s of response){
-				values.push(s.amount);
-				labels.push(s.stock_symbol);
-			}
-
-			this.chartDonutOptions = {
-				series: values,
-				labels: labels,
-				chart: {
-					type: 'donut',
-					height: 300,
-				},
-				title:{
-					text: "RESUMEN DE ACCIONES EN CARTERA",
-					align: "center",
-					margin: 0,
-				},
-				legend: {
-					show: true,
-					floating: true,
-				}
-			};
-
-			this.flag_end_draw = true;
-		});
+		};
 	}
 
-	get_betterWorst_stocks(){
-
-		this.better_tickers = [];
-		this.worst_tickers = [];
-
-		this.http.get(`${environment.apiEndpoint}/fmp`,{
-			params: {
-			path: "v3/gainers"
-			}
-		}).subscribe((response:any)=>{
-			for (let i = 0; i < 5; i++){
-				let change_length = response[i].changesPercentage.length;
-				let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
-				this.better_tickers.push(
-					new Tickers(response[i].ticker, response[i].companyName, change)
-				)
-			}
-		}, (error:any)=>{
+	public async dibujarTablas(){
+		let response = await this.apiService.getData('/fmp', {
+			path: "v3/gainers",
 		});
 
-		this.http.get(`${environment.apiEndpoint}/fmp`,{
-			params: {
-			path: "v3/losers"
-			}
-		}).subscribe((response:any)=>{
-			for (let i = 0; i < 5; i++){
-				let change_length = response[i].changesPercentage.length;
-				let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
-				this.worst_tickers.push(
-					new Tickers(response[i].ticker, response[i].companyName, change)
-				)
-			}
-		}, (error:any)=>{
-		});
+		for (let i = 0; i < 5; i++){
+			let change_length = response[i].changesPercentage.length;
+			let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
+			this.mejoresAcciones.push(
+				new Tickers(response[i].ticker, response[i].companyName, change)
+			)
+		}
+
+		response = await this.apiService.getData('/fmp', {
+			path: "v3/gainers",
+		})
+
+		for (let i = 0; i < 5; i++){
+			let change_length = response[i].changesPercentage.length;
+			let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
+			this.peoresAcciones.push(
+				new Tickers(response[i].ticker, response[i].companyName, change)
+			)
+		}
 	}
 }
