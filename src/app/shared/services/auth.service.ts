@@ -48,14 +48,5 @@ export class AuthService {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('usuario_actual');
     }
-
-
-    public changePassword(data: {
-        old_password: string,
-        new_password: string,
-        new_password_confirmation: string
-    }) {
-        return this.apiService.post('/change-password', data);
-    }
 }
 

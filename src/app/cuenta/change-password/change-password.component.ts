@@ -2,8 +2,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { UserInterface } from 'src/app/shared/models/user.model';
+import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { SnackBarService } from 'src/app/shared/services/snack-bar.service';
 
 @Component({
     selector: 'app-change-password',
@@ -14,9 +17,14 @@ export class ChangePasswordComponent implements OnInit {
     form: FormGroup;
     currentUser: UserInterface;
 
+    public hideOldPassword  : boolean = true;
+    public hidePassword : boolean = true;
+	public hideConfirmPassword : boolean = true;
+
     constructor(
-        private authService: AuthService,
-        private snackBar: MatSnackBar
+        private snackBar: SnackBarService,
+        private apiService: ApiService,
+        private router: Router,
     ) { }
 
     ngOnInit(): void {
@@ -25,24 +33,34 @@ export class ChangePasswordComponent implements OnInit {
 
     initForm() {
         this.form = new FormGroup({
-            old_password: new FormControl('', [Validators.required]),
-            new_password: new FormControl('', [Validators.required]),
-            new_password_confirmation: new FormControl('', [Validators.required]),
+            old_password: new FormControl(''),
+            new_password: new FormControl(''),
+            new_password_confirmation: new FormControl(''),
         });
     }
 
-    onSubmit() {
-        /*
-        if (this.form.valid) {
-            this.authService.changePassword(this.form.value).subscribe({
-                next: () => console.log('Contraseña actualizada', 'done'),
-                error: (errorResponse: HttpErrorResponse) => {
-                    if (errorResponse.status === 401) {
-                        console.log('Contraseña invalida', 'close')
-                    }
-                }
-            });
+    public async submit() {
+        if (!this.form.valid) {
+            return;
         }
-        */
+
+        if(this.form.get("new_password")?.value != this.form.get("new_password_confirmation")?.value){
+			this.snackBar.show("Las contraseñas no coinciden.");
+            return;
+		}
+
+		if(this.form.get("new_password")?.value.length < 6){
+			this.snackBar.show("La contraseña debe tener más de 6 caracteres.");
+            return;
+		}
+
+        await this.apiService.post('/change-password', {
+            old_password: this.form.get('old_password')?.value,
+            new_password: this.form.get('new_password')?.value,
+            new_password_confirmation: this.form.get('new_password_confirmation')?.value
+        });
+
+        this.snackBar.show("Cambios guardados con éxito.");
+		this.router.navigateByUrl('/');
     }
 }
