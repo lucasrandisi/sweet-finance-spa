@@ -3,15 +3,15 @@
 <div class="fondo">
     <mat-card>
         <mat-card-title>Editar Datos</mat-card-title>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form [formGroup]="form" (ngSubmit)="submit()">
             <mat-form-field>
                 <mat-label>Email</mat-label>
                 <input matInput required formControlName="email">
             </mat-form-field>
     
             <mat-form-field>
-                <mat-label>Nombre</mat-label>
-                <input matInput required formControlName="name">
+                <mat-label>Nombre Completo</mat-label>
+                <input matInput required formControlName="nombre">
             </mat-form-field>
     
             <button mat-raised-button class="bg-primary submit" type="submit">Guardar</button>

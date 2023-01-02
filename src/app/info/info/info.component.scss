@@ -2,14 +2,15 @@
     background-image: url(../../../assets/trama_cursos2.png); 
     background-size: 100%;  
     background-size: cover;
-    min-height: 92vh;
+    min-height: 91.6vh;
 }
 
 .container-card{
     width: 70%;
-    margin-bottom: 5%;
-    height: 67vh;
-    padding: 1%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 mat-card{

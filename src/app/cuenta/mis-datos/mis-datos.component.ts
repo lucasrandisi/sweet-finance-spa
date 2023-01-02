@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserInterface } from 'src/app/shared/models/user.model';
+import { FormControl, FormGroup} from '@angular/forms';
+import { Router } from '@angular/router';
+import { ApiService } from 'src/app/shared/services/api.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { UserService } from 'src/app/shared/services/users.service';
+import { SnackBarService } from 'src/app/shared/services/snack-bar.service';
 
 @Component({
   selector: 'app-mis-datos',
@@ -11,36 +11,47 @@ import { UserService } from 'src/app/shared/services/users.service';
   styleUrls: ['./mis-datos.component.scss']
 })
 export class MisDatosComponent implements OnInit {
-	form: FormGroup;
-	currentUser: any;
+	public form!: FormGroup;
+	public user: any;
 
 	constructor(
-		private userService: UserService,
-		private authService: AuthService,
-		private snackBar: MatSnackBar
+		private authService : AuthService,
+		private snackBar : SnackBarService,
+		private apiService : ApiService,
+		private router: Router,
 	) { }
 
-	ngOnInit(): void {
-		this.currentUser = this.authService.getCurrentUser();
-		this.initForm();
-	}
-
-	initForm() {
-		this.form = new FormGroup({
-			email: new FormControl(this.currentUser.email, [Validators.required]),
-			name: new FormControl(this.currentUser.name, [Validators.required]),
+	async ngOnInit(): Promise<void> {
+		await this.authService.getCurrentUser().then((usuario) => {
+			this.user = usuario;
 		});
+		this.inicializarForm();
 	}
 
-	onSubmit() {
-		if (this.form.valid) {
-			/*
-			this.userService.updateMe(this.form.value).subscribe({
-				next: () => console.log('Datos guardados', 'done'),
-				error: () => console.log('Ocurrió un error al guardar los datos', 'close')
-			});
-			*/
+	public inicializarForm() {
+		this.form = new FormGroup({
+			email: new FormControl(''),
+			nombre: new FormControl(''),
+		});
+
+		this.form.get('email')?.setValue(this.user.email);
+		this.form.get('nombre')?.setValue(this.user.name);
+	}
+
+	public async submit() {
+		if (!this.form.valid) {
+			return;
 		}
+
+		let response = await this.apiService.patch('/me', {
+			email: this.form.get('email')?.value,
+			name: this.form.get('nombre')?.value,
+		});
+
+		this.authService.setCurrentUser(response);
+
+		this.snackBar.show("Cambios guardados con éxito.");
+		this.router.navigateByUrl('/');
 	}
 
 }

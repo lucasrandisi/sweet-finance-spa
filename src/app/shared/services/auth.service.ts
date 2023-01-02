@@ -15,6 +15,10 @@ export class AuthService {
         return JSON.parse(localStorage.getItem('usuario_actual')!);
     }
 
+    public async setCurrentUser(user : any){
+        localStorage.setItem('usuario_actual', JSON.stringify(user));
+    }
+
     public getAccessToken() : string | null {
         return localStorage.getItem('accessToken');
     }
