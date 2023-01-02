@@ -11,8 +11,8 @@
             Tendrás disponibles los créditos en un plazo de 2hs aproximadamente.
             Ante cualquier inconveniente comunicarse a soporte@sweetfinance.com.
         </p>
-        <p>Finance actuales: {{finance}}</p>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <p>Finance actuales: {{user.finance}}</p>
+        <form [formGroup]="form" (ngSubmit)="submit()">
             <mat-form-field>
                 <mat-label>Ingrese los $F a recargar</mat-label>
                 <input matInput required formControlName="finance">
