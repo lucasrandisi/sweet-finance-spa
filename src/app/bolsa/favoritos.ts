@@ -1,4 +1,4 @@
-export class Favorites{
+export class Favoritos{
 	id: number;
 	ticker: string;
 	change: string;
