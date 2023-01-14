@@ -15,8 +15,13 @@ import {
 	ApexPlotOptions,
 	ApexDataLabels,
 	ApexStroke,
-	YAxisAnnotations
 } from "ng-apexcharts";
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { SpinnerService } from 'src/app/shared/services/spinner.service';
+import { LocatorService } from 'src/app/shared/services/locator.service';
+import { ApiService } from 'src/app/shared/services/api.service';
+import { SerieDataLinear } from 'src/app/bolsa/serieDataLinear';
+import { SnackBarService } from 'src/app/shared/services/snack-bar.service';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -36,489 +41,364 @@ export type ChartOptions = {
 
 export class TradingComponent implements OnInit {
 
-	ticker: FormGroup;
-	buy: FormGroup;
-	sell: FormGroup;
-	limit_buy: FormGroup;
-	limit_sell: FormGroup;
-	stop_limit_buy: FormGroup;
-	stop_limit_sell: FormGroup;
+	public user : any = {
+		finance: ''
+	};
+	protected spinnerService  = LocatorService.injector.get(SpinnerService);
 
-	price : string;
-	change_action : boolean;
-	change: string;
-	max24: string;
-	min24: string;
-	max52: string;
-	min52: string;
-	volume: string;
-	ema21: string;
-	ema21_value_number: number;
-	price_number: number;
-	estado: string;
-	estado_action : boolean;
-	symbol: string;
-	finance: number;
-	disponible : number;
+	public formularioTicker: FormGroup;
+	public formularioCompra: FormGroup;
+	public formularioVenta: FormGroup;
+	public formularioCompraLimit: FormGroup;
+	public formularioVentaLimit: FormGroup;
+	public formularioCompraStopLimit: FormGroup;
+	public formularioVentaStopLimit: FormGroup;
 
-	feedback_message : string;
-	error_flag : boolean;
+	public tickerInformacion : any = {
+		nombre: '',
+		simbolo: '',
+		cambio: '',
+		cambioAccion: true,
+		mercado: '',
+		precio: '',
+		volumen: '',
+		ema21: '',
+		maximo24: '',
+		minimo24: '',
+		maximo52: '',
+		minino52: '',
+		estado: '',
+		disponible : '0',
+	}
 
-	insta: boolean;
-	lim : boolean;
-	stop : boolean;
-	wait : boolean;
-
-	switch: string = "instantanea";
-
-	orders: Orders[] = [];
+	public minimoValorgrafico : number;
+	public maximoValorgrafico : number;
+	public ordenes: Orders[] = [];
 
 	@ViewChild("chart") chart: ChartComponent;
 	public chartOptions : any;
-	seriesData : SerieData[] = [];
+	public seriesData : SerieData[] = [];
 
-	min_value : number;
-	max_value : number;
-	flag_chart : boolean;
+  	constructor(
+		private router: Router,
+		private authService : AuthService,
+		private apiService : ApiService,
+		private snackBar: SnackBarService,
+	) { }
 
-  	constructor(private http: HttpClient, private router: Router) { }
+  	async ngOnInit(){
+		this.inicializarFormularios();
+		await this.spinnerService.go(async() => {
+			await this.obtenerUsuarioFinance();
+			await this.obtenerInformacionTicker('AAPL');
+			await this.obtenerOrdenes();
+		});
+	}
 
-  	ngOnInit(): void {
-
-		this.insta = true;
-
-		this.ticker = new FormGroup({
+	public inicializarFormularios(){
+		this.formularioTicker = new FormGroup({
 			ticker: new FormControl()
 		});
 
-		this.buy = new FormGroup({
+		this.formularioCompra = new FormGroup({
 			amount: new FormControl()
 		});
 
-		this.sell = new FormGroup({
+		this.formularioVenta = new FormGroup({
 			amount: new FormControl()
 		});
 
-		this.limit_buy = new FormGroup({
+		this.formularioCompraLimit = new FormGroup({
 			limit: new FormControl(),
 			amount: new FormControl()
 		});
 
-		this.limit_sell = new FormGroup({
+		this.formularioVentaLimit = new FormGroup({
 			limit: new FormControl(),
 			amount: new FormControl()
 		});
 
-		this.stop_limit_buy = new FormGroup({
+		this.formularioCompraStopLimit = new FormGroup({
 			stop: new FormControl(),
 			limit: new FormControl(),
 			amount: new FormControl()
 		});
 
-		this.stop_limit_sell = new FormGroup({
+		this.formularioVentaStopLimit = new FormGroup({
 			stop: new FormControl(),
 			limit: new FormControl(),
 			amount: new FormControl()
 		});
+	}
+
+	public async obtenerUsuarioFinance(){
+		let responseFinance = await this.apiService.getData('/me');
+		this.user.finance = responseFinance.data.finance;
+	}
+
+ 	public async obtenerInformacionTicker(ticker: any) {
+		await this.spinnerService.go(async() => {
+			let responseQuote = await this.apiService.getData('/twelve-data/quote', {
+				symbol: ticker
+			});
+			this.tickerInformacion.nombre = responseQuote.name;
+			this.tickerInformacion.simbolo = responseQuote.symbol;
+			this.tickerInformacion.mercado = responseQuote.exchange;
+			this.tickerInformacion.cambio = responseQuote.percent_change.substr(0, responseQuote.percent_change.length-3).concat("%");
+			if(this.tickerInformacion.cambio.substr(0,1) == '-') this.tickerInformacion.cambioAccion = false;
+			this.tickerInformacion.maximo24 = responseQuote.high.substr(0, responseQuote.high.length-3);
+			this.tickerInformacion.minimo24 = responseQuote.low.substr(0, responseQuote.low.length-3);
+			this.tickerInformacion.maximo52 = responseQuote.fifty_two_week.high.substr(0, responseQuote.fifty_two_week.high.length-3);
+			this.tickerInformacion.minimo52 = responseQuote.fifty_two_week.low.substr(0, responseQuote.fifty_two_week.low.length-3);
+			this.tickerInformacion.volumen = this.obtenerVolumenFormateado(responseQuote.volume);
 			
-		this.http.get(`${environment.apiEndpoint}/me`,{
-			params: {
-			}
-		}).subscribe((response:any)=>{
-			this.finance = response.data.finance; 
-		});
+			let responsePrice = await this.apiService.getData('/twelve-data/price', {
+				symbol: ticker
+			});
+			this.tickerInformacion.precio = responsePrice.price.substr(0, responsePrice.price.length-3);
 
-		this.find_ticker_form('AAPL');
-
-		this.get_orders();
-	}
-
-	find_ticker(){
-		this.find_ticker_form(this.ticker.value['ticker'])
-	}
-
- 	find_ticker_form(ticker: any) {
-		//request for ticker data
-		this.http.get(`${environment.apiEndpoint}/twelve-data/price`,{
-			params: {
-			symbol: ticker
-			}
-		}).subscribe((response:any)=>{
-			this.price = response.price; 
-			this.price = this.price.substr(0, this.price.length-3);
-		});
-
-		this.http.get(`${environment.apiEndpoint}/twelve-data/quote`,{
-			params: {
-			symbol: ticker
-			}
-		}).subscribe((response:any)=>{
-			this.symbol = response.symbol;
-			this.change = response.percent_change;
-			this.change = this.change.substr(0, this.change.length-3);
-			if (this.change.substring(0,1) == "-"){
-				this.change_action = false;
-			} else {
-				this.change_action = true;
-			}
-			this.change = this.change.concat("%");
-			this.max24 = response.high;
-			this.max24 = this.max24.substr(0, this.max24.length-3);
-			this.min24 = response.low;
-			this.min24 = this.min24.substr(0, this.min24.length-3);
-			this.max52 = response.fifty_two_week.high;
-			this.max52 = this.max52.substr(0, this.max52.length-3);
-			this.min52 = response.fifty_two_week.low;
-			this.min52 = this.min52.substr(0, this.min52.length-3);
-			this.volume = this.convertVolume(response.volume);
-		});
-
-		this.http.get(`${environment.apiEndpoint}/twelve-data/price`,{
-			params: {
-			symbol: ticker
-			}
-		}).subscribe((response:any)=>{
-			this.price = response.price;
-			this.price = this.price.substr(0, this.price.length-3);
-		});
-
-		this.http.get(`${environment.apiEndpoint}/twelve-data/ema`,{
-			params: {
+			let responseEma21 = await this.apiService.getData('/twelve-data/ema', {
 				symbol: ticker,
 				interval: '1day',
-				time_period: '21'
-				}
-			}).subscribe((response:any)=>{
-				this.ema21 = response.values[0].ema;
-				this.ema21 = this.ema21.substr(0, this.ema21.length-3);
+				time_period: '21',
+				outputsize: '90'
+			});
+			this.tickerInformacion.ema21 = responseEma21.values[0].ema.substr(0, responseEma21.values[0].ema.length-3);
+			(Number(this.tickerInformacion.ema21) <= Number(this.tickerInformacion.precio)) ? this.tickerInformacion.estado = "COMPRA" : this.tickerInformacion.estado = "VENTA";
 
-				//calculate state
-				this.ema21_value_number = +this.ema21;
-				this.price_number = +this.price;
-				if (this.ema21_value_number <= this.price_number){
-					this.estado = "COMPRA";
-					this.estado_action = true;
-				} else {
-					this.estado = "VENTA";
-					this.estado_action = false;
-				}
-		});	
+			await this.calcularDisponible(ticker);
 
-		this.available(ticker);
-
-		this.draw(ticker);
+			await this.dibujarGrafico(ticker);
+		});
     }
 
-	available(ticker : any){
-		this.http.get(`${environment.apiEndpoint}/stocks`,{
-		}).subscribe((response:any)=>{
-			for (let stock of response){
-				if(stock.stock_symbol == ticker){
-					this.disponible = stock.amount;
-					return;
-				}
+	public async calcularDisponible(ticker: any){
+		let responseAcciones = await this.apiService.getData('/stocks');
+		for (let accion of responseAcciones){
+			if(accion.stock_symbol == ticker){
+				this.tickerInformacion.disponible = accion.amount;
+				break;
 			}
-			this.disponible = 0;
-		});
+		}
 	}
 
-	buy_ticker(){
-		this.http.post(`${environment.apiEndpoint}/stocks/${this.symbol}/buy`,{
-			amount: this.buy.value['amount']
-		}).subscribe((response:any)=>{
-			this.buy.reset();
-			this.error_flag = false;
-			this.available(this.symbol);
-			this.finance = response.data.user.finance;
-			this.feedback_message = "Operación realizada con éxito";
-			this.waiting();
-		}, (error:any)=>{
-			this.buy.reset();
-			this.error_flag = true;
-			this.feedback_message = error.error.message;
-			this.waiting();
-		});
-	}
-
-	sell_ticker(){
-		this.http.post(`${environment.apiEndpoint}/stocks/${this.symbol}/sell`,{
-			amount: this.sell.value['amount']
-		}).subscribe((response:any)=>{
-			this.sell.reset();
-			this.available(this.symbol);
-			this.error_flag = false;
-			this.finance = response.data.user.finance;
-			this.feedback_message = "Operación realizada con éxito";
-			this.waiting();
-		},(error:any)=>{
-			this.sell.reset();
-			this.error_flag = true;
-			this.feedback_message = error.error.message;
-			this.waiting();
-		});
-	}
-
-	limit_buy_ticker(){
-		this.http.post(`${environment.apiEndpoint}/orders`,{
-			stock_symbol: this.symbol,
-			action: 'BUY',
-			limit: this.limit_buy.value['limit'],
-			amount: this.limit_buy.value['amount']
-		}).subscribe((response:any)=>{
-			this.limit_buy.reset();
-			this.available(this.symbol);
-			this.error_flag = false;
-			this.get_orders();
-			this.feedback_message = "Orden creada con éxito";
-			this.waiting();
-			this.finance = response.data.user.finance;
-		}, (error:any)=>{
-			this.limit_buy.reset();
-			this.error_flag = true;
-			this.feedback_message = error.error.message;
-			this.waiting();
-		});
-	}
-
-	limit_sell_ticker(){
-		this.http.post(`${environment.apiEndpoint}/orders`,{
-			stock_symbol: this.symbol,
-			action: 'SELL',
-			limit: this.limit_sell.value['limit'],
-			amount: this.limit_sell.value['amount']
-		}).subscribe((response:any)=>{
-			this.limit_sell.reset();
-			this.available(this.symbol);
-			this.error_flag = false;
-			this.get_orders();
-			this.feedback_message = "Orden creada con éxito";
-			this.waiting();
-		}, (error:any)=>{
-			this.limit_sell.reset();
-			this.error_flag = true;
-			this.feedback_message = error.error.message;
-			this.waiting();
-		});
-	}
-
-	stop_limit_buy_ticker(){
-		this.http.post(`${environment.apiEndpoint}/orders`,{
-			stock_symbol: this.symbol,
-			action: 'BUY',
-			stop: this.stop_limit_buy.value['stop'],
-			limit: this.stop_limit_buy.value['limit'],
-			amount: this.stop_limit_buy.value['amount']
-		}).subscribe((response:any)=>{
-			this.stop_limit_buy.reset();
-			this.available(this.symbol);
-			this.error_flag = false;
-			this.get_orders();
-			this.feedback_message = "Orden creada con éxito";
-			this.waiting();
-			this.finance = response.data.user.finance;
-		}, (error:any)=>{
-			this.stop_limit_buy.reset();
-			this.error_flag = true;
-			this.feedback_message = error.error.message;
-			this.waiting();
-		});
-	}
-
-	stop_limit_sell_ticker(){
-		this.http.post(`${environment.apiEndpoint}/orders`,{
-			stock_symbol: this.symbol,
-			action: 'SELL',
-			stop: this.stop_limit_sell.value['stop'],
-			limit: this.stop_limit_sell.value['limit'],
-			amount: this.stop_limit_sell.value['amount']
-		}).subscribe((response:any)=>{
-			this.stop_limit_sell.reset();
-			this.available(this.symbol);
-			this.error_flag = false;
-			this.get_orders();
-			this.feedback_message = "Orden creada con éxito";
-			this.waiting();
-		}, (error:any)=>{
-			this.stop_limit_sell.reset();
-			this.error_flag = true;
-			this.feedback_message = error.error.message;
-			this.waiting();
-		});
-	}
-
-	get_orders(){
-		this.http.get(`${environment.apiEndpoint}/orders`,{
-			params: {
-			}
-		}).subscribe((response:any)=>{
-			this.orders = [];
-			let action_boolean: boolean;
-
-			for(let order of response){
-
-				if(order.action == "BUY"){
-					order.action = "COMPRA";
-					action_boolean = true;
-				} else{
-					order.action = "VENTA";
-					action_boolean = false;
-				}
-
-				if(order.limit == null){
-					order.limit = "-";
-				}
-
-				if(order.stop == null){
-					order.stop = "-";
-				}
-
-				let fecha = order.created_at.substring(0,10);
-
-				this.orders.push(
-					new Orders(order.id, order.action, action_boolean, order.stock_symbol, order.amount,
-						order.stop, order.limit, fecha)
-				);
-			}
-		});
-	}
-
-	delete_order(id : any){
-		this.http.delete(`${environment.apiEndpoint}/orders/${id}`,{})
-		.subscribe((response:any)=>{
-			this.get_orders();
-			//actualizar finance
-		});
-	}
-
-	navigate_academy(){
-		this.router.navigateByUrl('/anatecnico');
-	}
-
-	draw(ticker : any){
-		//request for velas + volumen
-		this.http.get(`${environment.apiEndpoint}/twelve-data/time_series`,{
-		params: {
+	public async dibujarGrafico(ticker : any){
+		let responsePrecios = await this.apiService.getData('/twelve-data/time_series', {
 			symbol: ticker,
 			interval: '4h',
 			outputsize: '30'
-			}
-		}).subscribe((response:any)=>{
-			this.seriesData = [];
-			this.max_value = 0;
-			this.min_value = 9999999;
-		
-			for (let hour of response.values){
-				let year = +hour.datetime.substr(0,4);
-				let month = +hour.datetime.substr(5,2)-1;
-				let day = +hour.datetime.substr(8,2);
-				let hour_v = +hour.datetime.substr(11,2);
-				let minute = +hour.datetime.substr(14,2);
-				let close = +hour.close;
+		});
 
-				if(close > this.max_value){
-					this.max_value = close;
-				}
+		this.seriesData = [];
+		this.maximoValorgrafico = 0;
+		this.minimoValorgrafico = 9999999;
 
-				if(close < this.min_value){
-					this.min_value = close;
-				}
+		for (let hora of responsePrecios.values){
+			this.seriesData.push(
+				new SerieData(
+					+hora.datetime.substr(0,4),
+					+hora.datetime.substr(5,2)-1, 
+					+hora.datetime.substr(8,2), 
+					+hora.datetime.substr(11,2), 
+					+hora.datetime.substr(14,2), 
+					+hora.close,
+				)
+			);
 
-				this.seriesData.push(
-					new SerieData(year, month, day, hour_v, minute, close)
-				);	
+			if(Number(hora.close) > this.maximoValorgrafico){
+				this.maximoValorgrafico = Number(hora.close);
 			}
 
-			this.chartOptions = {
-				series: [
-					{
-						name: ticker,
-						data: this.seriesData
-					},
-				],
-				chart: {
-					type: "line",
-					height: 300,
-					toolbar: {
-						autoSelected: "pan",
-						show: false
-					}
-				},
-				xaxis: {
-					type: "datetime",
-					position: "bottom",
-					labels:{
-						datetimeFormatter: {
-							year: 'yy',
-							month: "MMM 'yy",
-							day: 'dd MMM',
-							hour: 'HH:mm',
-						}
-					}
-				},	
-				yaxis: {
-					max: this.max_value + 0.5,
-					min: this.min_value - 0.5,
-					decimalsInFloat: 2
-				},
-				title:{
-					text: `${ticker}: Serie de Precios al Cierre 4hour/close/30`,
-					align: "center",
-					margin: 0
-				},
-				stroke: { 
-					width: 2,
-					curve: "smooth",
-					colors: "#1AA7EC"
-				},
-				markers: {
-					size: 0,
-				}
-			};
+			if(Number(hora.close) < this.minimoValorgrafico){
+				this.minimoValorgrafico = Number(hora.close);
+			}
+		}
 
-			this.flag_chart = true;
-			
+		this.chartOptions = {
+			series: [
+				{
+					name: ticker,
+					data: this.seriesData
+				},
+			],
+			chart: {
+				type: "line",
+				height: 300,
+				toolbar: {
+					autoSelected: "pan",
+					show: false
+				}
+			},
+			xaxis: {
+				type: "datetime",
+				position: "bottom",
+				labels:{
+					datetimeFormatter: {
+						year: 'yy',
+						month: "MMM 'yy",
+						day: 'dd MMM',
+						hour: 'HH:mm',
+					}
+				}
+			},	
+			yaxis: {
+				max: this.maximoValorgrafico + 0.5,
+				min: this.minimoValorgrafico - 0.5,
+				decimalsInFloat: 2
+			},
+			title:{
+				text: `${ticker}: Serie de Precios al Cierre 4horas/30`,
+				align: "center",
+				margin: 0
+			},
+			stroke: { 
+				width: 2,
+				curve: "smooth",
+				colors: "#1AA7EC"
+			},
+			markers: {
+				size: 0,
+			}
+		};
+
+	}
+
+	public obtenerVolumenFormateado(volumen: any){
+		console.log('volumen', volumen);
+		if(volumen.length>6){
+			volumen = volumen.substr(0, volumen.length-6);
+			return volumen.concat("M");
+		} else{
+			if (volumen.length>3){
+				volumen = volumen.substr(0, volumen.length-3);
+				return volumen.concat("K");
+			} else{
+				return volumen;
+			}
+		}
+	}
+
+	public async comprarTickerInstantanea(){
+		await this.spinnerService.go(async() => {
+			let responseCompra = await this.apiService.post(`/stocks/${this.tickerInformacion.simbolo}/buy`, {
+				amount: this.formularioCompra.value['amount']
+			});
+
+			this.formularioCompra.reset();
+			await this.calcularDisponible(this.tickerInformacion.simbolo);
+			this.user.finance = responseCompra.data.user.finance;
+			this.snackBar.show('Operación realizada con éxito.');
 		});
 	}
 
-	waiting(): void {
-		this.wait = true;
-		setTimeout(function(this: any) {
-			this.wait = false;
-		}.bind(this), 3000);
+	public async venderTickerInstantanea(){
+		await this.spinnerService.go(async() => {
+			let responseVenta = await this.apiService.post(`/stocks/${this.tickerInformacion.simbolo}/sell`, {
+				amount: this.formularioVenta.value['amount']
+			});
+
+			this.formularioVenta.reset();
+			await this.calcularDisponible(this.tickerInformacion.simbolo);
+			this.user.finance = responseVenta.data.user.finance;
+			this.snackBar.show('Operación realizada con éxito.');
+		});
 	}
 
-	convertVolume(vol : any){
-		if(vol.length>6){
-			vol = vol.substr(0, vol.length-6);
-			return vol.concat("M");
-		} else{
-			if (vol.length>3){
-				vol = vol.substr(0, vol.length-3);
-				return vol.concat("K");
-			} else{
-				return vol;
-			}
+	public async comprarTickerLimit(){
+		await this.spinnerService.go(async() => {
+			let responseCompraLimit = await this.apiService.post(`/orders`, {
+				stock_symbol: this.tickerInformacion.simbolo,
+				action: 'BUY',
+				limit: this.formularioCompraLimit.value['limit'],
+				amount: this.formularioCompraLimit.value['amount']
+			});
+
+			this.formularioCompraLimit.reset();
+			await this.calcularDisponible(this.tickerInformacion.simbolo);
+			await this.obtenerOrdenes();
+			this.user.finance = responseCompraLimit.data.user.finance;
+			this.snackBar.show('Orden creada con éxito.');
+		});
+	}
+
+	public async venderTickerLimit(){
+		await this.spinnerService.go(async() => {
+			let responseVentaLimit = await this.apiService.post(`/orders`, {
+				stock_symbol: this.tickerInformacion.simbolo,
+				action: 'SELL',
+				limit: this.formularioVentaLimit.value['limit'],
+				amount: this.formularioVentaLimit.value['amount']
+			});
+
+			this.formularioVentaLimit.reset();
+			await this.calcularDisponible(this.tickerInformacion.simbolo);
+			await this.obtenerOrdenes();
+			this.user.finance = responseVentaLimit.data.user.finance;
+			this.snackBar.show('Orden creada con éxito.');
+		});
+	}
+
+	public async comprarTickerStopLimit(){
+		let responseCompraStopLimit = await this.apiService.post(`/orders`, {
+			stock_symbol: this.tickerInformacion.simbolo,
+			action: 'BUY',
+			stop: this.formularioCompraStopLimit.value['stop'],
+			limit: this.formularioCompraStopLimit.value['limit'],
+			amount: this.formularioCompraStopLimit.value['amount']
+		});
+
+		this.formularioCompraStopLimit.reset();
+		await this.calcularDisponible(this.tickerInformacion.simbolo);
+		await this.obtenerOrdenes();
+		this.user.finance = responseCompraStopLimit.data.user.finance;
+		this.snackBar.show('Orden creada con éxito.');
+	}
+
+	public async venderTickerStopLimit(){
+		let responseCompraStopLimit = await this.apiService.post(`/orders`, {
+			stock_symbol: this.tickerInformacion.simbolo,
+			action: 'SELL',
+			stop: this.formularioVentaStopLimit.value['stop'],
+			limit: this.formularioVentaStopLimit.value['limit'],
+			amount: this.formularioVentaStopLimit.value['amount']
+		});
+
+		this.formularioVentaStopLimit.reset();
+		await this.calcularDisponible(this.tickerInformacion.simbolo);
+		await this.obtenerOrdenes();
+		this.user.finance = responseCompraStopLimit.data.user.finance;
+		this.snackBar.show('Orden creada con éxito.');
+	}
+
+	public async obtenerOrdenes(){
+		let responseOrdenes = await this.apiService.getData('/orders', {});
+		this.ordenes = [];
+
+		for (let orden of responseOrdenes){
+			this.ordenes.push(
+				new Orders(
+					orden.id, 
+					(orden.action == "BUY") ? "COMPRA" : "VENTA", 
+					(orden.action == "BUY") ? true : false, 
+					orden.stock_symbol, 
+					orden.amount,
+					(orden.stop == null) ? '-' : orden.stop, 
+					(orden.limit == null) ? '-' : orden.limit, 
+					orden.created_at.substring(0,10),
+				)
+			);
 		}
 	}
 
-	onChangeHeight(event : any){
-		if (event == "instantanea"){
-			this.lim = false;
-			this.stop = false;
-			this.insta = true;
-		}
-		
-		if (event == "limit"){
-			this.lim = true;
-			this.stop = false;
-			this.insta = false;
-		}
+	public async eliminarOrden(id : any){
+		let responseEliminar = await this.apiService.delete(`/orders/${id}`);
+		this.user.finance = responseEliminar.user.finance;
+		await this.obtenerOrdenes();
+		//@toDo actualizar finance
 
-		if (event == "stop-limit"){
-			this.lim = false;
-			this.stop = true;
-			this.insta = false;
-		}
 	}
 
+	public navegarAcademia(){
+		this.router.navigateByUrl('/academia/anatecnico');
+	}
 }
