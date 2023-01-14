@@ -22,7 +22,8 @@ jobs:
       - name: Add to site to known hosts
         run: |
           ssh-keyscan -H ${{secrets.DIGITALOCEAN_IP}} >> ~/.ssh/known_hosts
-          
+       
       - name: Copy code
-        run: rsync -avh --delete . \
-          ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
+        run: |
+          rsync -avh --delete . \
+            ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
