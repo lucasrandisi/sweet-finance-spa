@@ -15,6 +15,8 @@ import {
 	ApexStroke,
 } from "ng-apexcharts";
 import { ApiService } from 'src/app/shared/services/api.service';
+import { SpinnerService } from 'src/app/shared/services/spinner.service';
+import { LocatorService } from 'src/app/shared/services/locator.service';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -35,6 +37,7 @@ export type ChartOptions = {
 export class BolsaComponent implements OnInit {
 
 	public form: FormGroup;
+	protected spinnerService : SpinnerService = LocatorService.injector.get(SpinnerService);
 	
 	public tickerInformacion : any = {
 		nombre: '',
@@ -79,10 +82,12 @@ export class BolsaComponent implements OnInit {
 	}
 
   	async ngOnInit(): Promise<void> {
-		this.inicializarForm();
-		await this.obtenerFavoritos();
-		await this.obtenerInformacionTicker('AAPL');
-		await this.dibujarGraficos('AAPL');
+		await this.spinnerService.go(async () => {
+			this.inicializarForm();
+			await this.obtenerFavoritos();
+			await this.obtenerInformacionTicker('AAPL');
+			await this.dibujarGraficos('AAPL');
+		});
 	}
 
 	public inicializarForm() {
@@ -92,9 +97,11 @@ export class BolsaComponent implements OnInit {
 	}
 
 	public async buscarTicker(){
-		this.puedeDibujar = false;
-		await this.obtenerInformacionTicker(this.form.value['ticker']);
-		await this.dibujarGraficos(this.form.value['ticker']);
+		await this.spinnerService.go(async () => {
+			this.puedeDibujar = false;
+			await this.obtenerInformacionTicker(this.form.value['ticker']);
+			await this.dibujarGraficos(this.form.value['ticker']);
+		});
 	}
 
 	public async obtenerInformacionTicker(ticker: any) {

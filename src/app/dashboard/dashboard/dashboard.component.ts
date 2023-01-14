@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
 	public chartOptions: any;
 
 	async ngOnInit(): Promise<void> {
-		this.spinnerService.go(async() => {
+		await this.spinnerService.go(async() => {
 			this.authService.getCurrentUser().then((usuario) => {
 				this.user = usuario;
 			});
