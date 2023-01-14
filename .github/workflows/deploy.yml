@@ -28,5 +28,5 @@ jobs:
        
       - name: Copy code
         run: |
-          rsync -avh --delete ./dist \
+          rsync -avh --delete ./dist/sweet-finance/ \
             ${{ secrets.DIGITALOCEAN_USERNAME}}@${{ secrets.DIGITALOCEAN_IP }}:${{ secrets.DIGITALOCEAN_DEPLOY_PATH }}
