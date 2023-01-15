@@ -1,0 +1,14 @@
+.spinner-background {
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.596);
+    z-index: 999;
+    position: fixed;
+
+    mat-progress-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -50px;
+    }
+}

@@ -11,14 +11,15 @@
                         <th class="font-bold text-base">Ticker</th>
                         <th class="font-bold text-base">Cambio</th>
                         <th class="font-bold text-base">Precio</th>
+                        <th class="font-bold text-base"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="tr-hover" *ngFor="let fav of favorites">
-                        <td class="td-ticker" (click)="find_ticker_form(fav.ticker)">{{fav.ticker}}</td>
-                        <td [class.compra]="fav.change_status" [class.venta]="!fav.change_status">{{fav.change}}</td>
-                        <td>{{fav.price}}</td>
-                        <button mat-icon-button (click)="delete_favorite(fav.id)"><mat-icon class="delete-button">clear</mat-icon></button>
+                    <tr class="tr-hover" *ngFor="let favorito of favoritos">
+                        <td class="td-ticker" (click)="obtenerInformacionTicker(favorito.ticker)">{{favorito.ticker}}</td>
+                        <td [class.compra]="favorito.change_status" [class.venta]="!favorito.change_status">{{favorito.change}}</td>
+                        <td>{{favorito.price}}</td>
+                        <button mat-icon-button (click)="eliminarFavorito(favorito.id)"><mat-icon>delete</mat-icon></button>
                     </tr>
                 </tbody>
             </div>
@@ -27,47 +28,55 @@
 
     <div class="col-span-3">
         <div class="container-find">
-            <form [formGroup]="form" (ngSubmit)="find_ticker()">
+            <form [formGroup]="form" (ngSubmit)="buscarTicker()">
                 <mat-form-field appearance="legacy">
-                    <mat-label>Ticker</mat-label>
-                    <input id="ticker" formControlName="ticker" autocomplete="false" matInput>
+                    <mat-label>Escriba para buscar..</mat-label>
+                    <input id="ticker" formControlName="ticker" autocomplete="off" matInput>
                 </mat-form-field>
-                <button mat-raised-button type="submit" class="form-button">Buscar<mat-icon class="delete-button" >search</mat-icon></button>
-                <button type="button" mat-raised-button (click)="add_favorite()" class="form-button">Añadir a Favoritos<mat-icon class="delete-button">add</mat-icon></button>
-                <button type="button" mat-raised-button (click)="navigate_academy()" class="form-button">Información<mat-icon class="delete-button">info</mat-icon></button>
+                <button mat-raised-button type="submit"><mat-icon>search</mat-icon>Buscar</button>
+                <button type="button" mat-raised-button (click)="agregarFavorito()"><mat-icon>add</mat-icon>Añadir a favoritos</button>
+                <button type="button" mat-raised-button (click)="navegarAcademia()"><mat-icon>info</mat-icon>Información</button>
             </form>
 
-            <div class="table-fixed text-center">
-                <thead>
-                    <tr>
-                        <th class="w-1/6">Ticker</th>
-                        <th class="w-1/4">Compañía</th>
-                        <th class="w-1/6">Mercado de EEUU</th>
-                        <th class="w-1/6">Última cotización</th>
-                        <th class="w-1/8">EMA21 Diaria</th>
-                        <th class="w-1/8">EMA200 Diaria</th>
-                        <th class="w-1/8">RSI Diario</th>
-                        <th class="w-1/6">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{symbol}}</td>
-                        <td>{{name}}</td>
-                        <td>{{mercado}}</td>
-                        <td>{{price}}</td>
-                        <td>{{ema21}}</td>
-                        <td>{{ema200}}</td>
-                        <td>{{rsi}}</td>
-                        <td *ngIf="estado_compra" class="compra">COMPRA</td>
-                        <td *ngIf="estado_venta" class="venta">VENTA</td>
-                    </tr>
-                </tbody>
+            <div class="container-informacion-ticker">
+                <div class="columna">
+                    <span class="titulo">Ticker</span>
+                    <span class="info">{{tickerInformacion.simbolo}}</span>
+                </div>
+                <div class="columna">
+                    <span class="titulo">Compañía</span>
+                    <span class="info">{{tickerInformacion.nombre}}</span>
+                </div>
+                <div class="columna">
+                    <span class="titulo">Mercado de EEUU</span>
+                    <span class="info">{{tickerInformacion.mercado}}</span>
+                </div>
+                <div class="columna">
+                    <span class="titulo">Última cotización</span>
+                    <span class="info">${{tickerInformacion.precio}}</span>
+                </div>
+                <div class="columna">
+                    <span class="titulo">EMA21 Actual</span>
+                    <span class="info">${{tickerInformacion.ema21}}</span>
+                </div>
+                <div class="columna">
+                    <span class="titulo">EMA200 Actual</span>
+                    <span class="info">${{tickerInformacion.ema200}}</span>
+                </div>
+                <div class="columna">
+                    <span class="titulo">RSI Actual</span>
+                    <span class="info">{{tickerInformacion.rsi}}</span>
+                </div>
+                <div class="columna">
+                    <span class="titulo">Estado</span>
+                    <span *ngIf="estadoCompra" class="info compra">COMPRA</span>
+                    <span *ngIf="estadoVenta" class="info venta">VENTA</span>
+                </div>
             </div>
         </div>
 
-        <div class="chart-box">
-            <div *ngIf="flag_candle" id="chart-candlestick">
+        <div *ngIf="puedeDibujar" class="chart-box">
+            <div id="chart-candlestick">
                 <apx-chart
                     #chartCandle
                     [series]="chartCandleOptions.series"
@@ -81,7 +90,7 @@
                     [tooltip]="chartCandleOptions.tooltip"
                 ></apx-chart>
             </div>
-            <div *ngIf="flag_vol" id="chart-bar">
+            <div id="chart-bar">
                 <apx-chart
                     #chartBar
                     [series]="chartBarOptions.series"
@@ -94,7 +103,7 @@
                     [title]="chartBarOptions.title"
                 ></apx-chart>
             </div>
-            <div *ngIf="flag_macd" id="chart-macd">
+            <div id="chart-macd">
                 <apx-chart
                     #chartMACD
                     [series]="chartMACDOptions.series"
@@ -108,7 +117,7 @@
                     [title]="chartMACDOptions.title"
                 ></apx-chart>
             </div>
-            <div *ngIf="flag_rsi" id="chart-rsi">
+            <div id="chart-rsi">
                 <apx-chart
                     #chartRSI
                     [series]="chartRSIOptions.series"
