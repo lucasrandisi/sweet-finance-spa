@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiEndpoint: 'http://sweetfinance.live/api'
+    apiEndpoint: 'http://api.sweetfinance.live/api'
 };
