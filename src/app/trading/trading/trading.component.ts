@@ -390,12 +390,13 @@ export class TradingComponent implements OnInit {
 		}
 	}
 
-	public async eliminarOrden(id : any){
-		let responseEliminar = await this.apiService.delete(`/orders/${id}`);
-		this.user.finance = responseEliminar.user.finance;
-		await this.obtenerOrdenes();
-		//@toDo actualizar finance
-
+	public async eliminarOrden(id: any, ticker: any){
+		await this.spinnerService.go(async() => {
+			let responseEliminar = await this.apiService.delete(`/orders/${id}`);
+			this.user.finance = responseEliminar.user.finance;
+			await this.obtenerOrdenes();
+			await this.calcularDisponible(ticker);
+		});
 	}
 
 	public navegarAcademia(){

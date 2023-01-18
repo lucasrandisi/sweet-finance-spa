@@ -223,7 +223,7 @@
                         <td>{{orden.stop}}</td>
                         <td>{{orden.limit}}</td>
                         <td>{{orden.fecha}}</td>
-                        <button mat-icon-button (click)="eliminarOrden(orden.id)"><mat-icon class="delete-button">delete</mat-icon></button>
+                        <button mat-icon-button (click)="eliminarOrden(orden.id, orden.ticker)"><mat-icon class="delete-button">delete</mat-icon></button>
                     </tr>
                 </tbody>
             </div>
