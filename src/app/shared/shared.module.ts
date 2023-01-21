@@ -56,6 +56,7 @@ import { MatDatepickerModule      } from '@angular/material/datepicker';
 import { ConfirmComponent } from './components/confirm/confirm.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { NoSoportadoComponent } from './components/no-soportado/no-soportado.component';
 
 @NgModule({
 	providers: [
@@ -65,6 +66,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
         MenuComponent,
         ConfirmComponent,
         SpinnerComponent,
+        NoSoportadoComponent,
     ],
 	imports: [
         ApiService,
@@ -132,6 +134,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
         MenuComponent,
         ConfirmComponent,
         SpinnerComponent,
+        NoSoportadoComponent,
     ],
     schemas: [
         NO_ERRORS_SCHEMA,

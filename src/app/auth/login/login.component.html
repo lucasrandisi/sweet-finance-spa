@@ -5,17 +5,16 @@
     </div>
     
     <div class="title">
-        <p class="sweet-title italic font-extrabold text-6xl">SWEET</p>
-        <p class="sweet-title italic font-extrabold text-6xl">FINANCE</p>
+        <img class="imagen" src="../../../assets/sw_logoFull.png">
         <span class="text-xl italic font-medium" style="color: white"> Una nueva forma de ahorrar</span>
     </div>
 
     <div class="grid grid-cols-2">
-        <div class="container-form mx-auto">
+        <div class="container-form">
             <form [formGroup]="form" (ngSubmit)="submit()" class="form">
                 <p class="text-xl font-medium" style="color: yellow">Email</p>
                 <mat-form-field appearance="outline">
-                    <input formControlName="email" autocomplete="false" matInput required>
+                    <input formControlName="email" autocomplete="off" matInput required>
                 </mat-form-field>
 
                 <p class="text-xl font-medium" style="color: yellow">Contraseña</p>

@@ -28,27 +28,7 @@
     margin-left: 30vh;
 }
 
-.titulo1{
-    color: rgb(143, 27, 27);
-}
-
-.titulo2{
-    color: rgb(143, 27, 27);
-}
-
-.titulo3{
-    color: rgb(143, 27, 27);
-}
-
-.titulo4{
-    color: rgb(143, 27, 27);
-}
-
-.titulo5{
-    color: rgb(143, 27, 27);
-}
-
-.titulo6{
+.titulo{
     color: rgb(143, 27, 27);
 }
 
@@ -62,4 +42,9 @@
 
 p{
     text-align: justify;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(143, 27, 27);
+    border-radius: 5px;
 }

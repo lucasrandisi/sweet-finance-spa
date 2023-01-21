@@ -9,32 +9,35 @@
 }
 
 .title{
-    margin-left: 8%;
-    margin-top: 2%;
+    margin-left: 150px;
+    margin-top: 30px;
     
-    .sweet-title{
-        color: #cccc00;
+    .imagen{
+        width: 300px;
+        height: 250px;
     }
 }
 
 .container-body{
     background-image: url(../../../assets/bg_login.png); 
-    background-size: 100%;  
+    background-repeat: no-repeat;
+    background-position: center center;
     background-size: cover;
+    min-width: 100vw;
+    width: 100%;
     min-height: 100vh;
+    height: 100%;
 }
 
 .container-form{
-    width: 75%;
-    height: 70%;
-    padding: 2%;
-    margin-top: 8%;
-    border-radius: 2%;
+    padding: 10px;
+    margin-top: 50px;
     background-color: transparent;
 }
 
 form{
-    margin: 2%;
+    margin-left: 150px;
+    margin-right: 150px;
 
     mat-form-field{
         width: 100% !important;
@@ -43,13 +46,21 @@ form{
     ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
         background-color: white;
         border-radius: 5px;
-      }
+    }
+
+    .button{
+        width: 200px;
+        height: 50px;
+        margin-bottom: 20px;
+        font-weight: 700;
+        font-size: 17px;
+    }
 }
 
 mat-divider{
     border: 0.005vh solid #cccc00;
-    margin-top: 2%;
-    margin-bottom: 5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 
