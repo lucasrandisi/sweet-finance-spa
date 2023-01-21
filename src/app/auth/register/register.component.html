@@ -2,12 +2,11 @@
     <nav class="flex items-center justify-between flex-wrap">
         <div class="flex items-center">
             <img class="logo" src="../../../assets/sw_logo.png">
-            <span class="font-extrabold text-xl" style="color: #cccc00"> SWEET FINANCE</span>
         </div>
 
         <div>
             <span class="font-light text-lg" style="color: #cccc00">¿Ya tienes cuenta?</span>
-            <button mat-raised-button class="button"><a (click)="navegar('/login')">Iniciar Sesión</a></button>
+            <button mat-raised-button class="button" (click)="navegar('/login')">Iniciar Sesión</button>
         </div>
     </nav>
 
@@ -18,12 +17,12 @@
         <form [formGroup]="form" (ngSubmit)="submit()" class="form">
             <p class="text-xl font-medium" style="color: yellow">Nombre Completo</p>
             <mat-form-field appearance="outline">
-                <input formControlName="name" autocomplete="false" matInput required>
+                <input formControlName="name" autocomplete="off" matInput required>
             </mat-form-field>
 
             <p class="text-xl font-medium" style="color: yellow">Email</p>
             <mat-form-field appearance="outline">
-                <input formControlName="email" autocomplete="false" matInput required>
+                <input formControlName="email" autocomplete="off" matInput required>
             </mat-form-field>
 
             <p class="text-xl font-medium" style="color: yellow">Constraseña</p>

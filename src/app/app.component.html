@@ -1,2 +1,9 @@
-<router-outlet></router-outlet>
+<div *ngIf="!isMobile">
+    <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="isMobile">
+    <app-no-soportado></app-no-soportado>
+</div>
+
 <spinner *ngIf="showSpinner"></spinner>

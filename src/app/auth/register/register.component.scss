@@ -10,11 +10,10 @@
 }
 
 .logo{
-    height: 4vh;
-    width: 5vh;
-    margin-right: 2vh;
-    margin-left: 3vh;
-    margin-bottom: 0.5vh;
+    height: 40px;
+    width: 50px;
+    margin-right: 10px;
+    margin-left: 30px;
 }
 
 nav{
@@ -43,10 +42,11 @@ mat-form-field{
     background-color: #cccc00;
     color: black;
     border: 1px solid #212245;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    width: 130px;
-    height: 40px;
+    width: 200px;
+    height: 50px;
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 17px;
 }
 
 .button{

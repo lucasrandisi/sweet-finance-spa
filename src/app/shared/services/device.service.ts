@@ -10,6 +10,7 @@ export class DeviceService {
 
     public isDesktop! : boolean;
     public isMobile!  : boolean;
+    public isMobileGalaxyFold : boolean = false;
     public observer   : Subject<void> = new Subject<void>();
 
     constructor(
@@ -18,11 +19,22 @@ export class DeviceService {
     ) 
     { 
         this.breakPointObserver.observe([
-            '(max-width: 1008px)'
+            '(max-width: 1300px)'
         ]).subscribe(result => {
             this.isDesktop = !result.matches;
             this.isMobile = result.matches;
+            this.isMobileGalaxyFold = window.outerWidth <= 280;
             this.observer.next();
         })
     }
+
+    public observe(fn: Function) {
+        this.observer.subscribe(() => {
+            fn(this.isMobile);
+        });
+
+        // Hay que invocarla la primera vez igualmente.
+        fn(this.isMobile);
+    }
 }
+
