@@ -13,10 +13,13 @@
                 <mat-label>Nombre Completo</mat-label>
                 <input matInput required formControlName="nombre">
             </mat-form-field>
+
+            <button mat-raised-button class="bg-primary guardar" type="submit">Guardar cambios</button>
     
-            <button mat-raised-button class="bg-primary submit" type="submit">Guardar</button>
-            <button mat-stroked-button routerLink="./change-password" class="submit">Cambiar Contraseña</button>
-            <button mat-stroked-button routerLink="./add-finance">Añadir Finance</button>
+            <div class="botones">
+                <button mat-stroked-button routerLink="./change-password">Cambiar Contraseña</button>
+                <button mat-stroked-button routerLink="./add-finance">Añadir Finance</button>
+            </div>
         </form>
     </mat-card>
 </div>

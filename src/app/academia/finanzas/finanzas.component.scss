@@ -1,8 +1,8 @@
 .fondo{
-    background-image: url(../../../assets/trama_cursos2.png); 
-    background-size: 100%;  
+    background-image: url(../../../assets/trama_cursos2.png);  
     background-size: cover;
-    min-height: 91.6vh;
+    height: 100%;
+    max-height: 87.8vh;
 }
 
 .ABC{
@@ -19,13 +19,15 @@
     padding: 1%;
     color: white;
     overflow: auto;
-    height: 75vh; /*vh*/
+    height: 450px;
     width: 51vw;
     margin-left: 21vh;
 }
 
 .cuerpoindice{
     margin-left: 30vh;
+    overflow: auto;
+    height: 450px;
 }
 
 .titulo{
@@ -47,4 +49,8 @@ p{
 ::-webkit-scrollbar-thumb {
     background: rgb(143, 27, 27);
     border-radius: 5px;
+}
+
+button{
+    text-align: start;
 }

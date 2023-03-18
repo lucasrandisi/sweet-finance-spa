@@ -102,7 +102,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	public async dibujarGraficoAcciones(){
-		this.acciones = await this.apiService.getData('/stocks');
+		this.acciones = await this.apiService.getData('/user-stocks');
 
 		let values = [];
 		let labels = [];

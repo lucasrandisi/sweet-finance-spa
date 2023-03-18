@@ -42,8 +42,8 @@
                 <div class="columna">
                     <span class="titulo">Estado</span>
                     <span class="info"
-                        [class.compra]="tickerInformacion.cambioAccion"
-                        [class.venta]="!tickerInformacion.cambioAccion"
+                        [class.venta]="tickerInformacion.cambioAccion"
+                        [class.compra]="!tickerInformacion.cambioAccion"
                     >{{tickerInformacion.estado}}</span>
                 </div>
                 <div class="columna">
