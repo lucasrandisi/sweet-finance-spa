@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { SerieData } from '../serieDataHour';
 import { Router } from '@angular/router';
 import { Orders } from '../orders';
@@ -20,7 +18,6 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { SpinnerService } from 'src/app/shared/services/spinner.service';
 import { LocatorService } from 'src/app/shared/services/locator.service';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { SerieDataLinear } from 'src/app/bolsa/serieDataLinear';
 import { SnackBarService } from 'src/app/shared/services/snack-bar.service';
 
 export type ChartOptions = {
@@ -81,7 +78,6 @@ export class TradingComponent implements OnInit {
 
   	constructor(
 		private router: Router,
-		private authService : AuthService,
 		private apiService : ApiService,
 		private snackBar: SnackBarService,
 	) { }
@@ -137,6 +133,11 @@ export class TradingComponent implements OnInit {
 	}
 
  	public async obtenerInformacionTicker(ticker: any) {
+		if(ticker == null || ticker == ''){
+			this.snackBar.show('Debes ingresar un Ticker para buscar');
+			return;
+		}
+
 		await this.spinnerService.go(async() => {
 			let responseQuote = await this.apiService.getData('/twelve-data/quote', {
 				symbol: ticker
@@ -173,7 +174,7 @@ export class TradingComponent implements OnInit {
     }
 
 	public async calcularDisponible(ticker: any){
-		let responseAcciones = await this.apiService.getData('/stocks');
+		let responseAcciones = await this.apiService.getData('/user-stocks');
 		for (let accion of responseAcciones){
 			if(accion.stock_symbol == ticker){
 				this.tickerInformacion.disponible = accion.amount;

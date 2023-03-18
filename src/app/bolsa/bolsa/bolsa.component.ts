@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SerieData } from '../serieData';
 import { SerieDataLinear } from '../serieDataLinear';
@@ -17,6 +17,7 @@ import {
 import { ApiService } from 'src/app/shared/services/api.service';
 import { SpinnerService } from 'src/app/shared/services/spinner.service';
 import { LocatorService } from 'src/app/shared/services/locator.service';
+import { SnackBarService } from 'src/app/shared/services/snack-bar.service';
 
 export type ChartOptions = {
 	series: ApexAxisChartSeries;
@@ -78,6 +79,7 @@ export class BolsaComponent implements OnInit {
  	constructor(
 		private apiService: ApiService,
 		private router: Router,
+		private snackBar: SnackBarService,
 		) {
 	}
 
@@ -97,6 +99,11 @@ export class BolsaComponent implements OnInit {
 	}
 
 	public async buscarTicker(){
+		if(this.form.value['ticker'] == null || this.form.value['ticker'] == ''){
+			this.snackBar.show('Debes ingresar un Ticker para buscar');
+			return;
+		}
+
 		await this.spinnerService.go(async () => {
 			this.puedeDibujar = false;
 			await this.obtenerInformacionTicker(this.form.value['ticker']);
@@ -625,6 +632,11 @@ export class BolsaComponent implements OnInit {
 	}
 
 	public async agregarFavorito(){
+		if(this.form.value['ticker'] == null || this.form.value['ticker'] == ''){
+			this.snackBar.show('Debes ingresar un Ticker para añadir a favoritos');
+			return;
+		}
+
 		await this.apiService.post('/stocks/favorites', {
 			stock_symbol: this.form.value['ticker']
 		});
