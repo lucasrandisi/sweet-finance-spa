@@ -24,7 +24,7 @@ jobs:
           ssh-keyscan -H ${{secrets.DIGITALOCEAN_IP}} >> ~/.ssh/known_hosts
       
       - name: Build
-        run: npm install && npx ng build --prod
+        run: export NODE_OPTIONS=--openssl-legacy-provider && npm install && npx ng build --prod
        
       - name: Copy code
         run: |
