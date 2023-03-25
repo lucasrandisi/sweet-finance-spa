@@ -50,7 +50,6 @@ import { MatSlideToggleModule     } from '@angular/material/slide-toggle';
 import { MatTableModule           } from '@angular/material/table';
 import { MatToolbarModule         } from '@angular/material/toolbar';
 import { MatExpansionModule       } from '@angular/material/expansion';
-import { MatDatepickerModule      } from '@angular/material/datepicker';
 
 //Componentes
 import { ConfirmComponent } from './components/confirm/confirm.component';
@@ -119,6 +118,7 @@ import { NoSoportadoComponent } from './components/no-soportado/no-soportado.com
         MatIconModule,
         MatMenuModule,
         MatPaginatorModule,
+        MatProgressSpinnerModule,
         MatRadioModule,
         MatRippleModule,
         MatSelectModule,

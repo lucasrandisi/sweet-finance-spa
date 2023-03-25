@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, TrackByFunction} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SerieData } from '../serieData';
 import { SerieDataLinear } from '../serieDataLinear';
@@ -76,6 +76,9 @@ export class BolsaComponent implements OnInit {
 	public chartRSIOptions: any;
 	public chartMACDOptions: any;
 
+	public autocompleteLoading = true;
+	public tickersFiltrados : any = [];
+
  	constructor(
 		private apiService: ApiService,
 		private router: Router,
@@ -96,6 +99,18 @@ export class BolsaComponent implements OnInit {
 		this.form = new FormGroup({
 			ticker: new FormControl()
 		});
+	}
+
+	public async buscarTickerAutocomplete(event : any){
+		this.autocompleteLoading = true;
+		let response = await this.apiService.getData('/stocks',{
+			'filters' : {
+				'search': event
+			}
+		});
+
+		this.tickersFiltrados = response.data;
+		this.autocompleteLoading = false;
 	}
 
 	public async buscarTicker(){
@@ -339,6 +354,9 @@ export class BolsaComponent implements OnInit {
 				},
 			],
 			chart: {
+				animations: {
+					enabled: false,
+				},
 				type: "candlestick",
 				height: 300,
 				toolbar: {
@@ -391,6 +409,9 @@ export class BolsaComponent implements OnInit {
 				}
 			],
 			chart: {
+				animations: {
+					enabled: false,
+				},
 				height: 120,
 				type: "bar",
 				toolbar: {
@@ -445,6 +466,9 @@ export class BolsaComponent implements OnInit {
 				data: this.seriesRSI
 			  }],
 			chart: {
+				animations: {
+					enabled: false,
+				},
 				type: 'line',
 				height: 150,
 				toolbar: {
@@ -546,6 +570,9 @@ export class BolsaComponent implements OnInit {
 				}
 			],
 			chart: {
+				animations: {
+					enabled: false,
+				},
 				height: 150,
 				type: "line",
 				stacked: false,

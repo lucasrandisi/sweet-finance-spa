@@ -31,7 +31,23 @@
             <form [formGroup]="form" (ngSubmit)="buscarTicker()">
                 <mat-form-field appearance="legacy">
                     <mat-label>Escriba para buscar..</mat-label>
-                    <input id="ticker" formControlName="ticker" autocomplete="off" matInput>
+                    <input 
+                        id="ticker" 
+                        formControlName="ticker" 
+                        [matAutocomplete]="auto" 
+                        (ngModelChange)="buscarTickerAutocomplete($event)"
+                        matInput
+                    >
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option disabled class="loading" *ngIf="autocompleteLoading && this.form.value['ticker']!=null">
+                            <mat-spinner diameter="25"></mat-spinner>
+                        </mat-option>
+                        <ng-container *ngIf="!autocompleteLoading">
+                            <mat-option *ngFor="let ticker of tickersFiltrados" [value]="ticker.symbol">
+                                {{ticker.symbol}} - {{ticker.name}}
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
                 </mat-form-field>
                 <button mat-raised-button type="submit"><mat-icon>search</mat-icon>Buscar</button>
                 <button type="button" mat-raised-button (click)="agregarFavorito()"><mat-icon>add</mat-icon>Añadir a favoritos</button>
@@ -128,7 +144,7 @@
                     [stroke]="chartRSIOptions.stroke"
                     [annotations]="chartRSIOptions.annotations"
                     [title]="chartRSIOptions.title"
-                    ></apx-chart>
+                ></apx-chart>
             </div>
         </div>
     </div>
