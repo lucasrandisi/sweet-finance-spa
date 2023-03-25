@@ -11,8 +11,24 @@
 
             <form class="form-ticker" [formGroup]="formularioTicker" (ngSubmit)="obtenerInformacionTicker(formularioTicker.value['ticker'])">
                 <mat-form-field appearance="legacy">
-                    <mat-label>Ticker</mat-label>
-                    <input formControlName="ticker" autocomplete="off" matInput>
+                    <mat-label>Escriba para buscar..</mat-label>
+                    <input 
+                        id="ticker" 
+                        formControlName="ticker" 
+                        [matAutocomplete]="auto" 
+                        (ngModelChange)="buscarTickerAutocomplete($event)"
+                        matInput
+                    >
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option disabled class="loading" *ngIf="autocompleteLoading && this.formularioTicker.value['ticker']!=null">
+                            <mat-spinner diameter="25"></mat-spinner>
+                        </mat-option>
+                        <ng-container *ngIf="!autocompleteLoading">
+                            <mat-option *ngFor="let ticker of tickersFiltrados" [value]="ticker.symbol">
+                                {{ticker.symbol}} - {{ticker.name}}
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
                 </mat-form-field>
                 
                 <button mat-raised-button type="submit">Buscar<mat-icon>search</mat-icon></button>

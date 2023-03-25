@@ -76,6 +76,9 @@ export class TradingComponent implements OnInit {
 	public chartOptions : any;
 	public seriesData : SerieData[] = [];
 
+	public autocompleteLoading = true;
+	public tickersFiltrados : any = [];
+
   	constructor(
 		private router: Router,
 		private apiService : ApiService,
@@ -125,6 +128,18 @@ export class TradingComponent implements OnInit {
 			limit: new FormControl(),
 			amount: new FormControl()
 		});
+	}
+
+	public async buscarTickerAutocomplete(event : any){
+		this.autocompleteLoading = true;
+		let response = await this.apiService.getData('/stocks',{
+			'filters' : {
+				'search': event
+			}
+		});
+
+		this.tickersFiltrados = response.data;
+		this.autocompleteLoading = false;
 	}
 
 	public async obtenerUsuarioFinance(){
@@ -179,6 +194,8 @@ export class TradingComponent implements OnInit {
 			if(accion.stock_symbol == ticker){
 				this.tickerInformacion.disponible = accion.amount;
 				break;
+			} else {
+				this.tickerInformacion.disponible = 0;
 			}
 		}
 	}
@@ -223,6 +240,9 @@ export class TradingComponent implements OnInit {
 				},
 			],
 			chart: {
+				animations: {
+					enabled: false,
+				},
 				type: "line",
 				height: 300,
 				toolbar: {
@@ -265,7 +285,6 @@ export class TradingComponent implements OnInit {
 	}
 
 	public obtenerVolumenFormateado(volumen: any){
-		console.log('volumen', volumen);
 		if(volumen.length>6){
 			volumen = volumen.substr(0, volumen.length-6);
 			return volumen.concat("M");
