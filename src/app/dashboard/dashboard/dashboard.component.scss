@@ -52,7 +52,7 @@
 
 .container-noticias{
     min-height: 90vh;
-    max-height: 125vh;
+    max-height: 110vh;
     overflow-y: scroll;
 
     .noticias{
@@ -78,6 +78,8 @@
                 margin-top: 10px;
                 width: 75%;
                 height: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .imagen{

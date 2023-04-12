@@ -14,7 +14,7 @@ import {
 	ApexDataLabels,
 	ApexStroke,
 } from "ng-apexcharts";
-import { AuthService } from 'src/app/shared/services/auth.service';
+
 import { SpinnerService } from 'src/app/shared/services/spinner.service';
 import { LocatorService } from 'src/app/shared/services/locator.service';
 import { ApiService } from 'src/app/shared/services/api.service';
@@ -78,6 +78,37 @@ export class TradingComponent implements OnInit {
 
 	public autocompleteLoading = true;
 	public tickersFiltrados : any = [];
+
+	public cursos = [
+		{
+			titulo: 'ABC ECONOMIA',
+			url: '/academia/abceconomia'
+		},
+		{
+			titulo: 'MERCADOS',
+			url: '/academia/mercados'
+		},
+		{
+			titulo: 'VARIABLES MACROECONOMICAS',
+			url: '/academia/vareco'
+		},
+		{
+			titulo: 'FINANZAS',
+			url: '/academia/finanzas'
+		},
+		{
+			titulo: 'ANÁLISIS TÉCNICO',
+			url: '/academia/anatecnico'
+		},
+		{
+			titulo: 'CRIPTOMONEDAS',
+			url: '/academia/criptos'
+		},
+		{
+			titulo: 'HISTORIA ECONÓMICA',
+			url: '/academia/hiseconomi'
+		},
+	]
 
   	constructor(
 		private router: Router,

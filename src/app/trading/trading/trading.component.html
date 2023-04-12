@@ -264,4 +264,16 @@
 
 </div>
 
+<div class="titulo-cursos">
+    Explorá nuestros cursos...
+</div>
 
+
+<div class="contenedor-cursos">
+    <div class="cursos">
+        <div class="card" *ngFor="let curso of cursos">
+            <div class="titulo">{{curso.titulo}}</div>
+            <button mat-stroked-button class="read-button"><a href={{curso.url}} target="_blank">Ir al curso</a></button>
+        </div>
+    </div>
+</div>
