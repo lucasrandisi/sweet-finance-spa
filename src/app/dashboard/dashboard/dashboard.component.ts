@@ -93,6 +93,11 @@ export class DashboardComponent implements OnInit {
 				if(descripcion.substr(0,10)!=noticia.snippet.substr(0,10)){
 					descripcion = descripcion + ' ' + noticia.snippet;
 				}
+
+				if(descripcion.substr(descripcion.length-1) != '.') descripcion = descripcion + '.';
+
+				if(descripcion.length > 250) descripcion = descripcion.substr(0,250) + '...';
+
 				if (descripcion != ''){
 					this.noticias.push(
 						new News(noticia.title, descripcion, noticia.image_url, noticia.url)
