@@ -141,24 +141,34 @@ export class DashboardComponent implements OnInit {
 			path: "v3/gainers",
 		});
 
-		for (let i = 0; i < 5; i++){
-			let change_length = response[i].changesPercentage.length;
-			let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
-			this.mejoresAcciones.push(
-				new Tickers(response[i].ticker, response[i].companyName, change)
-			)
+		let contador = 0;
+
+		for (let r of response){
+			if(r.companyName != ""){
+				let change = r.changesPercentage.split('.')[0].concat('%');
+				this.mejoresAcciones.push(
+					new Tickers(r.ticker, r.companyName, change)
+				)
+				contador = contador + 1;
+				if(contador == 5) break;
+			}
 		}
 
 		response = await this.apiService.getData('/fmp', {
-			path: "v3/gainers",
+			path: "v3/losers",
 		})
 
-		for (let i = 0; i < 5; i++){
-			let change_length = response[i].changesPercentage.length;
-			let change = response[i].changesPercentage.substr(0,change_length-4).concat("%");
-			this.peoresAcciones.push(
-				new Tickers(response[i].ticker, response[i].companyName, change)
-			)
+		contador = 0;
+
+		for (let r of response){
+			if(r.companyName != ""){
+				let change = r.changesPercentage.split('.')[0].concat('%');
+				this.peoresAcciones.push(
+					new Tickers(r.ticker, r.companyName, change)
+				)
+				contador = contador + 1;
+				if(contador == 5) break;
+			}
 		}
 	}
 }
