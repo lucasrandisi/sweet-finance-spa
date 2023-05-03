@@ -264,6 +264,12 @@ export class BolsaComponent implements OnInit {
 		this.seriesMACD = [];
 		this.seriesMACDSignal = [];
 		this.seriesMACDHist = [];
+		this.maximoValorEma21 = 0;
+		this.minimoValorEma21 = 99999;
+		this.maximoValorEma200 = 0;
+		this.minimoValorEma200 = 99999;
+		this.maximoValorVolumen = 0;
+		this.diferenciaLargo = 0;
 	}
 
 	public async dibujarGraficos(ticker : any){
