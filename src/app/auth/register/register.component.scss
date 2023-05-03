@@ -1,8 +1,10 @@
 .body{
     background-image: url(/../../../../../../../../assets/trama_cursos2.png); 
+    background-repeat: no-repeat;
+    background-position: center center;
     background-size: cover;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    min-height: 100vh; 
 }
 
 .logo{
