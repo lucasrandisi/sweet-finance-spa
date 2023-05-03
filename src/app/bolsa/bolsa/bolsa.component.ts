@@ -144,6 +144,14 @@ export class BolsaComponent implements OnInit {
 		this.tickerInformacion.mercado = responseQuote.exchange;
 	}
 
+	public async obtenerInformacionFavorito(ticker: any){
+		await this.spinnerService.go(async () => {
+			this.inicializarForm();
+			await this.obtenerInformacionTicker(ticker);
+			await this.dibujarGraficos(ticker);
+		});	
+	}
+
 	public async obtenerPrecioActualTicker(ticker: any){
 		let responsePrice = await this.apiService.getData('/twelve-data/price', {
 			symbol: ticker

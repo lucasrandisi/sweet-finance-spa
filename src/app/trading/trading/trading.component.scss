@@ -199,12 +199,17 @@ mat-tab-group{
     font-style: italic;
 }
 
+.contenedor-cursos::-webkit-scrollbar { 
+    display: none; 
+}
+
 .contenedor-cursos{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     overflow-x: scroll;
+    scrollbar-width: none; 
 
     .cursos{
         overflow-x: scroll;
@@ -213,6 +218,7 @@ mat-tab-group{
         padding-top: 20px;
         padding-left: 2.5%;
         padding-right: 2.5%;
+        scrollbar-width: none;
     
         .card{
             height: 200px;
@@ -229,6 +235,7 @@ mat-tab-group{
             text-align: center;
             margin-right: 10px;
             margin-left: 10px;
+            margin-bottom: 10px;
     
             .titulo{
                 color:#cccc00;
@@ -241,6 +248,10 @@ mat-tab-group{
                 color: black;
             }
         }
+    }
+
+    .cursos::-webkit-scrollbar { 
+        display: none; 
     }
 }
 

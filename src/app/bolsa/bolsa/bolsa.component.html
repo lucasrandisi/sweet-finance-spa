@@ -16,7 +16,7 @@
                 </thead>
                 <tbody>
                     <tr class="tr-hover" *ngFor="let favorito of favoritos">
-                        <td class="td-ticker" (click)="obtenerInformacionTicker(favorito.ticker)">{{favorito.ticker}}</td>
+                        <td class="td-ticker" (click)="obtenerInformacionFavorito(favorito.ticker)">{{favorito.ticker}}</td>
                         <td [class.compra]="favorito.change_status" [class.venta]="!favorito.change_status">{{favorito.change}}</td>
                         <td>{{favorito.price}}</td>
                         <button mat-icon-button (click)="eliminarFavorito(favorito.id)"><mat-icon>delete</mat-icon></button>
